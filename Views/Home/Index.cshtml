@@ -1,0 +1,83 @@
+﻿@model HeroQuest.ViewModels.HeroQuestIndexViewModel
+@{
+    ViewData["Title"] = "Personajes";
+}
+
+<div class="hq-page">
+    <section class="hq-hero">
+        <p class="hq-kicker">HEROQUEST · ARCHIVO DE AVENTURAS</p>
+        <h1>Personajes de la campaña</h1>
+        <p>Datos cargados desde la base de datos al abrir la aplicación.</p>
+        <div class="hq-counts">
+            <span><strong>@Model.Heroes.Count</strong> héroes</span>
+            <span><strong>@Model.Monsters.Count</strong> monstruos</span>
+        </div>
+    </section>
+
+    <section class="hq-section">
+        <div class="hq-section-heading">
+            <div><p class="hq-kicker">EL GRUPO</p><h2>Héroes</h2></div>
+        </div>
+        @if (Model.Heroes.Count == 0)
+        {
+            <p class="hq-empty">Todavía no hay héroes en la base de datos.</p>
+        }
+        else
+        {
+            <div class="hq-grid">
+                @foreach (var hero in Model.Heroes)
+                {
+                    <article class="hq-card hq-hero-card">
+                        <div class="hq-card-top"><span class="hq-badge">HÉROE</span><span class="hq-id">#@hero.Id</span></div>
+                        <h3>@hero.Name</h3>
+                        <p class="hq-subtitle">@hero.CharacterType · jugador: @hero.Player</p>
+                        <dl class="hq-stats">
+                            <div><dt>Vida</dt><dd>@hero.HpCurrent / @hero.Hp</dd></div>
+                            <div><dt>Mente</dt><dd>@hero.Mind</dd></div>
+                            <div><dt>Ataque</dt><dd>@hero.DicesAttack dados</dd></div>
+                            <div><dt>Defensa</dt><dd>@hero.DicesDefend dados</dd></div>
+                            <div><dt>Movimiento</dt><dd>@hero.DicesMovement dados</dd></div>
+                            <div><dt>Oro</dt><dd>@hero.Gold</dd></div>
+                            <div><dt>Arma</dt><dd>@hero.Weapon</dd></div>
+                            <div><dt>Armadura</dt><dd>@(hero.Armor ?? "—")</dd></div>
+                            <div><dt>Hechizos</dt><dd>@(hero.Spells ?? "—")</dd></div>
+                            <div><dt>Objetos</dt><dd>@(hero.Items ?? "—")</dd></div>
+                            <div><dt>Misiones completadas</dt><dd>@hero.QuestsCompleted</dd></div>
+                        </dl>
+                        <br />
+                        <div><dt>Descripción</dt><dd>@hero.Description</dd></div>
+                    </article>
+                }
+            </div>
+        }
+    </section>
+
+    <section class="hq-section">
+        <div class="hq-section-heading">
+            <div><p class="hq-kicker">ENEMIGOS</p><h2>Monstruos</h2></div>
+        </div>
+        @if (Model.Monsters.Count == 0)
+        {
+            <p class="hq-empty">Todavía no hay monstruos en la base de datos.</p>
+        }
+        else
+        {
+            <div class="hq-grid">
+                @foreach (var monster in Model.Monsters)
+                {
+                    <article class="hq-card hq-monster-card">
+                        <div class="hq-card-top"><span class="hq-badge hq-badge-monster">MONSTRUO</span><span class="hq-id">#@monster.Id</span></div>
+                        <h3>@monster.CharacterType</h3>
+                        <dl class="hq-stats">
+                            <div><dt>Vida</dt><dd>@monster.HpCurrent / @monster.Hp</dd></div>
+                            <div><dt>Mente</dt><dd>@monster.Mind</dd></div>
+                            <div><dt>Ataque</dt><dd>@monster.DicesAttack dados</dd></div>
+                            <div><dt>Defensa</dt><dd>@monster.DicesDefend dados</dd></div>
+                            <div><dt>Movimiento</dt><dd>@monster.DicesMovement dados</dd></div>
+                        </dl>
+                    </article>
+                }
+            </div>
+        }
+    </section>
+</div>
