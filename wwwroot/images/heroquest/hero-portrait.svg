@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="title desc">
+  <title id="title">Retrato de un aventurero</title><desc id="desc">Silueta heráldica de un héroe con espada y escudo, grabada sobre pergamino.</desc>
+  <defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#d9c18f"/><stop offset="1" stop-color="#9d7848"/></linearGradient><pattern id="lines" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0 10 10 0" stroke="#443324" stroke-opacity=".11"/></pattern></defs>
+  <rect width="640" height="520" fill="url(#bg)"/><rect width="640" height="520" fill="url(#lines)"/>
+  <path d="M155 475c19-109 85-164 165-164s146 55 165 164" fill="#35271e" stroke="#65492c" stroke-width="8"/>
+  <path d="M238 277c-30-29-45-70-37-114 10-52 54-86 119-86s109 34 119 86c8 44-7 85-37 114l-20 22H258z" fill="#b28958" stroke="#37271c" stroke-width="9"/>
+  <path d="M236 185c5-62 43-94 84-94 47 0 81 30 91 79-39-5-69-24-89-49-19 33-48 52-86 64z" fill="#443126" stroke="#2e2119" stroke-width="7"/>
+  <path d="M263 207h27m60 0h27M298 252q22 13 44 0" fill="none" stroke="#382820" stroke-width="8" stroke-linecap="round"/>
+  <path d="M105 380 191 320l49 74-88 56z" fill="#9c382b" stroke="#3b291f" stroke-width="9"/><path d="m159 388 36-27 17 26-36 27z" fill="#d7bc75"/>
+  <path d="m470 110 17-14 77 247-15 5z" fill="#e9ddc0" stroke="#3b2a20" stroke-width="6"/><path d="m474 353 75-23 19 18-87 31z" fill="#9c7947" stroke="#3b2a20" stroke-width="6"/>
+  <path d="M37 32h566v456H37z" fill="none" stroke="#4a3525" stroke-width="3"/><path d="M50 45h540v430H50z" fill="none" stroke="#9b7642" stroke-width="2"/>
+  <circle cx="320" cy="48" r="7" fill="#9c382b"/><circle cx="320" cy="472" r="7" fill="#9c382b"/>
+</svg>

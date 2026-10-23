@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 560" role="img" aria-labelledby="title desc">
+  <title id="title">Sello de aventuras</title><desc id="desc">Un escudo antiguo con una espada y una estrella.</desc>
+  <defs><radialGradient id="paper"><stop stop-color="#e7d5a8"/><stop offset="1" stop-color="#9c7440"/></radialGradient><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2"/><feColorMatrix values=".35 0 0 0 0 .3 0 0 0 0 .18 0 0 0 0 0 0 0 .12 0"/></filter></defs>
+  <path d="M240 22 430 94v155c0 126-75 225-190 282C125 474 50 375 50 249V94z" fill="#302219" stroke="#b99558" stroke-width="5"/>
+  <path d="M240 42 410 106v142c0 112-65 199-170 253C135 447 70 360 70 248V106z" fill="url(#paper)" stroke="#d7ba79" stroke-width="2"/>
+  <path d="M240 62 391 119v128c0 98-56 175-151 226-95-51-151-128-151-226V119z" fill="none" stroke="#75552f" stroke-width="2"/>
+  <circle cx="240" cy="265" r="116" fill="#3a2920" stroke="#b99558" stroke-width="5"/>
+  <path d="m240 155 16 58 58-16-43 42 43 42-58-16-16 58-16-58-58 16 43-42-43-42 58 16z" fill="#d4b66f" stroke="#6a4c2c" stroke-width="3"/>
+  <path d="M235 218h10l9 92-14 24-14-24z" fill="#efe1bf" stroke="#5a4029" stroke-width="4"/><path d="M210 266h60l-5 13h-50z" fill="#bd9956" stroke="#5a4029" stroke-width="3"/><path d="M235 332h10v25h-10z" fill="#75502d"/>
+  <text x="240" y="435" text-anchor="middle" font-family="Georgia,serif" font-size="30" font-weight="bold" letter-spacing="5" fill="#38281d">HEROQUEST</text>
+  <text x="240" y="466" text-anchor="middle" font-family="Georgia,serif" font-size="14" letter-spacing="4" fill="#60472d">EL LIBRO DE AVENTURAS</text>
+  <path d="M0 0h480v560H0z" filter="url(#grain)" opacity=".18"/>
+</svg>

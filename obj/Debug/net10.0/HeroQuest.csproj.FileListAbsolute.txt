@@ -215,4 +215,8 @@ C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\obj\Debug\net10.0
 C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\obj\Debug\net10.0\HeroQuest.genruntimeconfig.cache
 C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\obj\Debug\net10.0\ref\HeroQuest.dll
 C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\bin\Debug\net10.0\Data\HeroQuest_Heroes.csv
-C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\obj\Debug\net10.0\compressed\l044whj17o-{0}-af92ka3atc-af92ka3atc.gz
+C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\obj\Debug\net10.0\HeroQuest.sourcelink.json
+C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\obj\Debug\net10.0\compressed\l044whj17o-{0}-57u7c8gp4i-57u7c8gp4i.gz
+C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\obj\Debug\net10.0\compressed\schnxmg3hk-{0}-hb7shethan-hb7shethan.gz
+C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\obj\Debug\net10.0\compressed\egn1kau4y1-{0}-lzfh0wj2np-lzfh0wj2np.gz
+C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\obj\Debug\net10.0\compressed\fbbe5zdm2b-{0}-u5ot3d8dm4-u5ot3d8dm4.gz

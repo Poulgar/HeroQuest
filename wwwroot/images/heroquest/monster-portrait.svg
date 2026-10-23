@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-labelledby="title desc">
+  <title id="title">Retrato de una criatura</title><desc id="desc">Silueta de un monstruo de mazmorra en estilo grabado sobre pergamino oscuro.</desc>
+  <defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#8d7450"/><stop offset="1" stop-color="#332820"/></linearGradient><pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M0 9 9 0" stroke="#e0ca91" stroke-opacity=".12"/></pattern></defs>
+  <rect width="640" height="520" fill="url(#bg)"/><rect width="640" height="520" fill="url(#hatch)"/>
+  <path d="M165 470c-5-61 14-119 63-157l-39-79 69 28c16-16 35-25 62-25s46 9 62 25l69-28-39 79c49 38 68 96 63 157z" fill="#443126" stroke="#c2a66c" stroke-width="8"/>
+  <path d="M228 217c-31-26-41-70-30-115l58 40 19-76 44 62 41-62 19 76 58-40c11 45 1 89-30 115-27 23-50 32-89 32s-62-9-90-32z" fill="#695038" stroke="#30231b" stroke-width="8"/>
+  <path d="M241 269 300 282l-35 42-24-55zm158 0-59 13 35 42 24-55z" fill="#d9c28a" stroke="#2f2119" stroke-width="7"/><path d="m283 367 37-24 37 24-37 37z" fill="#9c382b" stroke="#241a15" stroke-width="7"/>
+  <path d="M85 90h470M85 430h470" stroke="#b89a60" stroke-width="3"/><path d="M77 72h486v376H77z" fill="none" stroke="#c2a66c" stroke-width="3"/><path d="M91 86h458v348H91z" fill="none" stroke="#3b2a20" stroke-width="2"/>
+  <path d="m105 245 31-13m368 13 31-13M104 270l24-10m384 10 24-10" stroke="#d3b878" stroke-width="4"/>
+</svg>

@@ -1,0 +1,61 @@
+@model HeroQuest.ViewModels.MonsterCatalogViewModel
+@{
+    ViewData["Title"] = "Monstruos";
+}
+
+<section class="catalog-page page-shell">
+    <div class="page-heading">
+        <p class="eyebrow">EL BESTIARIO</p>
+        <h1>Criaturas de la <em>mazmorra</em></h1>
+        <p>Selecciona una criatura para consultar sus atributos.</p>
+    </div>
+
+    @if (Model.Monsters.Count == 0)
+    {
+        <div class="empty-note"><span aria-hidden="true">✧</span><p>Aún no hay criaturas en el bestiario.</p></div>
+    }
+    else
+    {
+        <div class="catalog-layout">
+            <aside class="catalog-list" aria-label="Lista de monstruos">
+                <p class="list-caption">ÍNDICE <span>@Model.Monsters.Count CRIATURAS</span></p>
+                @foreach (var monster in Model.Monsters)
+                {
+                    <a class="catalog-row @(Model.SelectedMonster?.Id == monster.Id ? "selected" : "")"
+                       asp-controller="Monsters" asp-action="Index" asp-route-id="@monster.Id" aria-current="@(Model.SelectedMonster?.Id == monster.Id ? "page" : null)">
+                        <span class="row-initial monster-initial">@((monster.CharacterType.Length > 0 ? monster.CharacterType[..1] : "?").ToUpperInvariant())</span>
+                        <span class="row-main"><strong>@monster.CharacterType</strong><small>@monster.Hp HP · @monster.DicesAttack ataque</small></span>
+                        <span class="row-chevron" aria-hidden="true">›</span>
+                    </a>
+                }
+            </aside>
+
+            @if (Model.SelectedMonster is { } monsterDetail)
+            {
+                <article class="detail-card monster-detail-card">
+                    <div class="detail-art monster-art">
+                        <img src="~/images/heroquest/monster-portrait.svg" alt="Ilustración de @monsterDetail.CharacterType" />
+                        <span class="portrait-ribbon">REGISTRO DEL BESTIARIO</span>
+                    </div>
+                    <div class="detail-content">
+                        <p class="eyebrow">@monsterDetail.TypeMonsterRol · N.º @monsterDetail.Id</p>
+                        <h2>@monsterDetail.CharacterType</h2>
+                        <p class="detail-subtitle">Criatura catalogada en las profundidades</p>
+                        @if (!string.IsNullOrWhiteSpace(monsterDetail.Description))
+                        {
+                            <p class="detail-description">@monsterDetail.Description</p>
+                        }
+                        <div class="stat-grid">
+                            <div><span>Vida</span><strong>@monsterDetail.HpCurrent / @monsterDetail.Hp</strong></div>
+                            <div><span>Mente</span><strong>@monsterDetail.Mind</strong></div>
+                            <div><span>Ataque</span><strong>@monsterDetail.DicesAttack dados</strong></div>
+                            <div><span>Defensa</span><strong>@monsterDetail.DicesDefend dados</strong></div>
+                            <div><span>Movimiento máximo</span><strong>@monsterDetail.MaxMovement</strong></div>
+                            <div><span>Clasificación</span><strong>@monsterDetail.TypeMonsterRol</strong></div>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>

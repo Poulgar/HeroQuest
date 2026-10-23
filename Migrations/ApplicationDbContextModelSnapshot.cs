@@ -35,9 +35,6 @@ namespace HeroQuest.Migrations
                     b.Property<int>("DicesDefend")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("DicesMovement")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Hp")
                         .HasColumnType("INTEGER");
 
@@ -60,6 +57,9 @@ namespace HeroQuest.Migrations
 
                     b.Property<string>("Armor")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("DicesMovement")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Gold")
                         .HasColumnType("INTEGER");
@@ -91,6 +91,12 @@ namespace HeroQuest.Migrations
             modelBuilder.Entity("HeroQuest.Models.Monster", b =>
                 {
                     b.HasBaseType("HeroQuest.Models.Character");
+
+                    b.Property<int>("MaxMovement")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TypeMonsterRol")
+                        .HasColumnType("INTEGER");
 
                     b.ToTable("Monsters");
                 });

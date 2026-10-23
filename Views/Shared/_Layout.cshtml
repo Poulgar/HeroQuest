@@ -1,50 +1,38 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HeroQuest</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] · HeroQuest</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/HeroQuest.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HeroQuest</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" asp-controller="Home" asp-action="Index" aria-label="HeroQuest, inicio">
+                <span class="brand-mark" aria-hidden="true">H</span>
+                <span><strong>HEROQUEST</strong><small>Crónicas del reino</small></span>
+            </a>
+            <nav class="main-nav" aria-label="Navegación principal">
+                <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">Inicio</a>
+                <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Heroes" ? "active" : "")" asp-controller="Heroes" asp-action="Index">Héroes</a>
+                <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Monsters" ? "active" : "")" asp-controller="Monsters" asp-action="Index">Monstruos</a>
+                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Equipment" ? "active" : "")" asp-controller="Archive" asp-action="Equipment">Equipo y artefactos</a>
+                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Modifiers" ? "active" : "")" asp-controller="Archive" asp-action="Modifiers">Modificadores</a>
+            </nav>
+        </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - HeroQuest - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <main class="site-main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span class="footer-ornament" aria-hidden="true">✦</span>
+            <p>Un compendio de héroes, criaturas y tesoros para tus aventuras.</p>
+            <span class="footer-caption">HEROQUEST · ARCHIVO DE CAMPAÑA</span>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
