@@ -453,5 +453,5 @@ C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\n2whl42s8d-{0}-g03ctuu9vw-g03ctuu9vw.gz
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\bin\Debug\net10.0\Data\HeroQuest_csv\HeroQuest_MonstersCategoriesAbilities.csv
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\bin\Debug\net10.0\Data\HeroQuest_csv\HeroQuest_SpellsOfTerror.csv
-C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\l044whj17o-{0}-8d4en63pww-8d4en63pww.gz
-C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\fws6a7tl10-{0}-61068ft10q-61068ft10q.gz
+C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\l044whj17o-{0}-23qwk5rv7e-23qwk5rv7e.gz
+C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\fws6a7tl10-{0}-lcks13k1ug-lcks13k1ug.gz

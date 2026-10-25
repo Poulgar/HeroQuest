@@ -10,7 +10,7 @@
         <p class="detail-subtitle">@(Model.Price > 0 ? $"Precio: {Model.Price} monedas de oro" : "Precio no especificado")</p>
         <p class="detail-description">@Model.Description</p>
         <div class="stat-grid">
-            <div><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></div>
         </div>
     </div>
+    <footer class="detail-expansion-footer"><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></footer>
 </article>

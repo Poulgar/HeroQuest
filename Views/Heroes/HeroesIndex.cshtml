@@ -30,7 +30,7 @@
                     <a class="catalog-row @(Model.SelectedHero?.Id == hero.Id ? "selected" : "")"
                        data-select-record="@hero.Id" data-name="@hero.Name" data-search="@hero.Name @hero.Player @hero.CharacterType" data-appears="@hero.Appears.DisplayName()" data-id="@hero.Id"
                        asp-controller="Heroes" asp-action="Index" asp-route-id="@hero.Id" aria-current="@(Model.SelectedHero?.Id == hero.Id ? "page" : null)">
-                        <span class="row-initial">@((hero.Name.Length > 0 ? hero.Name[..1] : "?").ToUpperInvariant())</span>
+                        <span class="row-demo-image"><img src="~/images/heroquest/hero-portrait.svg" alt="" /></span>
                         <span class="row-main"><strong>@ShortIndexName(hero.Name)</strong><small>@hero.CharacterType • @hero.Hp HP</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>

@@ -27,7 +27,7 @@
             <div><dt>Hechizos</dt><dd>@(Model.Spells ?? "-")</dd></div>
             <div><dt>Objetos</dt><dd>@(Model.Items ?? "-")</dd></div>
             <div><dt>Misiones completadas</dt><dd>@Model.QuestsCompleted</dd></div>
-            <div><dt>Expansión</dt><dd>@Model.Appears.DisplayName()</dd></div>
         </dl>
     </div>
+    <footer class="detail-expansion-footer"><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></footer>
 </article>

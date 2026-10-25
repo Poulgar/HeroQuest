@@ -1,6 +1,7 @@
 document.querySelectorAll('.catalog-list').forEach((panel) => {
     const search = panel.querySelector('.index-search');
     const sort = panel.querySelector('.index-sort');
+    const factionFilter = panel.querySelector('.faction-filter');
     const list = panel.querySelector('[data-index-list]');
     const categoryButtons = [...panel.querySelectorAll('[data-equipment-category]')];
     let selectedCategory = categoryButtons[0]?.dataset.equipmentCategory ?? null;
@@ -14,7 +15,8 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
         const rows = [...list.querySelectorAll('.catalog-row')];
         for (const row of rows) {
             const matchesCategory = !selectedCategory || row.dataset.category === selectedCategory;
-            row.hidden = !matchesCategory || !normalize(row.dataset.search ?? row.dataset.name ?? '').includes(query);
+            const matchesFaction = !factionFilter?.value || row.dataset.faction === factionFilter.value;
+            row.hidden = !matchesCategory || !matchesFaction || !normalize(row.dataset.search ?? row.dataset.name ?? '').includes(query);
         }
 
         const mode = sort?.value ?? 'name-asc';
@@ -32,10 +34,15 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
             return result || Number(a.dataset.id) - Number(b.dataset.id);
         });
         rows.forEach((row) => list.append(row));
+
+        // Si el filtro oculta la ficha seleccionada, seleccionamos la primera visible para mantener índice y tarjeta sincronizados.
+        const selected = rows.find((row) => row.classList.contains('selected'));
+        if (selected?.hidden) rows.find((row) => !row.hidden)?.click();
     };
 
     search?.addEventListener('input', update);
     sort?.addEventListener('change', update);
+    factionFilter?.addEventListener('change', update);
     categoryButtons.forEach((button) => button.addEventListener('click', () => {
         selectedCategory = button.dataset.equipmentCategory;
         categoryButtons.forEach((candidate) => {
@@ -50,6 +57,17 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
 
 // Las fichas se guardan en <template>; cambiar selección no envía otra petición ni altera el scroll del índice.
 document.addEventListener('click', (event) => {
+    const skill = event.target.closest('.skill-trigger');
+    if (skill) {
+        const dialog = document.querySelector('[data-skill-dialog]');
+        if (dialog) {
+            dialog.querySelector('[data-skill-dialog-title]').textContent = skill.dataset.skillName ?? 'Habilidad';
+            dialog.querySelector('[data-skill-dialog-description]').textContent = skill.dataset.fullDescription ?? '';
+            dialog.showModal();
+        }
+        return;
+    }
+
     const row = event.target.closest('a[data-select-record]');
     if (!row || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
 
@@ -71,3 +89,40 @@ document.addEventListener('click', (event) => {
     // Actualiza la dirección para que la selección se pueda compartir; replaceState no recarga ni desplaza la página.
     window.history.replaceState(null, '', row.href);
 });
+
+// Este tooltip flotante se coloca en <body> para que no lo recorte el área desplazable de la ficha.
+const hoverTooltip = document.createElement('div');
+hoverTooltip.className = 'floating-tooltip';
+hoverTooltip.setAttribute('role', 'tooltip');
+hoverTooltip.hidden = true;
+document.body.append(hoverTooltip);
+let tooltipTarget = null;
+
+const showTooltip = (target) => {
+    if (!target?.dataset.tooltip) return;
+    tooltipTarget = target;
+    hoverTooltip.textContent = target.dataset.tooltip;
+    hoverTooltip.hidden = false;
+    const bounds = target.getBoundingClientRect();
+    const width = Math.min(320, window.innerWidth - 24);
+    const left = Math.max(12, Math.min(bounds.left + bounds.width / 2 - width / 2, window.innerWidth - width - 12));
+    hoverTooltip.style.width = `${width}px`;
+    hoverTooltip.style.left = `${left}px`;
+    hoverTooltip.style.top = `${bounds.top > 130 ? bounds.top - 10 : bounds.bottom + 10}px`;
+    hoverTooltip.classList.toggle('below', bounds.top <= 130);
+};
+
+const hideTooltip = (target) => {
+    if (target && target !== tooltipTarget) return;
+    hoverTooltip.hidden = true;
+    tooltipTarget = null;
+};
+
+document.addEventListener('pointerover', (event) => showTooltip(event.target.closest('.hover-tooltip')));
+document.addEventListener('pointerout', (event) => {
+    const target = event.target.closest('.hover-tooltip');
+    if (target && !target.contains(event.relatedTarget)) hideTooltip(target);
+});
+document.addEventListener('focusin', (event) => showTooltip(event.target.closest('.hover-tooltip')));
+document.addEventListener('focusout', (event) => hideTooltip(event.target.closest('.hover-tooltip')));
+window.addEventListener('scroll', () => hideTooltip(), true);

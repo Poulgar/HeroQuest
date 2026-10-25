@@ -17,6 +17,7 @@ public class MonstersController(ApplicationDbContext context) : Controller
             .OrderBy(monster => monster.Id)
             .ToListAsync();
         var abilities = await context.MonsterAbilities.AsNoTracking().OrderBy(ability => ability.Id).ToListAsync();
+        var spells = await context.SpellsOfTerror.AsNoTracking().OrderBy(spell => spell.Id).ToListAsync();
 
         var selected = monsters.FirstOrDefault(monster => monster.Id == id) ?? monsters.FirstOrDefault();
         ViewData["Title"] = "Monstruos";
@@ -25,7 +26,8 @@ public class MonstersController(ApplicationDbContext context) : Controller
         {
             Monsters = monsters,
             SelectedMonster = selected,
-            Abilities = abilities
+            Abilities = abilities,
+            SpellsOfTerror = spells
         });
     }
 }

@@ -11,7 +11,7 @@
         <p class="detail-description">@Model.Description</p>
         <div class="stat-grid">
             <div><span>Peso</span><strong>@(string.IsNullOrWhiteSpace(Model.Weight) ? "-" : Model.Weight)</strong></div>
-            <div><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></div>
         </div>
     </div>
+    <footer class="detail-expansion-footer"><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></footer>
 </article>

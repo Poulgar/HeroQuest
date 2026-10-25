@@ -22,14 +22,24 @@
                 <p class="list-caption">ÍNDICE <span>@Model.Monsters.Count CRIATURAS</span></p>
                 <div class="index-tools">
                     <label>Buscar <input class="index-search" type="search" placeholder="Nombre o habilidad…" /></label>
+                    <label>Facción
+                        <select class="faction-filter">
+                            <option value="">Todas las facciones</option>
+                            @foreach (var faction in Model.Monsters.Select(monster => monster.Faction).Where(faction => !string.IsNullOrWhiteSpace(faction)).Distinct().OrderBy(faction => faction, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true)))
+                            {
+                                <option value="@faction">@faction</option>
+                            }
+                        </select>
+                    </label>
                     <label>Ordenar <select class="index-sort"><option value="name-asc">A-Z</option><option value="name-desc">Z-A</option><option value="appears">Expansión</option></select></label>
                 </div>
                 <div class="catalog-scroll" data-index-list>
                 @foreach (var monster in Model.Monsters)
                 {
                     <a class="catalog-row @(Model.SelectedMonster?.Id == monster.Id ? "selected" : "")"
-                       data-select-record="@monster.Id" data-name="@monster.Name" data-search="@monster.Name @monster.Faction @monster.Ability" data-appears="@monster.Appears.DisplayName()" data-id="@monster.Id"
+                       data-select-record="@monster.Id" data-name="@monster.Name" data-faction="@monster.Faction" data-search="@monster.Name @monster.Faction @monster.Ability" data-appears="@monster.Appears.DisplayName()" data-id="@monster.Id"
                        asp-controller="Monsters" asp-action="Index" asp-route-id="@monster.Id" aria-current="@(Model.SelectedMonster?.Id == monster.Id ? "page" : null)">
+                        <span class="row-demo-image"><img src="~/images/heroquest/monster-portrait.svg" alt="" /></span>
                         <span class="faction-token faction-token-small" style="--faction-color: @monster.Faction.FactionColor()" title="@monster.Faction">@monster.Faction.FactionSymbol()</span>
                         <span class="row-main"><strong>@ShortIndexName(string.IsNullOrEmpty(monster.Name) ? monster.CharacterType : monster.Name)</strong><small>@monster.Hp HP • @monster.DicesAttack ataque</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
@@ -41,36 +51,76 @@
             <div class="detail-host" data-detail-host>
                 @if (Model.SelectedMonster is { } monsterDetail)
                 {
-                    @await Html.PartialAsync("~/Views/Shared/_MonsterDetailCard.cshtml", monsterDetail)
+                    @await Html.PartialAsync("~/Views/Shared/_MonsterDetailCard.cshtml", new HeroQuest.ViewModels.MonsterDetailCardViewModel { Monster = monsterDetail, Abilities = Model.Abilities })
                 }
             </div>
         </div>
 
         @foreach (var monster in Model.Monsters)
         {
-            <template data-detail-template="@monster.Id">@await Html.PartialAsync("~/Views/Shared/_MonsterDetailCard.cshtml", monster)</template>
+            <template data-detail-template="@monster.Id">@await Html.PartialAsync("~/Views/Shared/_MonsterDetailCard.cshtml", new HeroQuest.ViewModels.MonsterDetailCardViewModel { Monster = monster, Abilities = Model.Abilities })</template>
         }
     }
 </section>
 
+<dialog class="skill-description-dialog" data-skill-dialog aria-labelledby="skill-dialog-title">
+    <form method="dialog">
+        <button class="skill-dialog-close" aria-label="Cerrar">×</button>
+    </form>
+    <p class="eyebrow">BESTIARIO</p>
+    <h2 id="skill-dialog-title" data-skill-dialog-title></h2>
+    <p data-skill-dialog-description></p>
+</dialog>
+
 <section class="ability-archive page-shell">
     <div class="ability-heading">
         <p class="eyebrow">SABER DEL BESTIARIO</p>
-        <h2>Habilidades de monstruo</h2>
-        <p>Reglas y rasgos especiales registrados en el compendio.</p>
+        <h2>Habilidades y hechizos del bestiario</h2>
+        <p>Capacidades y conjuros registrados en el compendio, junto con las criaturas que los poseen.</p>
     </div>
-    @if (Model.Abilities.Count == 0)
+    @if (Model.Abilities.Count == 0 && Model.SpellsOfTerror.Count == 0)
     {
-        <div class="empty-note"><p>Aún no hay habilidades importadas.</p></div>
+        <div class="empty-note"><p>Aún no hay habilidades ni hechizos importados.</p></div>
     }
     else
     {
         <div class="ability-grid">
             @foreach (var ability in Model.Abilities)
             {
+                // El campo Ability de cada monstruo contiene una lista separada por comas, cargada desde el CSV.
+                var monsterNames = Model.Monsters
+                    .Where(monster => monster.Ability.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        .Contains(ability.Name, StringComparer.OrdinalIgnoreCase))
+                    .Select(monster => monster.Name)
+                    .OrderBy(name => name, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true))
+                    .ToList();
                 <article class="ability-card">
-                    <div class="ability-card-heading"><h3><span class="ability-icon" style="--ability-color: @ability.Name.AbilityColor()" aria-hidden="true">@ability.Name.AbilitySymbol()</span>@ability.Name</h3><span>@ability.Appears.DisplayName()</span></div>
-                    <p>@ability.Description</p>
+                    <div class="ability-card-heading">
+                        <h3><span class="ability-icon" style="--ability-color: @ability.Name.AbilityColor()" aria-hidden="true">@ability.Name.AbilitySymbol()</span>@ability.Name</h3>
+                        <span class="ability-kind">Habilidad</span>
+                    </div>
+                    <p class="ability-card-description">@ability.Description</p>
+                    <p class="ability-card-owners"><strong>Monstruos que poseen esta habilidad:</strong> @(monsterNames.Count > 0 ? string.Join(" · ", monsterNames) : "Sin monstruos vinculados")</p>
+                    <footer class="ability-card-expansion"><span>Expansión</span><strong>@ability.Appears.DisplayName()</strong></footer>
+                </article>
+            }
+
+            @foreach (var spell in Model.SpellsOfTerror)
+            {
+                // La navegación SpellLinks procede de las claves foráneas y da los monstruos vinculados a cada hechizo.
+                var monsterNames = Model.Monsters
+                    .Where(monster => monster.SpellLinks.Any(link => link.SpellOfTerrorId == spell.Id))
+                    .Select(monster => monster.Name)
+                    .OrderBy(name => name, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true))
+                    .ToList();
+                <article class="ability-card spell-card">
+                    <div class="ability-card-heading">
+                        <h3><span class="ability-icon spell-icon" style="--ability-color: @spell.Name.SpellColor()" aria-hidden="true">@spell.Name.SpellSymbol()</span>@spell.Name</h3>
+                        <span class="ability-kind">Hechizo</span>
+                    </div>
+                    <p class="ability-card-description">@spell.Description</p>
+                    <p class="ability-card-owners"><strong>Monstruos que poseen este hechizo:</strong> @(monsterNames.Count > 0 ? string.Join(" · ", monsterNames) : "Sin monstruos vinculados")</p>
+                    <footer class="ability-card-expansion"><span>Expansión</span><strong>@spell.Appears.DisplayName()</strong></footer>
                 </article>
             }
         </div>

@@ -21,7 +21,14 @@ public class MonsterCatalogViewModel
 {
     public List<Monster> Monsters { get; set; } = [];
     public Monster? SelectedMonster { get; set; }
-    // El modelo aún no relaciona una habilidad con un monstruo concreto; se muestra el catálogo completo.
+    // Catálogo general de capacidades; las relaciones de hechizos de Terror se muestran en cada ficha de monstruo.
+    public List<MonsterAbility> Abilities { get; set; } = [];
+    public List<SpellOfTerror> SpellsOfTerror { get; set; } = [];
+}
+
+public class MonsterDetailCardViewModel
+{
+    public Monster Monster { get; set; } = null!;
     public List<MonsterAbility> Abilities { get; set; } = [];
 }
 

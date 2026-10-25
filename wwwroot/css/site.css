@@ -106,20 +106,22 @@ h1 em { color: var(--red); font-weight: 400; }
 .catalog-row:hover, .catalog-row.selected { background: #f1e3be; }
 .catalog-row.selected { box-shadow: inset 3px 0 var(--red); }
 .row-initial { width: 38px; height: 38px; flex: 0 0 38px; display: grid; place-items: center; border: 1px solid #947445; border-radius: 50%; color: #f3e3bc; background: var(--red); font: 600 20px 'Palatino Linotype', 'Book Antiqua', Georgia, serif; }
+.row-demo-image { width: 38px; height: 38px; flex: 0 0 38px; display: block; overflow: hidden; border: 1px solid #947445; background: #c7b387; box-shadow: 0 2px 5px #30201455; }
+.row-demo-image img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .monster-initial { background: #49382b; }
 .row-main { min-width: 0; flex: 1; }
 .row-main strong, .row-main small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .row-main strong { font-size: 18px; }
 .row-main small { color: #766248; font-size: 14px; }
 .row-chevron { color: #835533; font-size: 25px; }
-.detail-card { position: relative; min-width: 0; height: 680px; display: grid; grid-template-columns: minmax(180px, .78fr) minmax(0, 1.22fr); grid-template-rows: minmax(0, 1fr); gap: 25px; padding: 24px; overflow: hidden; border: 1px solid #9e804f; outline: 1px solid #d4bd84; outline-offset: -7px; background: var(--paper); box-shadow: var(--shadow); }
+.detail-card { position: relative; min-width: 0; height: 680px; display: grid; grid-template-columns: minmax(180px, .78fr) minmax(0, 1.22fr); grid-template-rows: minmax(0, 1fr) auto; gap: 14px 25px; padding: 24px; overflow: hidden; border: 1px solid #9e804f; outline: 1px solid #d4bd84; outline-offset: -7px; background: var(--paper); box-shadow: var(--shadow); }
 .detail-art, .detail-content { position: relative; z-index: 1; }
 .detail-art { align-self: start; padding: 10px; border: 1px solid #876840; background: #bca073; box-shadow: 3px 5px 13px #33241740; }
 .detail-art img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
 .hero-art img { object-position: center; }
 .monster-art img { object-position: center; }
 .portrait-ribbon { display: block; margin-top: 9px; color: #4d3824; font: 10px Georgia, serif; letter-spacing: .13em; text-align: center; }
-.detail-content { min-width: 0; min-height: 0; padding: 4px 8px 10px 5px; overflow-y: auto; scrollbar-color: #987b4c #e8d9b5; }
+.detail-content { display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 4px 8px 10px 5px; overflow-y: auto; scrollbar-color: #987b4c #e8d9b5; }
 .detail-host { min-width: 0; min-height: 0; height: 100%; }
 .detail-host > .detail-card { height: 100%; }
 .detail-content .eyebrow { margin-bottom: 8px; }
@@ -137,6 +139,8 @@ h1 em { color: var(--red); font-weight: 400; }
 .detail-facts div { display: grid; grid-template-columns: minmax(100px, .7fr) 1.3fr; gap: 10px; padding: 4px 0; border-bottom: 1px dotted #b59c6b; }
 .detail-facts dt { color: #766248; font-size: 15px; }
 .detail-facts dd { margin: 0; overflow-wrap: anywhere; font-size: 16px; font-weight: 600; }
+.detail-expansion-footer { grid-column: 1 / -1; justify-self: end; display: flex; align-items: baseline; justify-content: flex-end; gap: 7px; max-width: 100%; padding-top: 8px; border-top: 1px solid #b59c6b; color: #766248; font: 10px Georgia, serif; letter-spacing: .06em; text-align: right; }
+.detail-expansion-footer strong { color: var(--red); font-size: 12px; overflow-wrap: anywhere; }
 .empty-note { max-width: 580px; margin: 40px auto; padding: 44px; border: 1px solid #aa8b56; color: var(--ink); background: var(--paper); box-shadow: var(--shadow); text-align: center; }
 .empty-note span { color: var(--red); font-size: 38px; }
 .empty-note p { margin: 8px 0 0; font-size: 23px; }
@@ -149,15 +153,29 @@ h1 em { color: var(--red); font-weight: 400; }
 .ability-heading .eyebrow { color: #d8b86e; }
 .ability-heading h2 { margin: 0; font-size: clamp(30px, 4vw, 42px); }
 .ability-heading p:last-child { margin: 8px 0 0; color: #d6c6a5; }
-.ability-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr)); grid-auto-rows: 380px; align-items: stretch; gap: 16px; }
-.ability-card { position: relative; display: flex; flex-direction: column; height: 380px; min-width: 0; padding: 38px; overflow: hidden; border: 1px solid #987b4c; color: var(--ink); background: var(--paper-light); box-shadow: 0 8px 22px #160e092b; }
-.ability-card::before { position: absolute; inset: 0; z-index: 0; content: ''; pointer-events: none; opacity: .64; background: url('../images/heroquest/wild-roots-frame.svg') center / 100% 100% no-repeat; }
+.ability-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr)); grid-auto-rows: 500px; align-items: stretch; gap: 16px; }
+.ability-card { position: relative; display: flex; flex-direction: column; height: 500px; min-width: 0; padding: 22px; overflow: hidden; border: 1px solid #987b4c; color: var(--ink); background: var(--paper-light); box-shadow: 0 8px 22px #160e092b; }
 .ability-card > * { position: relative; z-index: 1; }
-.ability-card-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 48px; border-bottom: 1px solid #c6ae7a; }
-.ability-card-heading h3 { display: flex; align-items: center; gap: 9px; min-width: 0; margin: 0 0 8px; font-size: 23px; }
-.ability-icon { width: 34px; height: 34px; flex: 0 0 34px; display: inline-grid; place-items: center; border: 1px solid color-mix(in srgb, var(--ability-color) 72%, #4e3925); border-radius: 50%; color: #fff3d1; background: var(--ability-color, #812f27); box-shadow: inset 0 0 0 2px #ffffff35, 0 2px 4px #30201455; font: 700 20px Georgia, serif; text-shadow: 0 1px 2px #0008; }
-.ability-card-heading span { color: var(--red); font-size: 13px; text-align: right; }
-.ability-card p { min-height: 0; flex: 1; margin: 12px 0 0; overflow-y: auto; color: #55422d; font-size: 16px; line-height: 1.25; white-space: pre-line; }
+.ability-card-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 60px; border-bottom: 1px solid #c6ae7a; }
+.ability-card-heading h3 { display: flex; align-items: center; gap: 9px; min-width: 0; margin: 0 0 8px; font-size: 22px; }
+.ability-icon { width: 38px; height: 38px; flex: 0 0 38px; display: inline-grid; place-items: center; border: 1px solid color-mix(in srgb, var(--ability-color) 72%, #4e3925); border-radius: 4px; color: #fff3d1; background: var(--ability-color, #812f27); box-shadow: inset 0 0 0 2px #ffffff35, 0 2px 4px #30201455; font: 700 20px Georgia, serif; text-shadow: 0 1px 2px #0008; }
+.spell-icon { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); border: 0; border-radius: 0; }
+.skill-trigger { padding: 0; cursor: pointer; appearance: none; }
+.ability-card-heading .ability-kind { flex: 0 0 auto; color: var(--red); font-size: 13px; text-align: right; }
+.ability-card-description { min-height: 0; flex: 1; margin: 12px 0; overflow-y: auto; color: #55422d; font-size: 16px; line-height: 1.3; white-space: pre-line; scrollbar-color: #987b4c #f4e9cc; }
+.ability-card-owners { flex: 0 0 auto; max-height: 84px; margin: 0; padding: 8px 0; overflow-y: auto; border-top: 1px dotted #b59c6b; color: #55422d; font-size: 14px; line-height: 1.25; }
+.ability-card-owners strong { color: #6b3a2c; }
+.ability-card-expansion { display: flex; justify-content: flex-end; gap: 8px; flex: 0 0 auto; padding-top: 9px; border-top: 1px solid #c6ae7a; color: #6e5c45; font-size: 13px; text-align: right; }
+.ability-card-expansion strong { color: var(--red); text-align: right; }
+.monster-skill-icons { display: flex; flex-wrap: wrap; gap: 10px; min-height: 44px; padding: 5px 0; }
+.hover-tooltip { cursor: help; }
+.floating-tooltip { position: fixed; z-index: 1000; max-height: 150px; padding: 10px 12px; transform: translateY(-100%); overflow-y: auto; border: 1px solid #9d7a45; color: #f6e9c9; background: #33251b; box-shadow: 0 5px 14px #1a100b80; font: 14px/1.3 'Palatino Linotype', 'Book Antiqua', Georgia, serif; white-space: normal; pointer-events: none; }
+.floating-tooltip.below { transform: none; }
+.skill-description-dialog { position: fixed; width: min(560px, calc(100% - 32px)); max-height: min(75vh, 620px); padding: 28px; border: 1px solid #9d7a45; outline: 2px solid #d4bd84; outline-offset: -7px; color: var(--ink); background: var(--paper); box-shadow: 0 18px 60px #0009; }
+.skill-description-dialog::backdrop { background: #160e09b8; }
+.skill-description-dialog h2 { margin: 0 35px 12px 0; color: #352519; }
+.skill-description-dialog > p:last-child { margin: 0; color: #55422d; font-size: 17px; line-height: 1.5; white-space: pre-line; }
+.skill-dialog-close { float: right; border: 0; color: var(--red); background: transparent; font-size: 30px; cursor: pointer; }
 .monster-ability-field { min-height: 25px; padding: 6px 0; border-bottom: 1px dotted #b59c6b; color: #55422d; white-space: pre-line; }
 .monster-spell-entry { margin-top: 10px; padding: 9px 11px; border-left: 2px solid #9b6b36; background: #eee1bf; }
 .monster-spell-entry p { margin: 5px 0 0; color: #55422d; font-size: 14px; line-height: 1.3; white-space: pre-line; }
@@ -184,7 +202,7 @@ h1 em { color: var(--red); font-weight: 400; }
     .home-shelves { grid-template-columns: 1fr; }
     .shelf-card { min-height: 165px; }
     .catalog-list { height: 260px; }
-    .detail-card { height: 680px; grid-template-columns: 1fr; padding: 20px; }
+    .detail-card { height: 680px; grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr) auto; padding: 20px; }
     .detail-art { width: min(100%, 330px); justify-self: center; }
     .detail-art img { aspect-ratio: 4 / 3; }
     .detail-content { padding: 0; }

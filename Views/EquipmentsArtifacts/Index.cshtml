@@ -34,7 +34,7 @@
                     <a class="catalog-row @(Model.SelectedItem?.Id == item.Id ? "selected" : "")"
                        data-select-record="@item.Id" data-name="@item.Name" data-category="@item.Category" data-search="@item.Name @item.Type @item.Description" data-price="@item.Price" data-appears="@item.Appears.DisplayName()" data-id="@item.Id"
                        asp-controller="Archive" asp-action="Equipment" asp-route-id="@item.Id" aria-current="@(Model.SelectedItem?.Id == item.Id ? "page" : null)">
-                        <span class="row-initial">@((item.Name.Length > 0 ? item.Name[..1] : "?").ToUpperInvariant())</span>
+                        <span class="row-demo-image"><img src="@(item.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase) ? Url.Content("~/images/heroquest/artifact-relic.svg") : Url.Content("~/images/heroquest/equipment-sword.svg"))" alt="" /></span>
                         <span class="row-main"><strong>@ShortIndexName(item.Name)</strong><small>@item.Category • @item.Type</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>

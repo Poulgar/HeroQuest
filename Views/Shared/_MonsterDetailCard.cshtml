@@ -1,34 +1,42 @@
-@model HeroQuest.Models.Monster
+@model HeroQuest.ViewModels.MonsterDetailCardViewModel
+@{
+    var monster = Model.Monster;
+    var abilityNames = monster.Ability.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+}
 <article class="detail-card monster-detail-card">
     <div class="detail-art monster-art">
-        <img src="~/images/heroquest/monster-portrait.svg" alt="Ilustración de @Model.Name" />
+        <img src="~/images/heroquest/monster-portrait.svg" alt="Ilustración de @monster.Name" />
         <span class="portrait-ribbon">REGISTRO DEL BESTIARIO</span>
     </div>
     <div class="detail-content">
-        <p class="eyebrow">BESTIARIO • N.º @Model.Id</p>
-        <h2>@Model.Name</h2>
-        <p class="detail-description"><strong>Descripción:</strong> @Model.Description</p>
+        <p class="eyebrow">BESTIARIO • N.º @monster.Id</p>
+        <h2>@monster.Name</h2>
+        <p class="detail-description"><strong>Descripción:</strong> @monster.Description</p>
         <div class="stat-grid">
-            <div><span>Vida</span><strong>@Model.HpCurrent / @Model.Hp</strong></div>
-            <div><span>Mente</span><strong>@Model.Mind</strong></div>
-            <div><span>Ataque</span><strong>@Model.DicesAttack dados</strong></div>
-            <div><span>Defensa</span><strong>@Model.DicesDefend dados</strong></div>
-            <div><span>Movimiento máximo</span><strong>@Model.MaxMovement</strong></div>
-            <div><span>Facción</span><strong><span class="faction-token" style="--faction-color: @Model.Faction.FactionColor()">@Model.Faction.FactionSymbol()</span> @Model.Faction</strong></div>
-            <div class="stat-wide"><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></div>
+            <div><span>Vida</span><strong>@monster.HpCurrent / @monster.Hp</strong></div>
+            <div><span>Mente</span><strong>@monster.Mind</strong></div>
+            <div><span>Ataque</span><strong>@monster.DicesAttack dados</strong></div>
+            <div><span>Defensa</span><strong>@monster.DicesDefend dados</strong></div>
+            <div><span>Movimiento máximo</span><strong>@monster.MaxMovement</strong></div>
+            <div><span>Facción</span><strong><span class="faction-token hover-tooltip" tabindex="0" style="--faction-color: @monster.Faction.FactionColor()" data-tooltip="@monster.Faction" title="@monster.Faction" aria-label="Facción: @monster.Faction">@monster.Faction.FactionSymbol()</span></strong></div>
         </div>
-        <div class="detail-divider"><span>HABILIDADES</span></div>
-        <div class="monster-ability-field">@Model.Ability</div>
-        @if (Model.SpellLinks.Count > 0)
-        {
-            <div class="detail-divider"><span>HECHIZOS DEL TERROR</span></div>
-            @foreach (var link in Model.SpellLinks)
+        <div class="detail-divider"><span>HABILIDADES Y HECHIZOS</span></div>
+        <div class="monster-skill-icons" aria-label="Habilidades y hechizos de @monster.Name">
+            @foreach (var abilityName in abilityNames)
             {
-                <div class="monster-spell-entry">
-                    <strong>@link.SpellOfTerror.Name</strong>
-                    <p>@link.SpellOfTerror.Description</p>
-                </div>
+                var spellLink = monster.SpellLinks.FirstOrDefault(link => string.Equals(link.SpellOfTerror.Name, abilityName, StringComparison.OrdinalIgnoreCase));
+                if (spellLink is not null)
+                {
+                    <button type="button" class="ability-icon spell-icon skill-trigger hover-tooltip" style="--ability-color: @abilityName.SpellColor()" data-tooltip="@spellLink.SpellOfTerror.Description.ShortEffect(abilityName)" data-full-description="@spellLink.SpellOfTerror.Description" data-skill-name="@abilityName" aria-label="Hechizo: @abilityName">@abilityName.SpellSymbol()</button>
+                }
+                else
+                {
+                    var ability = Model.Abilities.FirstOrDefault(entry => string.Equals(entry.Name, abilityName, StringComparison.OrdinalIgnoreCase));
+                    var description = ability?.Description ?? abilityName;
+                    <button type="button" class="ability-icon ability-square skill-trigger hover-tooltip" style="--ability-color: @abilityName.AbilityColor()" data-tooltip="@description.ShortEffect(abilityName)" data-full-description="@description" data-skill-name="@abilityName" aria-label="Habilidad: @abilityName">@abilityName.AbilitySymbol()</button>
+                }
             }
-        }
+        </div>
     </div>
+    <footer class="detail-expansion-footer"><span>Expansión</span><strong>@monster.Appears.DisplayName()</strong></footer>
 </article>

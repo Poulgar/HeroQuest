@@ -34,14 +34,18 @@ public class HeroeImportService(ApplicationDbContext context)
             string Texto(string campo) => datos.TryGetValue(campo, out var valor) ? valor?.ToString()?.Trim() ?? "" : "";
             int Numero(string campo) => int.TryParse(Texto(campo), NumberStyles.Integer, CultureInfo.InvariantCulture, out var valor) ? valor : 0;
 
-            var nombre = Texto("Name");
+            var nombre = NormalizeClassName(Texto("Name"));
+            var characterType = NormalizeClassName(Texto("CharacterType"));
             var aparicion = TypeAppearsParser.Parse(Texto("Appearances"));
             var heroeExistente = heroesExistentes.FirstOrDefault(heroe =>
-                string.Equals(heroe.Name, nombre, StringComparison.OrdinalIgnoreCase));
+                string.Equals(NormalizeClassName(heroe.Name), nombre, StringComparison.OrdinalIgnoreCase));
 
             if (heroeExistente is not null)
             {
                 // Al volver a importar, sólo sincronizamos la expansión; preservamos el estado de la campaña.
+                // La normalización también actualiza filas antiguas que aún conservan el sufijo «/a».
+                heroeExistente.Name = nombre;
+                heroeExistente.CharacterType = characterType;
                 heroeExistente.Appears = aparicion;
                 continue;
             }
@@ -53,7 +57,7 @@ public class HeroeImportService(ApplicationDbContext context)
 
             var heroe = new Heroe(
                 id: nextId++,
-                characterType: Texto("CharacterType"),
+                characterType: characterType,
                 hp: Numero("Hp"),
                 mind: Numero("Mind"),
                 dicesAttack: Numero("DicesAttack"),
@@ -61,7 +65,7 @@ public class HeroeImportService(ApplicationDbContext context)
                 dicesRedMovement: Numero("DicesRedMovement"),
                 description: Texto("Description"))
             {
-                CharacterType = Texto("CharacterType"),
+                CharacterType = characterType,
                 Name = nombre,
                 Player = Texto("Player"),
                 Weapon = Texto("Weapon"),
@@ -78,4 +82,13 @@ public class HeroeImportService(ApplicationDbContext context)
 
         await context.SaveChangesAsync();
     }
+
+    private static string NormalizeClassName(string name) => name.Trim() switch
+    {
+        "Bárbaro/a" => "Bárbaro",
+        "Elfo/a" => "Elfo",
+        "Enano/a" => "Enano",
+        "Mago/a" => "Mago",
+        var normalized => normalized
+    };
 }

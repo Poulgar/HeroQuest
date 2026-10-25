@@ -22,15 +22,15 @@
                 <p class="list-caption">ÍNDICE <span>@Model.Entries.Count OBJETOS</span></p>
                 <div class="index-tools">
                     <label>Buscar <input class="index-search" type="search" placeholder="Nombre…" /></label>
-                    <label>Ordenar <select class="index-sort"><option value="name-asc">Alfabético</option><option value="name-desc">Alfabético inverso</option><option value="price-asc">Precio: menor</option><option value="price-desc">Precio: mayor</option><option value="appears">Expansión</option></select></label>
+                    <label>Ordenar <select class="index-sort"><option value="name-asc">A-Z</option><option value="name-desc">Z-A</option><option value="price-asc">Precio: menor</option><option value="price-desc">Precio: mayor</option><option value="appears">Expansión</option></select></label>
                 </div>
                 <div class="catalog-scroll" data-index-list>
                 @foreach (var entry in Model.Entries)
                 {
                     <a class="catalog-row @(Model.SelectedEntry?.Id == entry.Id ? "selected" : "")"
-                       data-name="@entry.Name" data-search="@entry.Name" data-price="@entry.Price" data-appears="@entry.Appears.DisplayName()" data-id="@entry.Id"
+                       data-select-record="@entry.Id" data-name="@entry.Name" data-search="@entry.Name" data-price="@entry.Price" data-appears="@entry.Appears.DisplayName()" data-id="@entry.Id"
                        asp-controller="Archive" asp-action="Miscellanea" asp-route-id="@entry.Id" aria-current="@(Model.SelectedEntry?.Id == entry.Id ? "page" : null)">
-                        <span class="row-initial">@((entry.Name.Length > 0 ? entry.Name[..1] : "?").ToUpperInvariant())</span>
+                        <span class="row-demo-image"><img src="~/images/heroquest/modifier-scroll.svg" alt="" /></span>
                         <span class="row-main"><strong>@ShortIndexName(entry.Name)</strong><small>@(entry.Price > 0 ? $"{entry.Price} mo" : "Sin precio")</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>
@@ -38,25 +38,19 @@
                 </div>
             </aside>
 
-            @if (Model.SelectedEntry is { } detail)
-            {
-                <article class="detail-card">
-                    <div class="detail-art hero-art">
-                        <img src="~/images/heroquest/modifier-scroll.svg" alt="Ilustración de @detail.Name" />
-                        <span class="portrait-ribbon">TOMO DEL COMPENDIO</span>
-                    </div>
-                    <div class="detail-content">
-                        <p class="eyebrow">OBJETO • MISCELÁNEA</p>
-                        <h2>@detail.Name</h2>
-                        <p class="detail-subtitle">@(detail.Price > 0 ? $"Precio: {detail.Price} monedas de oro" : "Precio no especificado")</p>
-                        <p class="detail-description">@detail.Description</p>
-                        <div class="stat-grid">
-                            <div><span>Expansión</span><strong>@detail.Appears.DisplayName()</strong></div>
-                        </div>
-                    </div>
-                </article>
-            }
+            <div class="detail-host" data-detail-host>
+                @if (Model.SelectedEntry is { } selectedEntry)
+                {
+                    @await Html.PartialAsync("~/Views/Shared/_MiscellaneaDetailCard.cshtml", selectedEntry)
+                }
+            </div>
         </div>
+
+        @foreach (var entry in Model.Entries)
+        {
+            <template data-detail-template="@entry.Id">@await Html.PartialAsync("~/Views/Shared/_MiscellaneaDetailCard.cshtml", entry)</template>
+        }
     }
 </section>
+
 
