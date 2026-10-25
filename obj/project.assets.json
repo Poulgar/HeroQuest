@@ -2514,11 +2514,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\polgv\\OneDrive\\Escriptori\\Personal Programs\\HeroQuest\\HeroQuest.csproj",
+      "projectUniqueName": "C:\\Users\\polgv\\OneDrive\\Escriptori\\PersonalPrograms\\HeroQuest\\HeroQuest.csproj",
       "projectName": "HeroQuest",
-      "projectPath": "C:\\Users\\polgv\\OneDrive\\Escriptori\\Personal Programs\\HeroQuest\\HeroQuest.csproj",
+      "projectPath": "C:\\Users\\polgv\\OneDrive\\Escriptori\\PersonalPrograms\\HeroQuest\\HeroQuest.csproj",
       "packagesPath": "C:\\Users\\polgv\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\polgv\\OneDrive\\Escriptori\\Personal Programs\\HeroQuest\\obj\\",
+      "outputPath": "C:\\Users\\polgv\\OneDrive\\Escriptori\\PersonalPrograms\\HeroQuest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\polgv\\AppData\\Roaming\\NuGet\\NuGet.Config"

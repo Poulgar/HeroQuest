@@ -12,7 +12,7 @@
 
     @if (Model.Heroes.Count == 0)
     {
-        <div class="empty-note"><span aria-hidden="true">✧</span><p>Aún no hay héroes en el registro.</p></div>
+        <div class="empty-note"><span aria-hidden="true">⚜</span><p>Aún no hay héroes en el registro.</p></div>
     }
     else
     {
@@ -24,7 +24,7 @@
                     <a class="catalog-row @(Model.SelectedHero?.Id == hero.Id ? "selected" : "")"
                        asp-controller="Heroes" asp-action="Index" asp-route-id="@hero.Id" aria-current="@(Model.SelectedHero?.Id == hero.Id ? "page" : null)">
                         <span class="row-initial">@((hero.Name.Length > 0 ? hero.Name[..1] : "?").ToUpperInvariant())</span>
-                        <span class="row-main"><strong>@hero.Name</strong><small>@hero.CharacterType · @hero.Hp HP</small></span>
+                        <span class="row-main"><strong>@hero.Name</strong><small>@hero.CharacterType • @hero.Hp HP</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>
                 }
@@ -32,13 +32,13 @@
 
             @if (Model.SelectedHero is { } heroDetail)
             {
-                <article class="detail-card">
+                <article class="detail-card" style="min-height: 100%;">
                     <div class="detail-art hero-art">
                         <img src="~/images/heroquest/hero-portrait.svg" alt="Ilustración de @heroDetail.Name" />
                         <span class="portrait-ribbon">FICHA DEL AVENTURERO</span>
                     </div>
                     <div class="detail-content">
-                        <p class="eyebrow">@heroDetail.CharacterType · N.º @heroDetail.Id</p>
+                        <p class="eyebrow">@heroDetail.CharacterType • N.º @heroDetail.Id</p>
                         <h2>@heroDetail.Name</h2>
                         <p class="detail-subtitle">@(string.IsNullOrWhiteSpace(heroDetail.Player) ? "Sin jugador asignado" : $"Jugador: {heroDetail.Player}")</p>
                         @if (!string.IsNullOrWhiteSpace(heroDetail.Description))
@@ -55,11 +55,12 @@
                         </div>
                         <div class="detail-divider"><span>PERTENENCIAS Y HAZAÑAS</span></div>
                         <dl class="detail-facts">
-                            <div><dt>Arma</dt><dd>@(string.IsNullOrWhiteSpace(heroDetail.Weapon) ? "—" : heroDetail.Weapon)</dd></div>
-                            <div><dt>Armadura</dt><dd>@(heroDetail.Armor ?? "—")</dd></div>
-                            <div><dt>Hechizos</dt><dd>@(heroDetail.Spells ?? "—")</dd></div>
-                            <div><dt>Objetos</dt><dd>@(heroDetail.Items ?? "—")</dd></div>
+                            <div><dt>Arma</dt><dd>@(string.IsNullOrWhiteSpace(heroDetail.Weapon) ? "-" : heroDetail.Weapon)</dd></div>
+                            <div><dt>Armadura</dt><dd>@(heroDetail.Armor ?? "-")</dd></div>
+                            <div><dt>Hechizos</dt><dd>@(heroDetail.Spells ?? "-")</dd></div>
+                            <div><dt>Objetos</dt><dd>@(heroDetail.Items ?? "-")</dd></div>
                             <div><dt>Misiones completadas</dt><dd>@heroDetail.QuestsCompleted</dd></div>
+                            <div><dt>Expansión</dt><dd>@heroDetail.Appears.DisplayName()</dd></div>
                         </dl>
                     </div>
                 </article>

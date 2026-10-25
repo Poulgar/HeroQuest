@@ -3,10 +3,14 @@ using HeroQuest.Models; // Importa el espacio de nombres que contiene las clases
 
 namespace HeroQuest.Data;
 
+// Clase principal para gestionar la conexión y las entidades con Entity Framework Core
 public class ApplicationDbContext : DbContext
 {
-    public DbSet<Heroe> Heroes => Set<Heroe>(); // Representa la colección de héroes en la base de datos, permite realizar operaciones CRUD.
-    public DbSet<Monster> Monsters => Set<Monster>();
+    public DbSet<Heroe> Heroes => Set<Heroe>(); // Colección de héroes en la base de datos
+    public DbSet<Monster> Monsters => Set<Monster>(); // Colección de monstruos
+    public DbSet<Item> Items => Set<Item>(); // Colección de objetos (modificadores)
+    public DbSet<EquipmentsAndArtifacts> EquipmentsAndArtifacts => Set<EquipmentsAndArtifacts>(); // Colección unificada de equipamiento y artefactos
+    public DbSet<MonsterAbility> MonsterAbilities => Set<MonsterAbility>(); // Colección de habilidades de monstruos
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : base(options) // Constructor que recibe opciones de configuración para la base de datos y las pasa a la clase base DbContext.
@@ -18,9 +22,15 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Character>() // Configura la entidad Character en el modelo de la base de datos.
             .UseTpcMappingStrategy() // Configura la estrategia de mapeo TPC (Table Per Concrete Class) para la herencia de la clase Character.
             .Property(c => c.Id) // Configura la propiedad Id de la entidad Character.
-            .ValueGeneratedOnAdd(); // Indica que el valor de la propiedad Id se generará automáticamente al agregar un nuevo registro a la base de datos.
+            // TPC guarda Heroes y Monsters en tablas separadas. SQLite genera IDs por tabla,
+            // lo que puede repetir claves entre ambas tablas; las asignamos globalmente desde los importadores.
+            .ValueGeneratedNever();
 
         modelBuilder.Entity<Heroe>(); // Configura la entidad Heroe en el modelo de la base de datos.
         modelBuilder.Entity<Monster>();
+        modelBuilder.Entity<Item>();
+        modelBuilder.Entity<EquipmentsAndArtifacts>();
+        modelBuilder.Entity<MonsterAbility>();
     }
 }
+// Contexto de base de datos que gestiona todas las entidades del proyecto HeroQuest.

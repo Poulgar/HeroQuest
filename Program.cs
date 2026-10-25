@@ -2,6 +2,7 @@ using System.Globalization;
 using HeroQuest.Data;
 using HeroQuest.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,31 +12,42 @@ CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Fijamos la ruta a la carpeta del proyecto para que Visual Studio y `dotnet run`
+// usen la misma base y no creen por accidente otro HeroQuest.db en bin/Debug.
+var databasePath = Path.Combine(builder.Environment.ContentRootPath, "DataBase", "HeroQuest.db");
+Directory.CreateDirectory(Path.GetDirectoryName(databasePath)!);
+var connectionString = new SqliteConnectionStringBuilder(
+    builder.Configuration.GetConnectionString("DefaultConnection"))
+{
+    DataSource = databasePath
+}.ToString();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(connectionString));
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider
-        .GetRequiredService<ApplicationDbContext>();
-
-    await context.Database.MigrateAsync();
-}
 
 var ruta = Path.Combine(
     AppContext.BaseDirectory,
     "Data",
     "HeroQuest_Heroes.csv");
 
+// Los CSV de HeroQuest_csv se copian a la salida mediante HeroQuest.csproj.
+var csvFolder = Path.Combine(AppContext.BaseDirectory, "HeroQuest_csv");
+
+// Primero actualizamos el esquema y después importamos los datos en el mismo contexto.
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider
         .GetRequiredService<ApplicationDbContext>();
 
+    await context.Database.MigrateAsync();
+
     var importer = new HeroeImportService(context);
     await importer.ImportarAsync(ruta);
+
+    var csvImporter = new CsvImportService(context);
+    await csvImporter.ImportAllAsync(csvFolder);
 }
 
 // Configure the HTTP request pipeline.

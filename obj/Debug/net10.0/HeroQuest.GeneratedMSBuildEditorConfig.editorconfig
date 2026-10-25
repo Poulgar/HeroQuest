@@ -20,53 +20,61 @@ build_property.TargetFrameworkVersion = v10.0
 build_property.EntryPointFilePath = 
 build_property.RootNamespace = HeroQuest
 build_property.RootNamespace = HeroQuest
-build_property.ProjectDir = C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest\
+build_property.ProjectDir = C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 10.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\polgv\OneDrive\Escriptori\Personal Programs\HeroQuest
+build_property.MSBuildProjectDirectory = C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/polgv/OneDrive/Escriptori/Personal Programs/HeroQuest/Views/Archive/ComingSoon.cshtml]
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Archive/ComingSoon.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXJjaGl2ZVxDb21pbmdTb29uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/polgv/OneDrive/Escriptori/Personal Programs/HeroQuest/Views/Heroes/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVyb2VzXEluZGV4LmNzaHRtbA==
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/EquipmentsArtifacts/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXF1aXBtZW50c0FydGlmYWN0c1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/polgv/OneDrive/Escriptori/Personal Programs/HeroQuest/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Heroes/HeroesIndex.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVyb2VzXEhlcm9lc0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/polgv/OneDrive/Escriptori/Personal Programs/HeroQuest/Views/Home/Privacy.cshtml]
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Home/HomeIndex.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb21lSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/polgv/OneDrive/Escriptori/Personal Programs/HeroQuest/Views/Monsters/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9uc3RlcnNcSW5kZXguY3NodG1s
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Modifiers/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/polgv/OneDrive/Escriptori/Personal Programs/HeroQuest/Views/Shared/Error.cshtml]
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Monsters/MonstersIndex.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9uc3RlcnNcTW9uc3RlcnNJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/polgv/OneDrive/Escriptori/Personal Programs/HeroQuest/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/polgv/OneDrive/Escriptori/Personal Programs/HeroQuest/Views/_ViewImports.cshtml]
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/polgv/OneDrive/Escriptori/Personal Programs/HeroQuest/Views/_ViewStart.cshtml]
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/polgv/OneDrive/Escriptori/Personal Programs/HeroQuest/Views/Shared/_Layout.cshtml]
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-1n7wpbioc7

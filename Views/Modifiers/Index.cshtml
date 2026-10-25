@@ -1,0 +1,53 @@
+@model HeroQuest.ViewModels.ItemsViewModel
+@{
+    ViewData["Title"] = "Modificadores";
+}
+
+<section class="catalog-page page-shell">
+    <div class="page-heading">
+        <p class="eyebrow">EL COMPENDIO</p>
+        <h1>Objetos y <em>modificadores</em></h1>
+        <p>Objetos, tesoros y consumibles que alteran el destino de los aventureros.</p>
+    </div>
+
+    @if (Model.Items.Count == 0)
+    {
+        <div class="empty-note"><span aria-hidden="true">⚜</span><p>Aún no hay modificadores registrados.</p></div>
+    }
+    else
+    {
+        <div class="catalog-layout">
+            <aside class="catalog-list" aria-label="Lista de modificadores">
+                <p class="list-caption">ÍNDICE <span>@Model.Items.Count OBJETOS</span></p>
+                @foreach (var item in Model.Items)
+                {
+                    <a class="catalog-row @(Model.SelectedItem?.Id == item.Id ? "selected" : "")"
+                       asp-controller="Archive" asp-action="Modifiers" asp-route-id="@item.Id" aria-current="@(Model.SelectedItem?.Id == item.Id ? "page" : null)">
+                        <span class="row-initial">@((item.Name.Length > 0 ? item.Name[..1] : "?").ToUpperInvariant())</span>
+                        <span class="row-main"><strong>@item.Name</strong><small>@(item.Price > 0 ? $"{item.Price} mo" : "Sin precio")</small></span>
+                        <span class="row-chevron" aria-hidden="true">›</span>
+                    </a>
+                }
+            </aside>
+
+            @if (Model.SelectedItem is { } detail)
+            {
+                <article class="detail-card">
+                    <div class="detail-art hero-art">
+                        <img src="~/images/heroquest/treasure-chest.svg" alt="Ilustración de @detail.Name" />
+                        <span class="portrait-ribbon">TOMO DEL COMPENDIO</span>
+                    </div>
+                    <div class="detail-content">
+                        <p class="eyebrow">OBJETO • MODIFICADOR</p>
+                        <h2>@detail.Name</h2>
+                        <p class="detail-subtitle">@(detail.Price > 0 ? $"Precio: {detail.Price} monedas de oro" : "Precio no especificado")</p>
+                        <p class="detail-description">@detail.Description</p>
+                        <div class="stat-grid">
+                            <div><span>Expansión</span><strong>@detail.Appears.DisplayName()</strong></div>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>

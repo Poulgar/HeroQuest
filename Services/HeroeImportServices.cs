@@ -1,78 +1,81 @@
 using CsvHelper;
 using CsvHelper.Configuration;
-using HeroQuest.Models;
-using System.Globalization;
 using HeroQuest.Data;
+using HeroQuest.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace HeroQuest.Services;
 
-public class HeroeImportService
+public class HeroeImportService(ApplicationDbContext context)
 {
-    private readonly ApplicationDbContext _context;
-
-    public HeroeImportService(ApplicationDbContext context)
+    public async Task ImportarAsync(string ruta)
     {
-        _context = context;
-    }
+        if (!File.Exists(ruta))
+            throw new FileNotFoundException("No se encontró el CSV de héroes.", ruta);
 
-    public async Task ImportarAsync(string ruta) // Esta línea define un método asincrónico para importar datos de héroes desde un archivo CSV.
-    {
-        using var reader = new StreamReader(ruta); // Crea un lector de archivos para leer el contenido del archivo CSV especificado por la ruta proporcionada.
-
-        if (await _context.Heroes.AnyAsync()) // Verifica si ya existen registros de héroes en la base de datos. Si hay al menos un registro, se asume que los datos ya han sido importados y no se realiza ninguna acción adicional.
-        {
-            return;
-        }
-
-        var config = new CsvConfiguration(
-            CultureInfo.InvariantCulture) // Crea una configuración para el lector de CSV, especificando que se utilizará la cultura invariante para el análisis de los datos.
+        using var reader = new StreamReader(ruta);
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             Delimiter = ",",
-            PrepareHeaderForMatch = args =>
-                args.Header.Trim()
+            PrepareHeaderForMatch = args => args.Header.Trim()
         };
 
-        using var csv = new CsvReader(reader, config); // Crea un lector de CSV utilizando el lector de archivos y la configuración especificada. Este lector se utilizará para leer y analizar los registros del archivo CSV.
-
-        var registros = csv.GetRecords<dynamic>().ToList(); // Obtiene todos los registros del archivo CSV como una lista de objetos dinámicos. Cada registro representa una fila en el archivo CSV y se almacena en la lista "registros".
+        using var csv = new CsvReader(reader, config);
+        var registros = csv.GetRecords<dynamic>().ToList();
+        var heroesExistentes = await context.Heroes.ToListAsync();
+        var importarHeroesNuevos = heroesExistentes.Count == 0;
+        var nextId = await context.Heroes.Select(h => (int?)h.Id).MaxAsync() ?? 0;
+        nextId = Math.Max(nextId, await context.Monsters.Select(m => (int?)m.Id).MaxAsync() ?? 0) + 1;
 
         foreach (var fila in registros)
         {
-            var datos = (IDictionary<string, object>)fila; // Convierte cada fila del archivo CSV en un diccionario de pares clave-valor, donde las claves son los nombres de las columnas y los valores son los datos correspondientes a cada columna.
+            var datos = (IDictionary<string, object>)fila;
+            string Texto(string campo) => datos.TryGetValue(campo, out var valor) ? valor?.ToString()?.Trim() ?? "" : "";
+            int Numero(string campo) => int.TryParse(Texto(campo), NumberStyles.Integer, CultureInfo.InvariantCulture, out var valor) ? valor : 0;
 
-            string Texto(string campo) =>
-                datos[campo]?.ToString()?.Trim() ?? ""; // Esta función auxiliar toma el nombre de un campo (columna) como parámetro y devuelve el valor correspondiente de la fila actual como una cadena de texto. Si el valor es nulo, se devuelve una cadena vacía. Además, se eliminan los espacios en blanco al principio y al final del valor.
+            var nombre = Texto("Name");
+            var aparicion = TypeAppearsParser.Parse(Texto("Appearances"));
+            var heroeExistente = heroesExistentes.FirstOrDefault(heroe =>
+                string.Equals(heroe.Name, nombre, StringComparison.OrdinalIgnoreCase));
 
-            int Numero(string campo) =>
-                int.TryParse(Texto(campo), out var valor)
-                    ? valor
-                    : 0; // Esta función auxiliar toma el nombre de un campo (columna) como parámetro y devuelve el valor correspondiente de la fila actual como un número entero. Si el valor no se puede convertir a un número entero, se devuelve 0.
+            if (heroeExistente is not null)
+            {
+                // Al volver a importar, sólo sincronizamos la expansión; preservamos el estado de la campaña.
+                heroeExistente.Appears = aparicion;
+                continue;
+            }
+
+            // Los datos de clase sólo se usan para inicializar una tabla vacía; no se agregan plantillas
+            // a una partida que ya contiene héroes con nombres o progresos propios.
+            if (!importarHeroesNuevos)
+                continue;
 
             var heroe = new Heroe(
-                id: 0,
+                id: nextId++,
                 characterType: Texto("CharacterType"),
                 hp: Numero("Hp"),
                 mind: Numero("Mind"),
                 dicesAttack: Numero("DicesAttack"),
                 dicesDefend: Numero("DicesDefend"),
                 dicesMovement: Numero("DicesMovement"),
-                description: Texto("Description")) // Crea una nueva instancia de la clase Heroe utilizando los valores obtenidos de la fila actual del archivo CSV. Se pasan los valores correspondientes a las propiedades del héroe, como el tipo de personaje, puntos de vida, mente, dados de ataque y dados de defensa.
+                description: Texto("Description"))
             {
                 CharacterType = Texto("CharacterType"),
-                Name = Texto("Name"),
+                Name = nombre,
                 Player = Texto("Player"),
                 Weapon = Texto("Weapon"),
                 Armor = Texto("Armor"),
                 Spells = Texto("Spells"),
                 Gold = Numero("Gold"),
                 Items = Texto("Items"),
-                QuestsCompleted = Numero("QuestsCompleted")
+                QuestsCompleted = Numero("QuestsCompleted"),
+                Appears = aparicion
             };
 
-            _context.Set<Heroe>().Add(heroe); // Agrega la instancia del héroe recién creada al contexto de la base de datos, marcándola para su inserción en la tabla correspondiente cuando se guarden los cambios en la base de datos.
+            context.Heroes.Add(heroe);
         }
 
-        await _context.SaveChangesAsync(); // Guarda los cambios realizados en el contexto de la base de datos, lo que implica insertar todos los héroes importados en la tabla correspondiente de la base de datos. Esta operación se realiza de manera asincrónica para no bloquear el hilo principal.
+        await context.SaveChangesAsync();
     }
 }

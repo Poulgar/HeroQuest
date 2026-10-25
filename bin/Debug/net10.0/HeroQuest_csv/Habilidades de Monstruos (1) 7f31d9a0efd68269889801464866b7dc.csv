@@ -1,0 +1,20 @@
+﻿Nombre,Descripción,Apariciones
+Ágil,"Estos Monstruos pueden moverse sin sufrir efectos por las casillas que contengan Terrenos Peligrosos, Muebles y Héroes, como si estos no estuvieran allí.",Junglas de Delthrak
+Ataque a Distancia,"Un Monstruo con Ataque a distancia lanza Dados de Ataque iguales a su valor estándar de Ataque contra cualquier objetivo no adyacente en su línea de visión. Si su objetivo se encuentra adyacente, solo tira 1 Dado de Ataque.","Junglas de Delthrak, Maga del Espejo"
+Ataque de Abrazo,"Cada vez que un Monstruo con Ataque de Abrazo ataca a un Héroe, este pierde al menos 1 Punto Corporal y el Monstruo se aferra al Héroe con un brutal abrazo. Este abrazo inflige 2 Puntos Corporales de Daño al Héroe al comienzo de cada turno de Zargon. El Héroe no puede defenderse de este ataque, ni puede realizar ninguna acción. El Monstruo no puede realizar ningún otro ataque mientras abraza al Héroe. Esto continúa hasta que el Héroe muere o el Monstruo es abatido por los compañeros del Héroe.",Horror Congelado
+Ataque Doble,"Estos Monstruos pueden atacar dos veces en lugar de una en su turno.
+Puede realizar dos ataques contra un mismo oponente o un ataque contra dos oponentes distintos.",Horror Congelado
+Ataque en Diagonal,Estos Monstruos pueden atacar en diagonal.,"Luna del Terror, Not In Game"
+Engendrar,"Al final del turno de cada Héroe, cada Monstruo activo con la Habilidad de Engendrar puede realizar una de las siguientes acciones:
+Crear un nuevo Engendro sobre una casilla desocupada adyacente a la suya.
+Mover todos los Engendros activos de su tipo.",Junglas de Delthrak
+Estratega Astuto,Estos Monstruos se pueden mover antes y después de realizar una acción. Lanzan 1 Dado de Ataque adicional si su objetivo es un Héroe adyacente o diagonal a otro Monstruo.,Junglas de Delthrak
+Muerto Viviente,"Este Monstruo es un Muerto Viviente, por la cual cosa no tiene Mentalidad y es inmune a los Hechizos o Habilidades relacionados con esta.","Juego Base, Junglas de Delthrak, Luna del Terror, Not In Game"
+Raíces Apresadoras,"Si un Héroe cae en una casilla adyacente a un Monstruo con esta Habilidad, su movimiento termina de inmediato. Los obstáculos como paredes y Puertas cerradas bloquean este efecto. Un Héroe bajo este efecto no puede caer en una casilla de la que no pueda terminar el turno.",Junglas de Delthrak
+Robar Objetos,"Durante el turno de Zargon, un Monstruo con Robar Objetos puede atacar a un Héroe o Mercenario, o puede robar un Objeto a un Héroe (a elección de Zargon). 
+El Objeto robado no puede ser ni la Armadura, ni el Escudo que esté utilizando el Héroe, ni el Arma que esté empuñando. En cuanto el Monstruo haya robado un Objeto, huye a toda velocidad. Los Héroes pueden perseguir al este en su turno. Si lo atrapan y lo destruyen, recuperan el Objeto robado. Si ningún Héroe puede ver al Monstruo al comienzo del turno de Zargon, este se considera que ha escapado con el Objeto. 
+El Objeto debe ser tachado de la Hoja de Personaje del Héroe. Saca la figura del Monstruo del Tablero de Juego.",Horror Congelado
+Último Aliento,"Cuando los Puntos Corporales del Monstruo lleguen a 0, en lugar de eso se reducirán a 1.
+Esta Habilidad solo se activa una vez.","Luna del Terror, Not In Game"
+Venenoso,"Si una criatura venenosa afecta a un Héroe, este queda paralizado. Mientras está paralizado, no puede moverse, pero sí puede llevar a cabo acciones. El Héroe puede poner fin al efecto de inmediato lanzando un Dado Rojo, si saca 5 o 6, resiste el efecto del veneno, de lo contrario, coloca una ficha de Veneno sobre la carta de ese Héroe. El efecto termina al final de su próximo turno.",Junglas de Delthrak
+Vuelo Dracónico,"Este Monstruo puede usar una parte de su Movimiento, realizar una acción y luego terminar su Movimiento. También le permite moverse por casillas ocupadas por Héroes y Monstruos, pero no puede finalizar el Movimiento en una casilla ocupada.",Despertar

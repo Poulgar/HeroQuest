@@ -63,7 +63,7 @@ h1 em { color: var(--red); font-weight: 400; }
 .button-primary { color: #f7ebcd; background: var(--red); box-shadow: 3px 3px 0 #4e3021; }
 .button-primary:hover { color: #fff6df; background: var(--red-dark); }
 .text-link { color: var(--red-dark); font-weight: 700; text-decoration-color: #9f6f4e; text-underline-offset: 4px; }
-.home-counts { display: flex; gap: 34px; margin-top: 42px; padding-top: 20px; border-top: 1px solid #b29a6e; }
+.home-counts { display: flex; flex-wrap: wrap; gap: 18px 28px; margin-top: 42px; padding-top: 20px; border-top: 1px solid #b29a6e; }
 .home-counts div { display: flex; align-items: baseline; gap: 9px; }
 .home-counts strong { color: var(--red); font: 500 31px 'Palatino Linotype', 'Book Antiqua', Georgia, serif; }
 .home-counts span { color: var(--muted-ink); font-size: 15px; }
@@ -129,6 +129,17 @@ h1 em { color: var(--red); font-weight: 400; }
 .coming-soon h1 { color: #34251a; }
 .coming-soon > p:not(.eyebrow) { color: var(--muted-ink); font-size: 21px; }
 .coming-seal { width: 90px; height: 90px; display: grid; place-items: center; margin: 26px auto; border: 1px solid #a68753; border-radius: 50%; color: var(--red); font-size: 45px; }
+.ability-archive { margin-top: 54px; }
+.ability-heading { margin-bottom: 18px; color: var(--paper-light); }
+.ability-heading .eyebrow { color: #d8b86e; }
+.ability-heading h2 { margin: 0; font-size: clamp(30px, 4vw, 42px); }
+.ability-heading p:last-child { margin: 8px 0 0; color: #d6c6a5; }
+.ability-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr)); gap: 14px; }
+.ability-card { padding: 18px; border: 1px solid #987b4c; color: var(--ink); background: var(--paper-light); box-shadow: 0 8px 22px #160e092b; }
+.ability-card-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; border-bottom: 1px solid #c6ae7a; }
+.ability-card h3 { margin: 0 0 8px; font-size: 23px; }
+.ability-card-heading span { color: var(--red); font-size: 13px; text-align: right; }
+.ability-card p { margin: 12px 0 0; color: #55422d; font-size: 16px; line-height: 1.25; white-space: pre-line; }
 
 @media (max-width: 900px) {
     .header-inner { align-items: flex-start; flex-direction: column; padding: 14px 0; gap: 12px; }

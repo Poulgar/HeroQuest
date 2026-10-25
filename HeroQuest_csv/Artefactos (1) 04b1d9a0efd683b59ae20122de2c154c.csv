@@ -1,0 +1,114 @@
+﻿Nombre,Descripción,Tipo,Apariciones
+Azote de Orcos,"Al utilizar esta mágica Espada corta, tiras 2 Dados de Ataque. 
+Puedes atacar dos veces si te enfrentas a un Orco.
+No puede ser utilizada por el Mago.",Arma,Juego Base
+Bastón del Mago,"Este largo y antiguo Bastón brilla con una suave luz azul. Otorga 2 Dados de Ataque y la habilidad de atacar en diagonal.
+Solo puede utilizarlo el Mago. ",Arma,Juego Base
+Espada Larga de la Fortuna,"Esta Espada te permite atacar en diagonal y te otorga 3 Dados de Ataque. 
+Una vez por Misión, el Héroe puede utilizar su poder para volver a lanzar 1 Dado de Ataque. 
+No puede ser utilizado por el Mago.",Arma,Juego Base
+Filo del Espíritu,"Esta Espada Mágica tiene un espeluznante mango de hueso tallado. Al utilizarla, tira 3 Dados de Ataque, o tira 4 si atacas a un Muerto Viviente (Esqueletos, Zombis o Momias). 
+No puede ser utilizada por el Mago.",Arma,Juego Base
+Filo del Fantasma,"Esta Daga ornamentada te da 1 Dado de Ataque. 
+Una vez por Misión, cuando atacas con la Daga, tu objetivo no puede defenderse, ya que el arma atraviesa su Armadura.",Arma,Juego Base
+Garra de Cuervo,"Cuando uses esta Daga, tira 2 Dados de Ataque. Durante tu turno, podrás volver a tirar 1 Dado de Ataque en el que te haya salido un Escudo Negro.",Arma,Luna del Terror
+Lanza de la Reina de Hielo,"Esta lanza enjoyada te permite atacar en diagonal con una Fuerza de 2 Dados de Ataque, o 3 si atacas a un Oso Polar de Guerra.
+No puede ser utilizada por el Mago.",Arma,Horror Congelado
+Armadura de Borin,"Esta mágica vestimenta acorazada te otorga 2 Dados de Defensa adicionales. A diferencia de la Coraza normal, esta misteriosa y ultraligera Armadura no ralentiza a quien la lleve puesta.
+Puede combinarse con el Yelmo y/o el Escudo.
+No puede ser utilizada por el Mago.",Armadura,Juego Base
+Armadura de Hielo Frío,"Esta Armadura mágica de metal te da 2 Dados de Defensa adicionales y los Gremlins de Hielo no podrán robarte. Sin embargo, debido a que es tan pesada, solo puedes lanzar 1 Dado Rojo para moverte mientras la lleves puesta.
+Puede combinarse con el Yelmo y/o Escudo.
+No puede ser utilizada por el Mago.",Armadura,Horror Congelado
+Brazaletes de la Naturaleza,"Estos mágicos brazaletes de cuero otorgan 1 Dado de Defensa adicional. Mientras los lleves puestos, te mueves sin sufrir efectos por las casillas que contengan Muebles y Terrenos Peligrosos. También puedes añadir 2 casillas a tu tirada de movimiento.
+Se puede combinar con el Casco y con el Escudo.",Armadura,Junglas de Delthrak
+Capa de Mago,"Esta Capa Mágica de tela brillante está provista de runas místicas. 
+Solo puede llevarla el Mago. Otorga 1 Dado de Defensa adicional.",Armadura,Juego Base
+Escamas de Elethorn,"Esta Armadura encantada te otorga 1 Dado de Defensa adicional. Cuando intentes resistir los efectos de un Hechizo del Terror mientras lleves esta Armadura, tira otro dado adicional.
+Este Artefacto puede combinarse con el Yelmo, el Escudo o la Capa de Mago.",Armadura,Luna del Terror
+Escudo con Pinchos,"Este Escudo otorga 1 Dado de Defensa adicional. Un Yeti no agarrará ni abrazará a un Héroe que empuñe este afilado Artefacto. 
+No se puede usar con el Hacha de Batalla o el Bastón.
+No puede ser utilizado por el Mago.",Armadura,Horror Congelado
+Escudo del Alba,"Este Escudo te otorga 1 Dado de Defensa adicional. Una vez por Misión, antes de que cualquier Héroe lance sus Dados de Defensa, puedes usar el poder de este Escudo para obligar al Monstruo atacante a repetir su tirada de Dados de Ataque.
+Este Artefacto no puede combinarse con el Hacha de Batalla ni con el Bastón. El Mago no puede usarlo.",Armadura,Luna del Terror
+Aguja contra el Veneno,"Restablece los Puntos Corporales perdidos por el envenenamiento de su propietario si se utiliza inmediatamente. 
+Solo puede utilizarse una vez.",Objeto,Señor de los Brujos
+Amuleto del Norte,"Este antiguo Artefacto mágico fue fabricado para los reyes bárbaros de antaño. Solo lo puede portar un Bárbaro. Mientras lo posee, añade 2 Puntos Corporales y 1 Punto Mental a los totales del Bárbaro.",Objeto,Horror Congelado
+Anillo de Calidez,"Este Artefacto otorga a su portador inmunidad al Hechizo Escalofrío, así como a los efectos de las Bóvedas de Hielo y los Ríos Helados.",Objeto,Horror Congelado
+Anillo de Fortaleza,Este Anillo mágico otorga 1 Punto Corporal adicional al Héroe.,Objeto,Juego Base
+Anillo de Fuego,"Protege al portador de dos Hechizos de Terror de
+Fuego. 
+El Anillo desaparece después del segundo Hechizo.",Objeto,Torre de Kellar
+Anillo de Hechizos,"Este Anillo permite que un Héroe lance un Hechizo dos veces (no simultáneamente). Al comienzo de una Misión, el portador de este Anillo debe declarar cuál de los Hechizos está alojado en el Anillo.",Objeto,Juego Base
+Anillo de Retorno,"Cuando se invoca, este Anillo Mágico devuelve a todos los Héroes que el portador del anillo pueda ver al punto de partida de la Misión. 
+Solo se puede utilizar una vez.",Objeto,Juego Base
+Botas de Conejo,Su portador puede saltarse una Trampa descubierta en cada turno si obtiene cualquier resultado menos un Escudo Negro con 1 Dado de Combate.,Objeto,Señor de los Brujos
+Brazalete de Curación,"Restaura 2 Puntos Corporales perdidos.
+Puede utilizarse solo una vez por Misión. Si los Puntos Corporales del portador se reducen a 0, utilízalo inmediatamente.",Objeto,Señor de los Brujos
+Brazalete de Hielo,"Este poderoso Artefacto otorga a su portador Inmunidad a los Hechizos Congelación Mental y Escalofrío, además de inmunidad al daño de las Bóvedas de hielo y los Ríos helados mientras lo lleve puesto. También reduce el Daño de una Tormenta de Hielo en 1 Punto, pero solo a portador del Brazalete.",Objeto,Horror Congelado
+Brazalete Rapto guardián,"Usa este brazalete mágico para invocar al aliado Raptor.
+Si el Raptor es derrotado, el poder del brazalete se desactiva temporalmente. Su poder se activa nuevamente si el Héroe completa dos Misiones sin utilizarlo.
+Este Artefacto solo se puede usar una vez por Misión.",Objeto,Junglas de Delthrak
+Campanita Feérica,"Usa la campanita para invocar una pequeña Sin título (https://app.notion.com/p/3241d9a0efd680ad81a6fcf8dc5cf135?pvs=21) , esta se quadará a tu lado y no podrá ser atacada, a menos que la muevas a un aliado.
+Si la Hada es derrotada, el poder de la campanita se desactiva temporalmente. Su poder se activa nuevamente si el Héroe completa dos Misiones sin utilizarla.
+Este Artefacto solo se puede usar una vez por Misión.",Objeto,Not In Game
+Cenizas de Fénix,"Puedes usar este Artefacto una vez por Misión cuando los Puntos Corporales de cualquier Héroe queden reducidos a 0, para que, en lugar de ello, queden reducidos a 1.
+Tras hacerlo tira 1 Dado Rojo inmediatamente, si sacas 1 o 2, pierdes este Artefacto, si sacas otro resultado lo conservas.
+Puedes usarlo como reactivo para Elaborar 5 Sin título (https://app.notion.com/p/2161d9a0efd68061a6eedc90309526a5?pvs=21) o 1 Elixir de Vida (https://app.notion.com/p/Elixir-de-Vida-7af1d9a0efd683bd91f881a856d4f46f?pvs=21).",Objeto,Luna del Terror
+Cinturón del Poder,"Este cinturón encantado te otorga 1 Dado de Ataque adicional en todos los ataques que lleves a cabo con armas de corta distancia.
+El Mago no puede usarlo.",Objeto,Junglas de Delthrak
+Cuerno de Guerra de Mando,"Un símbolo de liderazgo de una época olvidada, todavía tiene influencia entre aquellos que se hacen llamar guerreros. Si un mercenario controlado por el Héroe que lleve este Cuerno de Guerra encantado sobrevive a una Misión, volverá a unirse a ese Héroe a cambio de la mitad de Monedas de Oro de su tarifa normal.",Objeto,Horror Congelado
+Daga Mágica Arrojadiza,"Siempre causa un Daño de 1 Punto Corporal cuando se lanza a un Monstruo
+que un Héroe pueda ver. 
+El Monstruo no puede defenderse. 
+La Daga se pierde al utilizarse.",Objeto,"Juego Base, Señor de los Brujos"
+El Cráneo de Zafiros,"Esta legendaria reliquia está hecha de piedras preciosas de cobalto. Te da mucha serenidad y seguridad. Mientras tengas este artefacto, tira 2 Dados de Ataque contra cualquier Monstruo en tu línea de visión.",Objeto,Junglas de Delthrak
+Elixir de Vida,"Esta pequeña botella de líquido perlado devuelve la vida a un Héroe Muerto, restaurando todos sus Puntos Corporales y Mentales.
+Esta Poción solo puede utilizarse una vez.",Objeto,Juego Base
+Manto de las Sombras,"Como acción, puedes usar el poder de este manto para hacerte incorpóreo. Durante tu próximo movimiento, te moverás como si hubieras sido objetivo de los Hechizos Sin título (https://app.notion.com/p/2151d9a0efd681dba0b0e5796233e6ef?pvs=21) y Sin título (https://app.notion.com/p/2151d9a0efd681a58acbe5636e19d013?pvs=21).
+Este Artefacto solo se puede usar una vez por Misión.",Objeto,Luna del Terror
+Pergamino de Hechizo (A través de la Roca),"Este Hechizo puede lanzarse sobre cualquier Héroe, incluido tú mismo. Ese Héroe puede atravesar Paredes en su siguiente movimiento. Puede atravesar tantas Paredes como le permita su Tirada de Dados. ¡Cuidado! Hay zonas sombreadas en cada Mapa de Misión que indican Roca Sólida. Si un Héroe termina su movimiento en una de estas áreas, ¡está atrapado para siempre!
+El Pergamino se desintegra después de utilizarse.",Objeto,"Luna del Terror, Señor de los Brujos"
+Pergamino de Hechizo (Agua Milagrosa),"Este Hechizo puede lanzarse sobre cualquier Héroe, incluido tú mismo. El contacto con el Agua cura hasta 4 Puntos Corporales, sin sobrepasar el número inicial de Puntos del Héroe.
+El Pergamino se desintegra después de utilizarse.",Objeto,Profecía de Telor
+Pergamino de Hechizo (Bola de Fuego),"Este Hechizo puede lanzarse sobre cualquier Monstruo, envolviéndolo en una Bola de Fuego. Causará 2 Puntos de Daño Corporal. El Monstruo tira 2 Dados Rojos, por cada 5 o 6 que saque, el daño se reduce a Punto. 
+El Pergamino se desintegra después de utilizarse.",Objeto,"Señor de los Brujos, Torre de Kellar"
+Pergamino de Hechizo (Cura Corporal),"Este Hechizo puede lanzarse sobre cualquier Héroe, incluido tú mismo. Su poder mágico restaura inmediatamente hasta 4 Puntos Corporales, sin sobrepasar el Número Inicial de Puntos Corporales del Héroe. 
+El Pergamino se desintegra después de utilizarse.",Objeto,"Profecía de Telor, Señor de los Brujos, Torre de Kellar"
+Pergamino de Hechizo (Dormir),"Este Hechizo dormirá a un Monstruo en un sueño profundo para que no pueda moverse, atacar o defenderse. El Hechizo puede romperse de inmediato o en un turno posterior. El Monstruo tira 1 Dado Rojo por cada uno de sus Puntos Mentales. Si se saca un 6, el Hechizo se rompe. 
+No puede utilizarse contra Momias, Zombis o Esqueletos. 
+El Pergamino se desintegra después de utilizarse.",Objeto,Torre de Kellar
+Pergamino de Hechizo (Escalofrío),"Este Hechizo causa 1 Punto de Daño Corporal a cualquier Monstruo Adyacente de quien lo lance (no es adyacente si está en diagonal). La víctima no puede defenderse del ataque. 
+El Pergamino se convierte en polvo tras ser utilizado.",Objeto,Horror Congelado
+Pergamino de Hechizo (Fuego de la Ira),"Este Hechizo puede lanzarse sobre cualquier Monstruo, envolviéndolo en llamas. Causará 1 Punto de Daño Corporal, a menos que el Monstruo inmediatamente saque un 5 o un 6 con 1 Dado Rojo. 
+El Pergamino se desintegra después de utilizarse.",Objeto,"Señor de los Brujos, Torre de Kellar"
+Pergamino de Hechizo (Genio),"Este Hechizo conjura un Genio que podrá hacer una de las siguientes opciones: Abrir cualquier Puerta del Tablero (mostrando lo que hay más allá), o atacar a cualquier Monstruo que se encuentre en la Línea de Visión con 5 Dados de Combate.
+El Pergamino se desintegra después de utilizarse.",Objeto,Torre de Kellar
+Pergamino de Hechizo (Patinar),"Este Hechizo permite a quien lo lance moverse rápidamente por Cavernas y Pasillos Helados. Añade 6 a sus
+Tiradas de Movimiento con los Dados Rojos y puede atravesar Héroes y Monstruos durante el movimiento.
+El Hechizo solo dura un turno.
+El Pergamino se convierte en polvo tras ser utilizado.",Objeto,Horror Congelado
+Pergamino de Hechizo (Piel de Roca),"Este Hechizo puede lanzarse sobre cualquier Héroe, incluido tú mismo. Ese Héroe puede tirar 1 Dado de Combate adicional al defenderse. El Hechizo se rompe cuando el Héroe sufre 1 daño de Punto Corporal. 
+El Pergamino se desintegra después de utilizarse.",Objeto,"Profecía de Telor, Torre de Kellar"
+Pergamino de Hechizo (Puente de Hielo),"Este Hechizo crea un puente permanente de fichas de Hielo Mágico que permite a los Héroes cruzar cualquier Foso, Trampa, Abismo, Grieta o Casilla Helada. 
+El Pergamino se convierte en polvo una vez utilizado.",Objeto,Horror Congelado
+Pergamino de Hechizo (Ráfaga),"Este Hechizo puede lanzarse sobre cualquier Héroe, incluido tú mismo. Su poderosa Ráfaga de energía permite a ese Héroe lanzar el doble de Dados Rojos la próxima vez que se mueva.
+El Pergamino se desintegra después de utilizarse.",Objeto,Luna del Terror
+Pergamino de Hechizo (Rayo Mortífero),"Este Hechizo puede lanzarse en dirección horizontal, vertical o diagonal. El Rayo se desplaza en línea Recta hasta que golpea una Pared o una Puerta Cerrada. Provoca un daño de 2 Puntos Corporales a todos los Héroes o Monstruos que se encuentren en su camino.
+El Pergamino se desintegra después de utilizarse.",Objeto,Profecía de Telor
+Pergamino de Hechizo (Recuperación Psíquica),"Este Hechizo restaura todos los Puntos Mentales al Héroe que lo lance o a cualquier Héroe que elija.
+El Pergamino se convierte en polvo tras ser utilizado.",Objeto,Horror Congelado
+Pergamino de Hechizo (Tempestad),"Este Hechizo crea una pequeña Tempestad que rodea a un Monstruo de tu elección. Ese Monstruo pierde su siguiente turno. 
+El Pergamino se desintegra después de utilizarse.",Objeto,Torre de Kellar
+Pergamino de Hechizo (Tormenta de Hielo),"Este Hechizo crea una ventisca de hielo que afecta un área de 2 casillas de ancho por 2 casillas de largo. Quien lance el Hechizo ataca a cada Monstruo y Héroe en esa área con 3 Dados de Combate. Los atacados no pueden defenderse. Este Hechizo no puede utilizarse en los pasillos.
+El Pergamino se convierte en polvo tras ser utilizado.",Objeto,Horror Congelado
+Pergamino de Hechizo (Valentía),"Este Hechizo puede ser lanzado sobre cualquier Héroe, incluido tú mismo. La próxima vez que el Héroe ataque, este podrá tirar 2 Dados extra de Combate. 
+El Hechizo se rompe cuando no hay Monstruos en la Línea de Visión del Héroe. 
+El Pergamino se desintegra después de utilizarse.",Objeto,"Señor de los Brujos, Torre de Kellar"
+Polvo de Desaparición,"Si se lanza sobre cualquier Héroe, este Polvo le permite pasar por encima de cualquier Monstruo que encuentre en su siguiente turno. 
+Solo puede utilizarse una vez.",Objeto,Señor de los Brujos
+Raquetas de Nieve de Velocidad,"Estas Raquetas mágicas añaden 2 casillas al movimiento del Héroe, y también anulan los efectos del Hielo Resbaladizo mientras las lleve puestas, Solo se pueden utilizar en Misiones en regiones frías y heladas.",Objeto,Horror Congelado
+Talismán de la Sabiduría,Este Medallón Mágico otorga 1 Punto Mental adicional al Héroe mientras lo lleve puesto.,Objeto,Juego Base
+Tiara de la Gema,Esta antigua Tiara está adornada con una ardiente gema roja. Aumenta en 1 tu valor máximo de Puntos Corporales y otorga 1 Dado de Defensa adicional.,Objeto,Junglas de Delthrak
+Vara de Telekinesis,"Una vez por Misión puedes utilizar esta Vara para atrapar a un Monstruo en un campo de fuerza mágica. Un Monstruo atrapado pierde su siguiente turno. El Monstruo puede resistir el hechizo inmediatamente tirando 1 Dado Rojo por cada uno de sus Puntos Mentales, Si saca un 6, resiste el Hechizo.",Objeto,Juego Base
+Varita Mágica,Esta Varita Mágica permite a un Héroe lanzar dos Hechizos distintos en su turno en lugar de un solo Hechizo.,Objeto,Juego Base

@@ -14,10 +14,18 @@ public class MonstersController(ApplicationDbContext context) : Controller
             .OrderBy(monster => monster.CharacterType)
             .ThenBy(monster => monster.Id)
             .ToListAsync();
+        var abilities = await context.MonsterAbilities.AsNoTracking()
+            .OrderBy(ability => ability.Name)
+            .ToListAsync();
 
         var selected = monsters.FirstOrDefault(monster => monster.Id == id) ?? monsters.FirstOrDefault();
         ViewData["Title"] = "Monstruos";
 
-        return View(new MonsterCatalogViewModel { Monsters = monsters, SelectedMonster = selected });
+        return View("MonstersIndex", new MonsterCatalogViewModel
+        {
+            Monsters = monsters,
+            SelectedMonster = selected,
+            Abilities = abilities
+        });
     }
 }

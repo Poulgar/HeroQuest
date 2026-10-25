@@ -13,8 +13,11 @@
             <a class="text-link" asp-controller="Monsters" asp-action="Index">Ver las criaturas <span aria-hidden="true">→</span></a>
         </div>
         <div class="home-counts">
-            <div><strong>@Model.Heroes.Count</strong><span>héroes registrados</span></div>
-            <div><strong>@Model.Monsters.Count</strong><span>criaturas catalogadas</span></div>
+            <div><strong>@Model.HeroesCount</strong><span>héroes registrados</span></div>
+            <div><strong>@Model.MonstersCount</strong><span>criaturas catalogadas</span></div>
+            <div><strong>@Model.EquipmentCount</strong><span>equipos y artefactos</span></div>
+            <div><strong>@Model.ModifierCount</strong><span>objetos y modificadores</span></div>
+            <div><strong>@Model.MonsterAbilityCount</strong><span>habilidades de monstruo</span></div>
         </div>
     </div>
     <div class="home-art-frame">

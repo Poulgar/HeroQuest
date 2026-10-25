@@ -1,0 +1,33 @@
+﻿Nombre,Descripción,Precio (Monedas de Oro),Tipo,Apariciones,Peso
+Ballesta,"Esta Arma de largo alcance te da una Fuerza de Combate de 3 Dados de Combate. Puedes disparar a cualquier Monstruo que puedas ver. Sin embargo, no puedes disparar a un Monstruo que esté adyacente a ti.
+Tienes un suministro ilimitado de flechas.
+No puede ser utilizada por el Mago.",350,Arma,"Despertar, Juego Base",Moderado
+Bastón,"Este largo y robusto Bastón de madera te otorga una Fuerza de Ataque de 1 Dado de Combate. Debido a su longitud, el Bastón te permite atacar en diagonal. 
+No puedes utilizar un Escudo cuando lleves esta Arma.",100,Arma,"Despertar, Juego Base",Ligero
+Daga,"Este afilado cuchillo otorga una Fuerza de Ataque de 1 Dado de Combate. Una Daga también puede lanzarse a cualquier Monstruo que puedas ver, pero se pierde una vez lanzada.",25,Arma,"Cripta de la Oscuridad, Despertar, Juego Base",Ligero
+Espada Ancha,"Esta Espada te Otorga una Fuerza de Ataque de 3 Dados de Combate. 
+No puede ser utilizada por el Mago.",250,Arma,"Despertar, Juego Base",Pesado
+Espada Corta,"Esta Espada te otorga la Fuerza de Ataque de 2 Dados de Combate.
+No puede ser utilizada por el Mago.",150,Arma,"Despertar, Juego Base",Moderado
+Espada Larga,"Esta Espada otorga una Fuerza de Ataque de 3 Dados de Combate. Debido a su longitud, te permite atacar en diagonal. 
+No puede ser utilizada por el Mago.",350,Arma,"Despertar, Juego Base",Pesado
+Estoque,"Esta larga y delgada Espada te otorga una Fuerza de Combate de 2 Dados de Combate y te permite atacar en diagonal.
+No puede ser utilizada por el Mago.",250,Arma,Reina de los Espíritus,Moderado
+Hacha de Batalla,"Esta pesada Hacha de doble filo te otorga una Fuerza de Ataque de 4 Dados de Combate.
+No puedes utilizar un Escudo cuando lleves esta Arma.
+No puede ser utilizada por el Mago.",450,Arma,"Despertar, Juego Base",Pesado
+Hacha Enana/de Mano,"Esta Hacha de mano te otorga 2 Dados de Combate en el Ataque. Puede lanzarse a cualquier Monstruo que puedas ver, pero se pierde una vez lanzada.",200,Arma,"Despertar, Juego Base, Luna del Terror",Moderado
+Varita,"Esta Varita te otorga una Fuerza de Ataque de 2 Dados de Combate contra cualquier Monstruo que puedas ver.
+Solo puede ser utilizada por la Hechicera.",125,Arma,Profecía de Telor,Ligero
+Brazaletes,"Estos Brazaletes de cuero reforzado te otorgan 1 Dado de Defensa adicional.
+Pueden combinarse con el Yelmo y/o el Escudo.",550,Armadura,"Despertar, Juego Base",Ligero
+Coraza,"Esta pesada Armadura de metal te otorga 2 Dados de Defensa adicionales. Sin embargo, al ser tan pesada, solo puedes tirar 1 Dado Rojo de Movimiento mientras la llevas puesta. 
+Puede combinarse con el Yelmo y/o el Escudo. 
+No puede ser utilizada por el Mago.",850,Armadura,"Despertar, Juego Base",Pesado
+Cota de Malla,"Esta Armadura ligera te otorga 1 Dado de Defensa adicional. Puede combinarse con el Yelmo y/o el Escudo. 
+No puede ser utilizada por el Mago.",500,Armadura,"Despertar, Juego Base",Moderado
+Escudo,"Esta Armadura te otorga 1 Dado de Defensa adicional.
+No puede ser combinada con el Hacha de Batalla ni con el Bastón.
+No puede ser utilizada por el Mago.",150,Armadura,"Despertar, Juego Base",Pesado
+Yelmo,"Este Casco te otorga 1 Dado de Defensa adicional.
+No puede ser utilizada por el Mago.",125,Armadura,"Despertar, Juego Base, Luna del Terror",Moderado

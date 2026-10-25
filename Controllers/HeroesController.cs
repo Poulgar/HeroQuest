@@ -18,6 +18,6 @@ public class HeroesController(ApplicationDbContext context) : Controller
         var selected = heroes.FirstOrDefault(hero => hero.Id == id) ?? heroes.FirstOrDefault();
         ViewData["Title"] = "Héroes";
 
-        return View(new HeroCatalogViewModel { Heroes = heroes, SelectedHero = selected });
+        return View("HeroesIndex", new HeroCatalogViewModel { Heroes = heroes, SelectedHero = selected });
     }
 }

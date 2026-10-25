@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0gvvvmn/MHQ=",
+  "dgSpecHash": "riQvt7SEo3I=",
   "success": true,
-  "projectFilePath": "C:\\Users\\polgv\\OneDrive\\Escriptori\\Personal Programs\\HeroQuest\\HeroQuest.csproj",
+  "projectFilePath": "C:\\Users\\polgv\\OneDrive\\Escriptori\\PersonalPrograms\\HeroQuest\\HeroQuest.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\polgv\\.nuget\\packages\\csvhelper\\33.1.0\\csvhelper.33.1.0.nupkg.sha512",
     "C:\\Users\\polgv\\.nuget\\packages\\exceldatareader\\3.9.0\\exceldatareader.3.9.0.nupkg.sha512",

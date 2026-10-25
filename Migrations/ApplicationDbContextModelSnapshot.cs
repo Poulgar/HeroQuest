@@ -19,7 +19,9 @@ namespace HeroQuest.Migrations
             modelBuilder.Entity("HeroQuest.Models.Character", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Appears")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CharacterType")
@@ -49,6 +51,90 @@ namespace HeroQuest.Migrations
                     b.ToTable("Character");
 
                     b.UseTpcMappingStrategy();
+                });
+
+            modelBuilder.Entity("HeroQuest.Models.EquipmentsAndArtifacts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Appears")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Weight")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EquipmentsAndArtifacts");
+                });
+
+            modelBuilder.Entity("HeroQuest.Models.Item", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Appears")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("HeroQuest.Models.MonsterAbility", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Appears")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MonsterAbilities");
                 });
 
             modelBuilder.Entity("HeroQuest.Models.Heroe", b =>
@@ -92,8 +178,28 @@ namespace HeroQuest.Migrations
                 {
                     b.HasBaseType("HeroQuest.Models.Character");
 
+                    b.Property<string>("Ability")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Attack")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Body")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Defense")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("MaxMovement")
                         .HasColumnType("INTEGER");
+
+                    b.Property<int>("Movement")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TypeMonsterRol")
                         .HasColumnType("INTEGER");

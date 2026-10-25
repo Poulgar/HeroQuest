@@ -11,13 +11,17 @@ public class HomeController(ApplicationDbContext context) : Controller
 {
     public async Task<IActionResult> Index()
     {
+        // La portada solo necesita recuentos; evitamos cargar todas las entidades en memoria.
         var model = new HeroQuestIndexViewModel
         {
-            Heroes = await context.Heroes.AsNoTracking().OrderBy(h => h.Name).ToListAsync(),
-            Monsters = await context.Monsters.AsNoTracking().OrderBy(m => m.CharacterType).ToListAsync()
+            HeroesCount = await context.Heroes.CountAsync(),
+            MonstersCount = await context.Monsters.CountAsync(),
+            EquipmentCount = await context.EquipmentsAndArtifacts.CountAsync(),
+            ModifierCount = await context.Items.CountAsync(),
+            MonsterAbilityCount = await context.MonsterAbilities.CountAsync()
         };
 
-        return View(model);
+        return View("HomeIndex", model);
     }
 
     public IActionResult Privacy() => View();

@@ -1,0 +1,3 @@
+EJECUTAR OPENCODE DESDE EL CMD
+
+opencode
