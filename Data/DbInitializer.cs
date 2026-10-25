@@ -3,15 +3,14 @@ using HeroQuest.Models;
 
 namespace HeroQuest.Data;
 
-// Inicializador para poblar la base de datos con datos de prueba
 public static class DbInitializer
 {
     public static void Initialize(IServiceProvider services)
     {
-        var context = services.GetRequiredService<ApplicationDbContext>(); // Obtiene una instancia del contexto de la base de datos
-        context.Database.Migrate(); // Aplica migraciones pendientes
+        var context = services.GetRequiredService<ApplicationDbContext>(); // Obtiene una instancia del contexto de la base de datos.
+        context.Database.Migrate(); // Aplica migraciones pendientes.
 
-        // Añade monstruos de prueba para poder hacer consultas LINQ
+        // Añade monstruos de prueba para poder hacer consultas LINQ.
         if (!context.Monsters.Any())
         {
             var nextId = Math.Max(
@@ -19,7 +18,7 @@ public static class DbInitializer
                 context.Monsters.Select(m => m.Id).DefaultIfEmpty(0).Max()) + 1;
             var monsters = new List<Monster>
             {
-                // id, characterType, hp, mind, dicesAttack, dicesDefend, maxMovement, name, movement, attack, defense, body, ability, appears
+                // id, characterType, hp, mind, dicesAttack, dicesDefend, maxMovement, name, movement, attack, defense, body, ability, appears.
                 new(nextId++, "Goblin", 1, 1, 2, 1, 10, "Goblin", 10, 2, 1, 1, "", "Juego Base") { CharacterType = "Goblin", Appears = TypeAppears.JuegoBase },
                 new(nextId++, "Orco", 1, 2, 3, 2, 8, "Orco", 8, 3, 2, 1, "", "Juego Base") { CharacterType = "Orco", Appears = TypeAppears.JuegoBase },
                 new(nextId++, "Abominación", 2, 3, 3, 3, 6, "Abominación", 6, 3, 3, 2, "", "Juego Base") { CharacterType = "Abominación", Appears = TypeAppears.JuegoBase },

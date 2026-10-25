@@ -1,21 +1,15 @@
 using Microsoft.EntityFrameworkCore; // Proporciona los métodos y clases necesarios para trabajar con Entity Framework Core.
-using HeroQuest.Models; // Importa el espacio de nombres que contiene las clases de modelo.
+using HeroQuest.Models;
 
 namespace HeroQuest.Data;
 
-// Clase principal para gestionar la conexión y las entidades con Entity Framework Core
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public DbSet<Heroe> Heroes => Set<Heroe>(); // Colección de héroes en la base de datos
-    public DbSet<Monster> Monsters => Set<Monster>(); // Colección de monstruos
-    public DbSet<MiscellaneaItem> Miscellanea => Set<MiscellaneaItem>(); // Objetos variados de la sección Miscelánea
-    public DbSet<EquipmentsAndArtifacts> EquipmentsAndArtifacts => Set<EquipmentsAndArtifacts>(); // Colección unificada de equipamiento y artefactos
-    public DbSet<MonsterAbility> MonsterAbilities => Set<MonsterAbility>(); // Colección de habilidades de monstruos
-
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-    : base(options) // Constructor que recibe opciones de configuración para la base de datos y las pasa a la clase base DbContext.
-    {
-    }
+    public DbSet<Heroe> Heroes => Set<Heroe>(); // Colección de héroes en la base de datos.
+    public DbSet<Monster> Monsters => Set<Monster>();
+    public DbSet<MiscellaneaItem> Miscellanea => Set<MiscellaneaItem>();
+    public DbSet<EquipmentsAndArtifacts> EquipmentsAndArtifacts => Set<EquipmentsAndArtifacts>();
+    public DbSet<MonsterAbility> MonsterAbilities => Set<MonsterAbility>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) // Método que se llama al crear el modelo de la base de datos, permite configurar las entidades y sus relaciones.
     {
@@ -24,7 +18,7 @@ public class ApplicationDbContext : DbContext
             .Property(c => c.Id) // Configura la propiedad Id de la entidad Character.
             // TPC guarda Heroes y Monsters en tablas separadas. SQLite genera IDs por tabla,
             // lo que puede repetir claves entre ambas tablas; las asignamos globalmente desde los importadores.
-            .ValueGeneratedNever();
+            .ValueGeneratedNever(); // Indica que el valor de la propiedad Id no se generará automáticamente, sino que se asignará manualmente.
 
         modelBuilder.Entity<Heroe>(); // Configura la entidad Heroe en el modelo de la base de datos.
         modelBuilder.Entity<Monster>();
@@ -33,4 +27,3 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<MonsterAbility>();
     }
 }
-// Contexto de base de datos que gestiona todas las entidades del proyecto HeroQuest.
