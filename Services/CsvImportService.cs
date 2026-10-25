@@ -1,8 +1,5 @@
-using CsvHelper;
-using CsvHelper.Configuration;
 using HeroQuest.Data;
 using HeroQuest.Models;
-using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 
 namespace HeroQuest.Services;
@@ -48,17 +45,6 @@ public class CsvImportService
         await ImportMonsterSpellLinksAsync(monsterCategoriesAbilitiesPath);
     }
 
-    private CsvConfiguration GetConfig()
-    {
-        return new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            Delimiter = ",",
-            PrepareHeaderForMatch = args => args.Header.Trim(),
-            BadDataFound = null,
-            MissingFieldFound = null
-        };
-    }
-
     private async Task ImportMonstersAsync(string path)
     {
         var existingMonsters = await _context.Monsters.ToListAsync();
@@ -71,25 +57,19 @@ public class CsvImportService
         var maxMonsterId = await _context.Monsters.Select(m => (int?)m.Id).MaxAsync() ?? 0;
         var nextId = Math.Max(maxHeroId, maxMonsterId) + 1;
 
-        using var reader = new StreamReader(path);
-        using var csv = new CsvReader(reader, GetConfig());
-        var records = csv.GetRecords<dynamic>().ToList();
+        var records = CsvRecordReader.ReadRecords(path);
 
-        foreach (var record in records)
+        foreach (var fields in records)
         {
-            var fields = (IDictionary<string, object>)record;
-            string Text(string field) => fields.TryGetValue(field, out var value) ? value?.ToString()?.Trim() ?? "" : "";
-            int Number(string field) => int.TryParse(Text(field), NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : 0;
-
-            var name = Text("Nombre");
-            var hp = Number("Cuerpo");
-            var mind = Number("Mente");
-            var attack = Number("Ataque");
-            var defense = Number("Defensa");
-            var maxMovement = Number("Movimiento");
-            var faction = Text("Categoria");
-            var ability = MonsterCsvParsing.CleanAbilityNames(Text("Habilidad"));
-            var appearance = TypeAppearsParser.Parse(Text("Apariciones"));
+            var name = CsvRecordReader.GetText(fields, "Nombre");
+            var hp = CsvRecordReader.GetInteger(fields, "Cuerpo");
+            var mind = CsvRecordReader.GetInteger(fields, "Mente");
+            var attack = CsvRecordReader.GetInteger(fields, "Ataque");
+            var defense = CsvRecordReader.GetInteger(fields, "Defensa");
+            var maxMovement = CsvRecordReader.GetInteger(fields, "Movimiento");
+            var faction = CsvRecordReader.GetText(fields, "Categoria");
+            var ability = MonsterCsvParsing.CleanAbilityNames(CsvRecordReader.GetText(fields, "Habilidad"));
+            var appearance = TypeAppearsParser.Parse(CsvRecordReader.GetText(fields, "Apariciones"));
 
             if (!byName.TryGetValue(MonsterCsvParsing.NormalizeName(name), out var monster))
             {
@@ -181,30 +161,26 @@ public class CsvImportService
 
     private async Task ImportSpellsOfTerrorAsync(string path)
     {
-        using var reader = new StreamReader(path);
-        using var csv = new CsvReader(reader, GetConfig());
-        var records = csv.GetRecords<dynamic>().ToList();
+        var records = CsvRecordReader.ReadRecords(path);
         var existing = (await _context.SpellsOfTerror.ToListAsync())
             .GroupBy(spell => MonsterCsvParsing.NormalizeName(spell.Name))
             .ToDictionary(group => group.Key, group => group.First());
 
-        foreach (var record in records)
+        foreach (var fields in records)
         {
-            var fields = (IDictionary<string, object>)record;
-            string Text(string field) => fields.TryGetValue(field, out var value) ? value?.ToString()?.Trim() ?? "" : "";
-            var name = Text("Nombre");
+            var name = CsvRecordReader.GetText(fields, "Nombre");
             if (!existing.TryGetValue(MonsterCsvParsing.NormalizeName(name), out var spell))
             {
-                spell = new SpellOfTerror(0, name, Text("Descripción"), Text("Tipo"), TypeAppearsParser.Parse(Text("Apariciones")));
+                spell = new SpellOfTerror(0, name, CsvRecordReader.GetText(fields, "Descripción"), CsvRecordReader.GetText(fields, "Tipo"), TypeAppearsParser.Parse(CsvRecordReader.GetText(fields, "Apariciones")));
                 _context.SpellsOfTerror.Add(spell);
                 existing[MonsterCsvParsing.NormalizeName(name)] = spell;
                 continue;
             }
 
             spell.Name = name;
-            spell.Description = Text("Descripción");
-            spell.Type = Text("Tipo");
-            spell.Appears = TypeAppearsParser.Parse(Text("Apariciones"));
+            spell.Description = CsvRecordReader.GetText(fields, "Descripción");
+            spell.Type = CsvRecordReader.GetText(fields, "Tipo");
+            spell.Appears = TypeAppearsParser.Parse(CsvRecordReader.GetText(fields, "Apariciones"));
         }
 
         await _context.SaveChangesAsync();
@@ -219,15 +195,11 @@ public class CsvImportService
             .ToDictionary(group => group.Key, group => group.First());
         var links = new HashSet<(int MonsterId, int SpellId)>();
 
-        using var reader = new StreamReader(monsterCsvPath);
-        using var csv = new CsvReader(reader, GetConfig());
-        foreach (var record in csv.GetRecords<dynamic>())
+        foreach (var fields in CsvRecordReader.ReadRecords(monsterCsvPath))
         {
-            var fields = (IDictionary<string, object>)record;
-            string Text(string field) => fields.TryGetValue(field, out var value) ? value?.ToString()?.Trim() ?? "" : "";
-            if (!monstersByName.TryGetValue(MonsterCsvParsing.NormalizeName(Text("Nombre")), out var monster)) continue;
+            if (!monstersByName.TryGetValue(MonsterCsvParsing.NormalizeName(CsvRecordReader.GetText(fields, "Nombre")), out var monster)) continue;
 
-            foreach (var abilityName in MonsterCsvParsing.ReadAbilityNames(Text("Habilidad")))
+            foreach (var abilityName in MonsterCsvParsing.ReadAbilityNames(CsvRecordReader.GetText(fields, "Habilidad")))
             {
                 if (spellsByName.TryGetValue(MonsterCsvParsing.NormalizeName(abilityName), out var spell))
                     links.Add((monster.Id, spell.Id));
@@ -245,25 +217,16 @@ public class CsvImportService
 
     private async Task ImportMiscellaneaAsync(string ruta)
     {
-        if (!File.Exists(ruta)) return;
         if (await _context.Miscellanea.AnyAsync()) return;
 
-        using var reader = new StreamReader(ruta);
-        using var csv = new CsvReader(reader, GetConfig());
-        var registros = csv.GetRecords<dynamic>().ToList();
-
-        foreach (var fila in registros)
+        foreach (var datos in CsvRecordReader.ReadRecords(ruta))
         {
-            var datos = (IDictionary<string, object>)fila;
-            string Texto(string campo) => datos.ContainsKey(campo) ? datos[campo]?.ToString()?.Trim() ?? "" : "";
-            int Numero(string campo) => int.TryParse(Texto(campo), out var valor) ? valor : 0;
-
             var entry = new MiscellaneaItem(
                 id: 0,
-                name: Texto("Nombre"),
-                description: Texto("Descripción"),
-                price: Numero("Precio (Monedas de Oro)"),
-                appears: TypeAppearsParser.Parse(Texto("Apariciones"))
+                name: CsvRecordReader.GetText(datos, "Nombre"),
+                description: CsvRecordReader.GetText(datos, "Descripción"),
+                price: CsvRecordReader.GetInteger(datos, "Precio (Monedas de Oro)"),
+                appears: TypeAppearsParser.Parse(CsvRecordReader.GetText(datos, "Apariciones"))
             );
             _context.Miscellanea.Add(entry);
         }
@@ -274,78 +237,49 @@ public class CsvImportService
     {
         if (await _context.EquipmentsAndArtifacts.AnyAsync()) return;
 
-        if (File.Exists(equipmentPath))
+        foreach (var datos in CsvRecordReader.ReadRecords(equipmentPath))
         {
-            using var reader = new StreamReader(equipmentPath);
-            using var csv = new CsvReader(reader, GetConfig());
-            var registros = csv.GetRecords<dynamic>().ToList();
-
-            foreach (var fila in registros)
-            {
-                var datos = (IDictionary<string, object>)fila;
-                string Texto(string campo) => datos.ContainsKey(campo) ? datos[campo]?.ToString()?.Trim() ?? "" : "";
-                int Numero(string campo) => int.TryParse(Texto(campo), out var valor) ? valor : 0;
-
-                var item = new EquipmentsAndArtifacts(
-                    id: 0,
-                    name: Texto("Nombre"),
-                    description: Texto("Descripción"),
-                    price: Numero("Precio (Monedas de Oro)"),
-                    type: Texto("Tipo"),
-                    appears: TypeAppearsParser.Parse(Texto("Apariciones")),
-                    weight: Texto("Peso"),
-                    category: "Equipment"
-                );
-                _context.EquipmentsAndArtifacts.Add(item);
-            }
+            var item = new EquipmentsAndArtifacts(
+                id: 0,
+                name: CsvRecordReader.GetText(datos, "Nombre"),
+                description: CsvRecordReader.GetText(datos, "Descripción"),
+                price: CsvRecordReader.GetInteger(datos, "Precio (Monedas de Oro)"),
+                type: CsvRecordReader.GetText(datos, "Tipo"),
+                appears: TypeAppearsParser.Parse(CsvRecordReader.GetText(datos, "Apariciones")),
+                weight: CsvRecordReader.GetText(datos, "Peso"),
+                category: "Equipment"
+            );
+            _context.EquipmentsAndArtifacts.Add(item);
         }
 
-        if (File.Exists(artifactPath))
+        foreach (var datos in CsvRecordReader.ReadRecords(artifactPath))
         {
-            using var reader = new StreamReader(artifactPath);
-            using var csv = new CsvReader(reader, GetConfig());
-            var registros = csv.GetRecords<dynamic>().ToList();
-
-            foreach (var fila in registros)
-            {
-                var datos = (IDictionary<string, object>)fila;
-                string Texto(string campo) => datos.ContainsKey(campo) ? datos[campo]?.ToString()?.Trim() ?? "" : "";
-
-                var item = new EquipmentsAndArtifacts(
-                    id: 0,
-                    name: Texto("Nombre"),
-                    description: Texto("Descripción"),
-                    price: 0,
-                    type: Texto("Tipo"),
-                    appears: TypeAppearsParser.Parse(Texto("Apariciones")),
-                    weight: "",
-                    category: "Artifact"
-                );
-                _context.EquipmentsAndArtifacts.Add(item);
-            }
+            var item = new EquipmentsAndArtifacts(
+                id: 0,
+                name: CsvRecordReader.GetText(datos, "Nombre"),
+                description: CsvRecordReader.GetText(datos, "Descripción"),
+                price: 0,
+                type: CsvRecordReader.GetText(datos, "Tipo"),
+                appears: TypeAppearsParser.Parse(CsvRecordReader.GetText(datos, "Apariciones")),
+                weight: "",
+                category: "Artifact"
+            );
+            _context.EquipmentsAndArtifacts.Add(item);
         }
         await _context.SaveChangesAsync();
     }
 
     private async Task ImportMonsterAbilitiesAsync(string ruta)
     {
-        if (!File.Exists(ruta)) return;
         if (await _context.MonsterAbilities.AnyAsync()) return;
 
-        using var reader = new StreamReader(ruta);
-        using var csv = new CsvReader(reader, GetConfig());
-        var registros = csv.GetRecords<dynamic>().ToList();
-
-        foreach (var fila in registros)
+        foreach (var datos in CsvRecordReader.ReadRecords(ruta))
         {
-            var datos = (IDictionary<string, object>)fila;
-            string Texto(string campo) => datos.ContainsKey(campo) ? datos[campo]?.ToString()?.Trim() ?? "" : "";
-
             var ability = new MonsterAbility(
                 id: 0,
-                name: Texto("Nombre"),
-                description: Texto("Descripción"),
-                appears: TypeAppearsParser.Parse(Texto("Apariciones"))
+                name: CsvRecordReader.GetText(datos, "Nombre"),
+                description: CsvRecordReader.GetText(datos, "Descripción"),
+                appears: TypeAppearsParser.Parse(CsvRecordReader.GetText(datos, "Apariciones"))
             );
             _context.MonsterAbilities.Add(ability);
         }

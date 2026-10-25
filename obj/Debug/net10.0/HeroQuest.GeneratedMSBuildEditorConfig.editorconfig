@@ -31,10 +31,6 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Archive/ComingSoon.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXJjaGl2ZVxDb21pbmdTb29uLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/EquipmentsArtifacts/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXF1aXBtZW50c0FydGlmYWN0c1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -71,16 +67,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9IZXJvRGV0YWlsQ2FyZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_MiscellaneaDetailCard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9NaXNjZWxsYW5lYURldGFpbENhcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_MonsterDetailCard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Nb25zdGVyRGV0YWlsQ2FyZC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_ValidationScriptsPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/_ViewImports.cshtml]
@@ -90,7 +86,3 @@ build_metadata.AdditionalFiles.CssScope =
 [C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = b-1n7wpbioc7

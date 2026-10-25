@@ -39,9 +39,11 @@
                     <a class="catalog-row @(Model.SelectedMonster?.Id == monster.Id ? "selected" : "")"
                        data-select-record="@monster.Id" data-name="@monster.Name" data-faction="@monster.Faction" data-search="@monster.Name @monster.Faction @monster.Ability" data-appears="@monster.Appears.DisplayName()" data-id="@monster.Id"
                        asp-controller="Monsters" asp-action="Index" asp-route-id="@monster.Id" aria-current="@(Model.SelectedMonster?.Id == monster.Id ? "page" : null)">
-                        <span class="row-demo-image"><img src="~/images/heroquest/monster-portrait.svg" alt="" /></span>
                         <span class="faction-token faction-token-small" style="--faction-color: @monster.Faction.FactionColor()" title="@monster.Faction">@monster.Faction.FactionSymbol()</span>
-                        <span class="row-main"><strong>@ShortIndexName(string.IsNullOrEmpty(monster.Name) ? monster.CharacterType : monster.Name)</strong><small>@monster.Hp HP • @monster.DicesAttack ataque</small></span>
+                        <span class="row-main">
+                            <strong>@ShortIndexName(string.IsNullOrEmpty(monster.Name) ? monster.CharacterType : monster.Name)</strong>
+                            <small class="row-stats">@monster.Hp HP · D@(monster.Mind) MND · D@(monster.DicesAttack) ATK · D@(monster.DicesDefend) DFC</small>
+                        </span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>
                 }
@@ -84,43 +86,52 @@
     }
     else
     {
-        <div class="ability-grid">
-            @foreach (var ability in Model.Abilities)
+        var spanishComparer = StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true);
+        var abilityCards = Model.Abilities.Select(ability => new
             {
-                // El campo Ability de cada monstruo contiene una lista separada por comas, cargada desde el CSV.
-                var monsterNames = Model.Monsters
+                Name = ability.Name,
+                Description = ability.Description,
+                Category = "ability",
+                Appears = ability.Appears,
+                Symbol = ability.Name.AbilitySymbol(),
+                Color = ability.Name.AbilityColor(),
+                Owners = Model.Monsters
                     .Where(monster => monster.Ability.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .Contains(ability.Name, StringComparer.OrdinalIgnoreCase))
                     .Select(monster => monster.Name)
-                    .OrderBy(name => name, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true))
-                    .ToList();
-                <article class="ability-card">
-                    <div class="ability-card-heading">
-                        <h3><span class="ability-icon" style="--ability-color: @ability.Name.AbilityColor()" aria-hidden="true">@ability.Name.AbilitySymbol()</span>@ability.Name</h3>
-                        <span class="ability-kind">Habilidad</span>
-                    </div>
-                    <p class="ability-card-description">@ability.Description</p>
-                    <p class="ability-card-owners"><strong>Monstruos que poseen esta habilidad:</strong> @(monsterNames.Count > 0 ? string.Join(" · ", monsterNames) : "Sin monstruos vinculados")</p>
-                    <footer class="ability-card-expansion"><span>Expansión</span><strong>@ability.Appears.DisplayName()</strong></footer>
-                </article>
-            }
-
-            @foreach (var spell in Model.SpellsOfTerror)
+                    .ToList()
+            });
+        var spellCards = Model.SpellsOfTerror.Select(spell => new
             {
-                // La navegación SpellLinks procede de las claves foráneas y da los monstruos vinculados a cada hechizo.
-                var monsterNames = Model.Monsters
+                Name = spell.Name,
+                Description = spell.Description,
+                Category = "spell",
+                Appears = spell.Appears,
+                Symbol = spell.Name.SpellSymbol(),
+                Color = spell.Name.SpellColor(),
+                Owners = Model.Monsters
                     .Where(monster => monster.SpellLinks.Any(link => link.SpellOfTerrorId == spell.Id))
                     .Select(monster => monster.Name)
-                    .OrderBy(name => name, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true))
-                    .ToList();
-                <article class="ability-card spell-card">
+                    .ToList()
+            });
+        // Unimos ambos tipos antes de ordenar para que el listado completo también quede alfabético.
+        var archiveCards = abilityCards.Concat(spellCards).OrderBy(card => card.Name, spanishComparer).ToList();
+        <div class="ability-category-filters" role="group" aria-label="Filtrar habilidades y hechizos">
+            <button type="button" class="ability-filter-button active" data-archive-filter="all" aria-pressed="true">Todos</button>
+            <button type="button" class="ability-filter-button" data-archive-filter="ability" aria-pressed="false">Habilidades</button>
+            <button type="button" class="ability-filter-button" data-archive-filter="spell" aria-pressed="false">Hechizos</button>
+        </div>
+        <div class="ability-grid">
+            @foreach (var card in archiveCards)
+            {
+                <article class="ability-card" data-archive-card="@card.Category">
                     <div class="ability-card-heading">
-                        <h3><span class="ability-icon spell-icon" style="--ability-color: @spell.Name.SpellColor()" aria-hidden="true">@spell.Name.SpellSymbol()</span>@spell.Name</h3>
-                        <span class="ability-kind">Hechizo</span>
+                        <h3><span class="ability-icon @(card.Category == "spell" ? "spell-icon" : "")" style="--ability-color: @card.Color" aria-hidden="true">@card.Symbol</span>@card.Name</h3>
+                        <span class="ability-kind">@(card.Category == "spell" ? "Hechizo" : "Habilidad")</span>
                     </div>
-                    <p class="ability-card-description">@spell.Description</p>
-                    <p class="ability-card-owners"><strong>Monstruos que poseen este hechizo:</strong> @(monsterNames.Count > 0 ? string.Join(" · ", monsterNames) : "Sin monstruos vinculados")</p>
-                    <footer class="ability-card-expansion"><span>Expansión</span><strong>@spell.Appears.DisplayName()</strong></footer>
+                    <p class="ability-card-description">@card.Description</p>
+                    <p class="ability-card-owners"><strong>Monstruos que poseen @(card.Category == "spell" ? "este hechizo" : "esta habilidad"):</strong> @(card.Owners.Count > 0 ? string.Join(" · ", card.Owners) : "Sin monstruos vinculados")</p>
+                    <footer class="ability-card-expansion"><span>Expansión</span><strong>@card.Appears.DisplayName()</strong></footer>
                 </article>
             }
         </div>

@@ -31,11 +31,21 @@
                 <div class="catalog-scroll" data-index-list>
                 @foreach (var item in Model.Items)
                 {
+                    var categoryName = item.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase) ? "Artefacto" : "Equipo";
                     <a class="catalog-row @(Model.SelectedItem?.Id == item.Id ? "selected" : "")"
-                       data-select-record="@item.Id" data-name="@item.Name" data-category="@item.Category" data-search="@item.Name @item.Type @item.Description" data-price="@item.Price" data-appears="@item.Appears.DisplayName()" data-id="@item.Id"
+                       data-select-record="@item.Id" data-name="@item.Name" data-category="@item.Category" data-search="@item.Name @categoryName @item.Type @item.Description" data-price="@item.Price" data-appears="@item.Appears.DisplayName()" data-id="@item.Id"
                        asp-controller="Archive" asp-action="Equipment" asp-route-id="@item.Id" aria-current="@(Model.SelectedItem?.Id == item.Id ? "page" : null)">
-                        <span class="row-demo-image"><img src="@(item.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase) ? Url.Content("~/images/heroquest/artifact-relic.svg") : Url.Content("~/images/heroquest/equipment-sword.svg"))" alt="" /></span>
-                        <span class="row-main"><strong>@ShortIndexName(item.Name)</strong><small>@item.Category • @item.Type</small></span>
+                        <span class="index-symbol" aria-hidden="true">
+                            @if (item.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <svg viewBox="0 0 32 32"><path d="M8 4c0 6 3 9 8 12 5-3 8-6 8-12M16 15l-6 7 6 7 6-7-6-7z" /></svg>
+                            }
+                            else
+                            {
+                                <svg viewBox="0 0 32 32"><path d="M7 5l9-3 9 3v8c0 7-4 12-9 16-5-4-9-9-9-16V5zM9 23L25 7M6 13l5 1M21 20l5 1" /></svg>
+                            }
+                        </span>
+                        <span class="row-main"><strong>@ShortIndexName(item.Name)</strong><small>@categoryName • @item.Type</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>
                 }

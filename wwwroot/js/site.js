@@ -9,6 +9,23 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
 
     const collator = new Intl.Collator('es', { sensitivity: 'accent', numeric: true });
     const normalize = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
+    let clearSearchButton = null;
+
+    // El botón se añade aquí para compartir la misma función de limpieza en todos los índices.
+    if (search) {
+        const wrapper = document.createElement('span');
+        wrapper.className = 'index-search-wrap';
+        search.before(wrapper);
+        wrapper.append(search);
+
+        clearSearchButton = document.createElement('button');
+        clearSearchButton.type = 'button';
+        clearSearchButton.className = 'index-search-clear';
+        clearSearchButton.setAttribute('aria-label', 'Limpiar búsqueda');
+        clearSearchButton.textContent = '×';
+        clearSearchButton.hidden = !search.value;
+        wrapper.append(clearSearchButton);
+    }
 
     const update = () => {
         const query = normalize(search?.value ?? '');
@@ -40,7 +57,15 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
         if (selected?.hidden) rows.find((row) => !row.hidden)?.click();
     };
 
-    search?.addEventListener('input', update);
+    search?.addEventListener('input', () => {
+        if (clearSearchButton) clearSearchButton.hidden = !search.value;
+        update();
+    });
+    clearSearchButton?.addEventListener('click', () => {
+        search.value = '';
+        search.dispatchEvent(new Event('input', { bubbles: true }));
+        search.focus();
+    });
     sort?.addEventListener('change', update);
     factionFilter?.addEventListener('change', update);
     categoryButtons.forEach((button) => button.addEventListener('click', () => {
@@ -53,6 +78,20 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
         update();
     }));
     update();
+});
+
+document.querySelectorAll('[data-archive-filter]').forEach((button) => {
+    button.addEventListener('click', () => {
+        const selection = button.dataset.archiveFilter;
+        document.querySelectorAll('[data-archive-filter]').forEach((candidate) => {
+            const active = candidate === button;
+            candidate.classList.toggle('active', active);
+            candidate.setAttribute('aria-pressed', String(active));
+        });
+        document.querySelectorAll('[data-archive-card]').forEach((card) => {
+            card.hidden = selection !== 'all' && card.dataset.archiveCard !== selection;
+        });
+    });
 });
 
 // Las fichas se guardan en <template>; cambiar selección no envía otra petición ni altera el scroll del índice.

@@ -30,7 +30,9 @@
                     <a class="catalog-row @(Model.SelectedEntry?.Id == entry.Id ? "selected" : "")"
                        data-select-record="@entry.Id" data-name="@entry.Name" data-search="@entry.Name" data-price="@entry.Price" data-appears="@entry.Appears.DisplayName()" data-id="@entry.Id"
                        asp-controller="Archive" asp-action="Miscellanea" asp-route-id="@entry.Id" aria-current="@(Model.SelectedEntry?.Id == entry.Id ? "page" : null)">
-                        <span class="row-demo-image"><img src="~/images/heroquest/modifier-scroll.svg" alt="" /></span>
+                        <span class="index-symbol" aria-hidden="true">
+                            <svg viewBox="0 0 32 32"><path d="M11 3h10M13 3v7l-6 13c-1 3 1 5 4 5h10c3 0 5-2 4-5l-6-13V3M10 20h12M12 16h8" /></svg>
+                        </span>
                         <span class="row-main"><strong>@ShortIndexName(entry.Name)</strong><small>@(entry.Price > 0 ? $"{entry.Price} mo" : "Sin precio")</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>

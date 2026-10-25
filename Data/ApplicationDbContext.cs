@@ -28,11 +28,6 @@ public class ApplicationDbContext : DbContext
             // lo que puede repetir claves entre ambas tablas; las asignamos globalmente desde los importadores.
             .ValueGeneratedNever();
 
-        modelBuilder.Entity<Heroe>(); // Configura la entidad Heroe en el modelo de la base de datos.
-        modelBuilder.Entity<Monster>();
-        modelBuilder.Entity<MiscellaneaItem>();
-        modelBuilder.Entity<EquipmentsAndArtifacts>();
-        modelBuilder.Entity<MonsterAbility>();
         modelBuilder.Entity<SpellOfTerror>().ToTable("SpellsOfTerror");
 
         // La tabla puente representa las dos claves foráneas y evita duplicar hechizos por monstruo.

@@ -18,7 +18,7 @@
             <div><span>Ataque</span><strong>@monster.DicesAttack dados</strong></div>
             <div><span>Defensa</span><strong>@monster.DicesDefend dados</strong></div>
             <div><span>Movimiento máximo</span><strong>@monster.MaxMovement</strong></div>
-            <div><span>Facción</span><strong><span class="faction-token hover-tooltip" tabindex="0" style="--faction-color: @monster.Faction.FactionColor()" data-tooltip="@monster.Faction" title="@monster.Faction" aria-label="Facción: @monster.Faction">@monster.Faction.FactionSymbol()</span></strong></div>
+            <div><span>Facción</span><strong><span class="faction-token hover-tooltip" tabindex="0" style="--faction-color: @monster.Faction.FactionColor()" data-tooltip="@monster.Faction" aria-label="Facción: @monster.Faction">@monster.Faction.FactionSymbol()</span></strong></div>
         </div>
         <div class="detail-divider"><span>HABILIDADES Y HECHIZOS</span></div>
         <div class="monster-skill-icons" aria-label="Habilidades y hechizos de @monster.Name">
@@ -27,13 +27,15 @@
                 var spellLink = monster.SpellLinks.FirstOrDefault(link => string.Equals(link.SpellOfTerror.Name, abilityName, StringComparison.OrdinalIgnoreCase));
                 if (spellLink is not null)
                 {
-                    <button type="button" class="ability-icon spell-icon skill-trigger hover-tooltip" style="--ability-color: @abilityName.SpellColor()" data-tooltip="@spellLink.SpellOfTerror.Description.ShortEffect(abilityName)" data-full-description="@spellLink.SpellOfTerror.Description" data-skill-name="@abilityName" aria-label="Hechizo: @abilityName">@abilityName.SpellSymbol()</button>
+                    var tooltipText = $"{abilityName}: {spellLink.SpellOfTerror.Description.ShortEffect(abilityName)}";
+                    <button type="button" class="ability-icon spell-icon skill-trigger hover-tooltip" style="--ability-color: @abilityName.SpellColor()" data-tooltip="@tooltipText" data-full-description="@spellLink.SpellOfTerror.Description" data-skill-name="@abilityName" aria-label="Hechizo: @abilityName">@abilityName.SpellSymbol()</button>
                 }
                 else
                 {
                     var ability = Model.Abilities.FirstOrDefault(entry => string.Equals(entry.Name, abilityName, StringComparison.OrdinalIgnoreCase));
                     var description = ability?.Description ?? abilityName;
-                    <button type="button" class="ability-icon ability-square skill-trigger hover-tooltip" style="--ability-color: @abilityName.AbilityColor()" data-tooltip="@description.ShortEffect(abilityName)" data-full-description="@description" data-skill-name="@abilityName" aria-label="Habilidad: @abilityName">@abilityName.AbilitySymbol()</button>
+                    var tooltipText = $"{abilityName}: {description.ShortEffect(abilityName)}";
+                    <button type="button" class="ability-icon ability-square skill-trigger hover-tooltip" style="--ability-color: @abilityName.AbilityColor()" data-tooltip="@tooltipText" data-full-description="@description" data-skill-name="@abilityName" aria-label="Habilidad: @abilityName">@abilityName.AbilitySymbol()</button>
                 }
             }
         </div>

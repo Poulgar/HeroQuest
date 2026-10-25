@@ -1,9 +1,6 @@
-using CsvHelper;
-using CsvHelper.Configuration;
 using HeroQuest.Data;
 using HeroQuest.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 
 namespace HeroQuest.Services;
 
@@ -14,29 +11,17 @@ public class HeroeImportService(ApplicationDbContext context)
         if (!File.Exists(ruta))
             throw new FileNotFoundException("No se encontró el CSV de héroes.", ruta);
 
-        using var reader = new StreamReader(ruta);
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            Delimiter = ",",
-            PrepareHeaderForMatch = args => args.Header.Trim()
-        };
-
-        using var csv = new CsvReader(reader, config);
-        var registros = csv.GetRecords<dynamic>().ToList();
+        var registros = CsvRecordReader.ReadRecords(ruta);
         var heroesExistentes = await context.Heroes.ToListAsync();
         var importarHeroesNuevos = heroesExistentes.Count == 0;
         var nextId = await context.Heroes.Select(h => (int?)h.Id).MaxAsync() ?? 0;
         nextId = Math.Max(nextId, await context.Monsters.Select(m => (int?)m.Id).MaxAsync() ?? 0) + 1;
 
-        foreach (var fila in registros)
+        foreach (var datos in registros)
         {
-            var datos = (IDictionary<string, object>)fila;
-            string Texto(string campo) => datos.TryGetValue(campo, out var valor) ? valor?.ToString()?.Trim() ?? "" : "";
-            int Numero(string campo) => int.TryParse(Texto(campo), NumberStyles.Integer, CultureInfo.InvariantCulture, out var valor) ? valor : 0;
-
-            var nombre = NormalizeClassName(Texto("Name"));
-            var characterType = NormalizeClassName(Texto("CharacterType"));
-            var aparicion = TypeAppearsParser.Parse(Texto("Appearances"));
+            var nombre = NormalizeClassName(CsvRecordReader.GetText(datos, "Name"));
+            var characterType = NormalizeClassName(CsvRecordReader.GetText(datos, "CharacterType"));
+            var aparicion = TypeAppearsParser.Parse(CsvRecordReader.GetText(datos, "Appearances"));
             var heroeExistente = heroesExistentes.FirstOrDefault(heroe =>
                 string.Equals(NormalizeClassName(heroe.Name), nombre, StringComparison.OrdinalIgnoreCase));
 
@@ -58,22 +43,22 @@ public class HeroeImportService(ApplicationDbContext context)
             var heroe = new Heroe(
                 id: nextId++,
                 characterType: characterType,
-                hp: Numero("Hp"),
-                mind: Numero("Mind"),
-                dicesAttack: Numero("DicesAttack"),
-                dicesDefend: Numero("DicesDefend"),
-                dicesRedMovement: Numero("DicesRedMovement"),
-                description: Texto("Description"))
+                hp: CsvRecordReader.GetInteger(datos, "Hp"),
+                mind: CsvRecordReader.GetInteger(datos, "Mind"),
+                dicesAttack: CsvRecordReader.GetInteger(datos, "DicesAttack"),
+                dicesDefend: CsvRecordReader.GetInteger(datos, "DicesDefend"),
+                dicesRedMovement: CsvRecordReader.GetInteger(datos, "DicesRedMovement"),
+                description: CsvRecordReader.GetText(datos, "Description"))
             {
                 CharacterType = characterType,
                 Name = nombre,
-                Player = Texto("Player"),
-                Weapon = Texto("Weapon"),
-                Armor = Texto("Armor"),
-                Spells = Texto("Spells"),
-                Gold = Numero("Gold"),
-                Items = Texto("Items"),
-                QuestsCompleted = Numero("QuestsCompleted"),
+                Player = CsvRecordReader.GetText(datos, "Player"),
+                Weapon = CsvRecordReader.GetText(datos, "Weapon"),
+                Armor = CsvRecordReader.GetText(datos, "Armor"),
+                Spells = CsvRecordReader.GetText(datos, "Spells"),
+                Gold = CsvRecordReader.GetInteger(datos, "Gold"),
+                Items = CsvRecordReader.GetText(datos, "Items"),
+                QuestsCompleted = CsvRecordReader.GetInteger(datos, "QuestsCompleted"),
                 Appears = aparicion
             };
 

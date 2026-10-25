@@ -1,12 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "riQvt7SEo3I=",
+  "dgSpecHash": "2AtjPjQBa6w=",
   "success": true,
   "projectFilePath": "C:\\Users\\polgv\\OneDrive\\Escriptori\\PersonalPrograms\\HeroQuest\\HeroQuest.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\polgv\\.nuget\\packages\\csvhelper\\33.1.0\\csvhelper.33.1.0.nupkg.sha512",
-    "C:\\Users\\polgv\\.nuget\\packages\\exceldatareader\\3.9.0\\exceldatareader.3.9.0.nupkg.sha512",
-    "C:\\Users\\polgv\\.nuget\\packages\\exceldatareader.dataset\\3.9.0\\exceldatareader.dataset.3.9.0.nupkg.sha512",
     "C:\\Users\\polgv\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\polgv\\.nuget\\packages\\microsoft.build.framework\\18.0.2\\microsoft.build.framework.18.0.2.nupkg.sha512",
     "C:\\Users\\polgv\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.11.0\\microsoft.codeanalysis.analyzers.3.11.0.nupkg.sha512",
