@@ -1,0 +1,34 @@
+@model HeroQuest.Models.Monster
+<article class="detail-card monster-detail-card">
+    <div class="detail-art monster-art">
+        <img src="~/images/heroquest/monster-portrait.svg" alt="Ilustración de @Model.Name" />
+        <span class="portrait-ribbon">REGISTRO DEL BESTIARIO</span>
+    </div>
+    <div class="detail-content">
+        <p class="eyebrow">BESTIARIO • N.º @Model.Id</p>
+        <h2>@Model.Name</h2>
+        <p class="detail-description"><strong>Descripción:</strong> @Model.Description</p>
+        <div class="stat-grid">
+            <div><span>Vida</span><strong>@Model.HpCurrent / @Model.Hp</strong></div>
+            <div><span>Mente</span><strong>@Model.Mind</strong></div>
+            <div><span>Ataque</span><strong>@Model.DicesAttack dados</strong></div>
+            <div><span>Defensa</span><strong>@Model.DicesDefend dados</strong></div>
+            <div><span>Movimiento máximo</span><strong>@Model.MaxMovement</strong></div>
+            <div><span>Facción</span><strong><span class="faction-token" style="--faction-color: @Model.Faction.FactionColor()">@Model.Faction.FactionSymbol()</span> @Model.Faction</strong></div>
+            <div class="stat-wide"><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></div>
+        </div>
+        <div class="detail-divider"><span>HABILIDADES</span></div>
+        <div class="monster-ability-field">@Model.Ability</div>
+        @if (Model.SpellLinks.Count > 0)
+        {
+            <div class="detail-divider"><span>HECHIZOS DEL TERROR</span></div>
+            @foreach (var link in Model.SpellLinks)
+            {
+                <div class="monster-spell-entry">
+                    <strong>@link.SpellOfTerror.Name</strong>
+                    <p>@link.SpellOfTerror.Description</p>
+                </div>
+            }
+        }
+    </div>
+</article>

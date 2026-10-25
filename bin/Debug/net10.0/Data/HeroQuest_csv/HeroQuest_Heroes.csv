@@ -1,4 +1,4 @@
-Id,CharacterType,Hp,HpCurrent,Mind,DicesAttack,DicesDefend,DicesMovement,Description,Name,Player,Weapon,Armor,Spells,Gold,Items,QuestsCompleted,Appearances
+Id,CharacterType,Hp,HpCurrent,Mind,DicesAttack,DicesDefend,DicesRedMovement,Description,Name,Player,Weapon,Armor,Spells,Gold,Items,QuestsCompleted,Appearances
 ,Bárbaro/a,8,8,2,3,2,2,"Eres el Bárbaro, el guerrero más formidable de todos. Pero ten cuidado con la magia, porque tu espada no te defenderá de ella.",Bárbaro/a,,Espada Ancha,,,0,,0,"Horror Congelado, Juego Base"
 ,Bardo,5,5,4,2,2,2,"Eres el Bardo, tu espíritu y tus canciones inspiran y vigorizan a tus aliados.
 Prefieres mantenerte ligero, así que cuando llevas una armadura no metálica y no llevas un escudo tienes 1 Dado de Defensa adicional.",Bardo,,Estoque,,,0,,0,Reina de los Espíritus

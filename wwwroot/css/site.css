@@ -85,13 +85,19 @@ h1 em { color: var(--red); font-weight: 400; }
 .page-heading h1 { color: #f0e2c2; }
 .page-heading h1 em { color: #e0bc69; }
 .page-heading > p:last-child { margin: 12px 0 0; color: #d6c6a5; font-size: 20px; }
-.catalog-layout { display: grid; grid-template-columns: minmax(250px, .72fr) minmax(0, 1.55fr); align-items: stretch; gap: 24px; height: 620px; }
+.catalog-layout { display: grid; grid-template-columns: minmax(250px, .72fr) minmax(0, 1.55fr); align-items: stretch; gap: 24px; height: 680px; }
 .catalog-list { min-height: 0; display: flex; flex-direction: column; padding: 16px; border: 1px solid #a1824d; background: #d9c79c; box-shadow: var(--shadow); }
 .catalog-scroll { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: #987b4c #d9c79c; }
 .index-tools { display: grid; gap: 9px; padding: 0 4px 12px; }
 .index-tools label { display: grid; gap: 4px; color: #665138; font: 700 10px Georgia, serif; letter-spacing: .08em; text-transform: uppercase; }
 .index-tools input, .index-tools select { width: 100%; min-width: 0; padding: 8px 9px; border: 1px solid #a88d5b; border-radius: 0; color: #352519; background: #f1e5c7; font: 15px 'Palatino Linotype', 'Book Antiqua', Georgia, serif; letter-spacing: normal; text-transform: none; }
+.equipment-category-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin: 0 4px 11px; }
+.equipment-category-button { padding: 8px 7px; border: 1px solid #84683f; color: #513a26; background: #c7b387; font: 700 13px Georgia, serif; cursor: pointer; }
+.equipment-category-button:hover, .equipment-category-button.active { color: #fff2d0; background: var(--red); }
 .catalog-row[hidden] { display: none; }
+.faction-token { width: 38px; height: 38px; flex: 0 0 38px; display: inline-grid; place-items: center; border: 1px solid #755b37; border-radius: 50%; color: #fff4d6; background: var(--faction-color, #806536); box-shadow: inset 0 0 0 2px #ffffff35; font: 700 19px Georgia, serif; text-shadow: 0 1px 2px #0008; }
+.faction-token-small { width: 38px; height: 38px; }
+.faction-token:not(.faction-token-small) { vertical-align: middle; margin-right: 5px; }
 .equipment-indexes { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
 .equipment-indexes .catalog-list { overflow: hidden; }
 .list-caption { display: flex; justify-content: space-between; margin: 0; padding: 4px 5px 13px; color: var(--red); font: 700 11px Georgia, serif; letter-spacing: .15em; }
@@ -106,7 +112,7 @@ h1 em { color: var(--red); font-weight: 400; }
 .row-main strong { font-size: 18px; }
 .row-main small { color: #766248; font-size: 14px; }
 .row-chevron { color: #835533; font-size: 25px; }
-.detail-card { position: relative; min-width: 0; height: 620px; display: grid; grid-template-columns: minmax(180px, .78fr) minmax(0, 1.22fr); grid-template-rows: minmax(0, 1fr); gap: 25px; padding: 24px; overflow: hidden; border: 1px solid #9e804f; outline: 1px solid #d4bd84; outline-offset: -7px; background: var(--paper); box-shadow: var(--shadow); }
+.detail-card { position: relative; min-width: 0; height: 680px; display: grid; grid-template-columns: minmax(180px, .78fr) minmax(0, 1.22fr); grid-template-rows: minmax(0, 1fr); gap: 25px; padding: 24px; overflow: hidden; border: 1px solid #9e804f; outline: 1px solid #d4bd84; outline-offset: -7px; background: var(--paper); box-shadow: var(--shadow); }
 .detail-art, .detail-content { position: relative; z-index: 1; }
 .detail-art { align-self: start; padding: 10px; border: 1px solid #876840; background: #bca073; box-shadow: 3px 5px 13px #33241740; }
 .detail-art img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
@@ -114,6 +120,8 @@ h1 em { color: var(--red); font-weight: 400; }
 .monster-art img { object-position: center; }
 .portrait-ribbon { display: block; margin-top: 9px; color: #4d3824; font: 10px Georgia, serif; letter-spacing: .13em; text-align: center; }
 .detail-content { min-width: 0; min-height: 0; padding: 4px 8px 10px 5px; overflow-y: auto; scrollbar-color: #987b4c #e8d9b5; }
+.detail-host { min-width: 0; min-height: 0; height: 100%; }
+.detail-host > .detail-card { height: 100%; }
 .detail-content .eyebrow { margin-bottom: 8px; }
 .detail-content h2 { margin: 0; color: #352519; font-size: clamp(32px, 4vw, 45px); line-height: 1; }
 .detail-subtitle { margin: 6px 0 14px; color: var(--muted-ink); font-size: 16px; font-style: italic; }
@@ -141,12 +149,19 @@ h1 em { color: var(--red); font-weight: 400; }
 .ability-heading .eyebrow { color: #d8b86e; }
 .ability-heading h2 { margin: 0; font-size: clamp(30px, 4vw, 42px); }
 .ability-heading p:last-child { margin: 8px 0 0; color: #d6c6a5; }
-.ability-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr)); gap: 14px; }
-.ability-card { padding: 18px; border: 1px solid #987b4c; color: var(--ink); background: var(--paper-light); box-shadow: 0 8px 22px #160e092b; }
-.ability-card-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; border-bottom: 1px solid #c6ae7a; }
-.ability-card h3 { margin: 0 0 8px; font-size: 23px; }
+.ability-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr)); grid-auto-rows: 380px; align-items: stretch; gap: 16px; }
+.ability-card { position: relative; display: flex; flex-direction: column; height: 380px; min-width: 0; padding: 38px; overflow: hidden; border: 1px solid #987b4c; color: var(--ink); background: var(--paper-light); box-shadow: 0 8px 22px #160e092b; }
+.ability-card::before { position: absolute; inset: 0; z-index: 0; content: ''; pointer-events: none; opacity: .64; background: url('../images/heroquest/wild-roots-frame.svg') center / 100% 100% no-repeat; }
+.ability-card > * { position: relative; z-index: 1; }
+.ability-card-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 48px; border-bottom: 1px solid #c6ae7a; }
+.ability-card-heading h3 { display: flex; align-items: center; gap: 9px; min-width: 0; margin: 0 0 8px; font-size: 23px; }
+.ability-icon { width: 34px; height: 34px; flex: 0 0 34px; display: inline-grid; place-items: center; border: 1px solid color-mix(in srgb, var(--ability-color) 72%, #4e3925); border-radius: 50%; color: #fff3d1; background: var(--ability-color, #812f27); box-shadow: inset 0 0 0 2px #ffffff35, 0 2px 4px #30201455; font: 700 20px Georgia, serif; text-shadow: 0 1px 2px #0008; }
 .ability-card-heading span { color: var(--red); font-size: 13px; text-align: right; }
-.ability-card p { margin: 12px 0 0; color: #55422d; font-size: 16px; line-height: 1.25; white-space: pre-line; }
+.ability-card p { min-height: 0; flex: 1; margin: 12px 0 0; overflow-y: auto; color: #55422d; font-size: 16px; line-height: 1.25; white-space: pre-line; }
+.monster-ability-field { min-height: 25px; padding: 6px 0; border-bottom: 1px dotted #b59c6b; color: #55422d; white-space: pre-line; }
+.monster-spell-entry { margin-top: 10px; padding: 9px 11px; border-left: 2px solid #9b6b36; background: #eee1bf; }
+.monster-spell-entry p { margin: 5px 0 0; color: #55422d; font-size: 14px; line-height: 1.3; white-space: pre-line; }
+.stat-wide { grid-column: 1 / -1; }
 
 @media (max-width: 900px) {
     .header-inner { align-items: flex-start; flex-direction: column; padding: 14px 0; gap: 12px; }
@@ -156,7 +171,7 @@ h1 em { color: var(--red); font-weight: 400; }
     .catalog-list { height: 280px; }
     .equipment-indexes { height: 300px; }
 }
-@media (max-width: 620px) {
+@media (max-width: 680px) {
     body { font-size: 17px; }
     .header-inner, .footer-inner, .page-shell { width: min(100% - 24px, 1180px); }
     .site-main { padding: 26px 0 42px; }
@@ -169,10 +184,11 @@ h1 em { color: var(--red); font-weight: 400; }
     .home-shelves { grid-template-columns: 1fr; }
     .shelf-card { min-height: 165px; }
     .catalog-list { height: 260px; }
-    .detail-card { height: 620px; grid-template-columns: 1fr; padding: 20px; }
+    .detail-card { height: 680px; grid-template-columns: 1fr; padding: 20px; }
     .detail-art { width: min(100%, 330px); justify-self: center; }
     .detail-art img { aspect-ratio: 4 / 3; }
     .detail-content { padding: 0; }
     .stat-grid { gap: 7px; }
     .detail-facts div { grid-template-columns: 1fr 1.2fr; }
 }
+

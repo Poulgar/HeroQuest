@@ -1,0 +1,58 @@
+﻿Nombre,Descripción,Tipo,Apariciones
+Agarre Trepador,"Este Hechizo puede usarse contra cualquier Héroe para atraparlo con enredaderas. Coloca una ficha de Agarre Trepador debajo del Héroe al que lances el Hechizo. El Héroe debe tirar 1 Dado de Combate, si saca Calavera, pierde 1 Punto Corporal y queda atrapado por las enredaderas sin poder moverse de esa casilla.
+ El Héroe atrapado u otro Héroe adyacente puede realizar una acción para destruir las enredaderas y liberar al Héroe atrapado.",Terror,Junglas de Delthrak
+Aliento Ácido,"Este Hechizo llena de ácido la Habitación. Causará 3 Puntos de daño Corporal a todos los Héroes y Monstruos en esa Habitación. El lanzador del Hechizo no se ve afectado. Todas las víctimas tiran inmediatamente 2 Dados Rojos, por cada 5 o 6, el daño se reduce en 1 Punto.
+No se puede usar en Pasillos.",Terror,Cripta de la Oscuridad
+Bola en Llamas,"Este Hechizo puede lanzarse sobre cualquier Héroe, envolviéndolo en una Bola en Llamas. Provoca un Daño de 2 Puntos Corporales. El Héroe tira 2 Dados Rojos. Por cada 5 o 6 que saque, el Daño se reduce 1 Punto.",Terror,Juego Base
+Calma,La Frescura curativa de este Hechizo restaura hasta 3 Puntos Corporales a quien lo lance o a cualquier Monstruo.,Terror,Horror Congelado
+Canalizar Terror,"Este Hechizo puede usarse contra un Héroe para agotar su fuerza vital. Tira 1 Dado Rojo. Por cada Monstruo capaz de lanzar este Hechizo y que esté adyacente al lanzador, añade 1 Punto al resultado del Dado:
+Si sacas 1, 2 o 3, el Héroe resiste el Hechizo.
+Si sacas 4 o 5, el Héroe pierde 1 Punto Corporal.
+Si sacas 6 o más, el Héroe pierde 2 Puntos Corporales.",Terror,"Junglas de Delthrak, Luna del Terror"
+Congelación Mental,"Este Hechizo destroza la mente de cualquier Héroe. El Héroe tira 1 Dado de Combate por cada Punto Mental que poseía antes del ataque. Si saca 1 o más Escudos Blancos, el Héroe conserva 1 Punto Mental, Si no saca Escudos Blancos, los Puntos Mentales del Héroe se reducen a cero y entra en shock. (Mira la sección de Puntos Mentales del Libro de Misiones de El Horror Congelado).",Terror,Horror Congelado
+Contra hechizo,"Este Hechizo puede ser lanzado durante el turno de un Héroe, puede ser usado inmediatamente después de que un Héroe haya lanzado un Hechizo. Se usa con el fin de intentar cancela un Hechizo lanzado por un Héroe. Lanza un Dado Rojo y suma al resultado los Puntos Mentales del Monstruo lanzador del Hechizo, luego el Héroe hace lo mismo, si el total del Monstruo es mayor el Hechizo del Héroe queda cancelado.",Terror,Maga del Espejo
+Dominación,"Este Hechizo pone a cualquier Héroe bajo el control de Zargon. El Hechizo puede romperse de inmediato o en un turno posterior. El Héroe tira 1 Dado Rojo por cada uno de sus Puntos Mentales. Si saca un 6, el Hechizo se rompe. Sin embargo, hasta que el Hechizo se rompa, Zargon, en su turno, puede mover al Héroe como un Monstruo y atacar a otros Héroes.",Terror,Juego Base
+Dormir,"Este Hechizo dormirá a un Héroe en un sueño profundo para que no pueda moverse, atacar o defenderse. El Hechizo puede romperse de inmediato o en un turno posterior. El Héroe tira 1 Dado Rojo por cada uno de sus Puntos Mentales. Si se saca un 6, el Hechizo se rompe.",Terror,Juego Base
+Escalofrío,Este Hechizo causa 1 Punto de Daño Corporal a cualquier Héroe o Monstruo Adyacente a quien se lance (no es adyacente si está en diagonal). La víctima no puede defenderse del ataque.,Terror,Horror Congelado
+Espejo Mágico,"Este Hechizo puede ser lanzado durante el turno de un Héroe, puede ser usado inmediatamente después de que un Héroe haya lanzado un Hechizo. El Hechizo permite que quién lo lance devuelva a un Héroe cualquier Hechizo que hubiera lanzado este.
+El Héroe sufre el efecto del Hechizo que había sido lanzado al Monstruo.",Terror,Maga del Espejo
+Estallido Mental,"Este Hechizo paraliza un Héroe dentro de la línea de visión del Monstruo que lo lanza. Ese Héroe no puede moverse ni atacar o realizar acciones, además el Héroe se defiende con 1 Dado de Combate.
+Para romper el Hechizo, el Héroe, en su turno, tira 1 Dado Rojo por cada Punto Mental que tenga, si saca un 6 en cualquiera de los dados, el Hechizo queda roto, y el Héroe puede volver a moverse y atacar normalmente en su próximo turno.",Terror,Maga del Espejo
+Explosión Mental,"El atacante y el defensor tiran, cada uno, un número de Dados de Combate igual al número de sus Puntos Mentales. Quien saque más Calaveras causa daño a los Puntos Mentales del oponente. El daño se determina según el número de Calaveras adicionales que haya sacado el ganador con respecto a su oponente.",Terror,Horda del Ogro
+Huída Fugaz,Este Hechizo permite a quien lo lance desaparecer y teletransportarse instantáneamente a un lugar seguro que solo Zargon conoce. Este lugar está marcado en el Mapa de la Misión.,Terror,Juego Base
+Invocar Espectros,"Este Hechizo invoca un grupo de Muertos Vivientes para que rodeen y protejan al lanzador del Hechizo. Tira 1 Dado Rojo para determinar cuantos Espectros aparecen.
+Si sacas 1 o 2, aparece 1 Espectro.
+Si sacas 3, 4 o 5, aparecen 2 Espectros.
+Si sacas 6, aparecen 3 Espectros.",Terror,Luna del Terror
+Invocar Lobos,"Este Hechizo invoca un número de Lobos Gigantes para que ataquen a los enemigos de su lanzador (coloca los lobos Gigantes junto a este). Para determinar cuantos Lobos Gigantes aparecen, tira 1 Dado Rojo:
+1 o 2 = 1 Lobo Gigante.
+3 o 4 = 2 Lobos Gigante.
+5 o 6 = 3 Lobos Gigante.",Terror,Maga del Espejo
+Invocar Muertos Vivientes,"Este Hechizo conjura un Grupo de Muertos Vivientes para rodear y proteger a quien lo lanza. Tira 1 Dado Rojo:
+1 o 2 = 4 Esqueletos.
+3 o 4 = 3 Esqueletos y 2 Zombis.
+5 o 6 = 2 Zombis y 2 Momias.",Terror,Juego Base
+Invocar Orcos,"Este Hechizo conjura un Grupo de Orcos para rodear y proteger a quien lo lanza. Tira 1 Dado Rojo:
+1, 2 o 3 = 4 Orcos.
+4 o 5 = 5 Orcos.
+6 = 6 Orcos.",Terror,Juego Base
+La Maldición del Hombre Lobo,"Este Hechizo puede ser lanzado sobre cualquier Héroe. El Héroe tira un Dado Rojo, si saca un 6, significa que el hechizo no tiene efecto, cualquier otro resultado significa que el Héroe sufre a partir de entonces la maldición del hombre lobo.
+Mira la sección “Transformar Héroes en Hombres Lobo” del Libro de Misiones de “La Maga del Espejo” para más información.",Terror,Maga del Espejo
+Luces del Terror,"Este Hechizo rodea a un Héroe que se encuentre en la línea de visión del lanzador con misteriosos haces de luz fantasmal. Todos los Monstruos tiran 1 Dado de Ataque adicional cuando ataquen al Héroe afectado.
+Es posible neutralizar este Hechizo de inmediato, o bien al empezar cada turno posterior del Héroe, según el resultado de una tirada de 1 Dado Rojo, si saca 5 o 6, el Hechizo queda neutralizado.",Terror,Luna del Terror
+Miedo,"Este Hechizo hace que un Héroe entre en pánico y solo pueda utilizar un Dado de Combate para atacar. El Hechizo puede romperse en el siguiente turno. El Héroe tira 1 Dado Rojo por cada uno de sus Puntos Mentales. Si saca un 6, el Hechizo se rompe.",Terror,Juego Base
+Muro de Hielo,"Este Hechizo crea hasta 4 casillas de Hielo Sólido (utiliza las fichas individuales de Hielo Mágico). Estas casillas bloquean el movimiento, pero no la Línea de Visión. No es necesario que las casillas sean adyacentes, pero deben estar en la Línea de Visión de quien lance el Hechizo. Cada Casilla de Hielo se mantiene hasta que quien lanzó el Hechizo muera, cancele el Hechizo, pierda la Línea Visión de la casilla, o hasta que se tire un total de 5 Calaveras en ataques contra la Casilla de Hielo.",Terror,Horror Congelado
+Nube de Terror,"Este Hechizo paraliza a todos los Héroes situados en la misma Habitación o Pasillo. Un Héroe paralizado es incapaz de moverse, atacar o defenderse, El Hechizo puede romperse de inmediato, o en un turno posterior. Para liberarse, cada víctima tira 1 Dado Rojo por cada uno de sus Puntos Mentales. Si saca un 6, el Héroe rompe el Hechizo.",Terror,Juego Base
+Oxidación,Este Hechizo hace que cualquier Espada o Yelmo metálico se vuelva tan frágil e inútil que nunca podrá volver a utilizarse. No es efectivo contra Artefactos.,Terror,Juego Base
+Parálisis Mental,"El atacante y el defensor tiran, cada uno, un número de Dados de Combate igual al número de sus Puntos Mentales. Por cada Calavera del atacante que represente un ataque con éxito contra el defensor, este último queda paralizado un turno. Si el atacante no tiene éxito con ninguna Calavera, el Hechizo no tendrá efecto.",Terror,Horda del Ogro
+Patinar,"Este Hechizo permite a quien lo lance moverse rápidamente por Cavernas y Pasillos Helados. Puede patinar hasta 12 casillas y puede atravesar Héroes y Monstruos durante el movimiento.
+ El Hechizo solo dura un turno.",Terror,Horror Congelado
+Rayo Mortífero,"Este Hechizo puede lanzarse en dirección horizontal, vertical o diagonal. El Rayo se desplaza en línea Recta hasta que golpea una Pared o una Puerta Cerrada. Provoca un daño de 2 Puntos Corporales a todos los Héroes o Monstruos que se encuentren en su camino.",Terror,Juego Base
+Reanimación,"Este Hechizo permite reanimar todos los Esqueletos, Momias y Zombis que hayan sido derrotados en la misma Habitación en la que se encuentra el lanzador. Estos Monstruos se alzan con todos los Puntos Corporales originales y atacan a los Héroes de nuevo.",Terror,Maga del Espejo
+Restaurar Terror,"Este Hechizo solo puede tener como objetivo los Monstruos.
+Hace que el lanzador del Hechizo o cualquier otro Monstruo que esté en su línea de visión recupere hasta 6 Puntos Corporales.",Terror,Maga del Espejo
+Subyugación,"El atacante y el defensor tiran, cada uno, un número de Dados de Combate igual al número de sus Puntos Mentales. Si el atacante logra atacar con éxito con, al menos, dos Calaveras, el Hechizo tiene efecto. El atacante puede tomar el control del movimiento y acción del defensor de inmediato. Al final del turno del atacante, el Hechizo termina.",Terror,Horda del Ogro
+Tempestad,Este Hechizo crea una pequeña Tempestad que rodea a un Héroe de tu elección. Ese Héroe pierde su siguiente turno.,Terror,Juego Base
+Tormenta de Fuego,"Este Hechizo crea una zona de fuego que provocará un daño de 3 Puntos Corporales a todos los Héroes y Monstruos en la misma Habitación. No afecta a quién lo lanza. Inmediatamente, todas las víctimas tiran 2 Dados Rojos. Por cada 5 o 6 que saquen, el daño se reduce 1 Punto, No puede utilizarse en Pasillos.",Terror,Juego Base
+Tormenta de Hielo,"Este Hechizo crea una ventisca de hielo que afecta un área de 2 casillas de ancho por 2 casillas de largo. Quien lance el Hechizo ataca a cada Monstruo y Héroe en esa área con 3 Dados de Combate. Los atacados no pueden defenderse. 
+Este Hechizo no puede utilizarse en los Pasillos.",Terror,Horror Congelado

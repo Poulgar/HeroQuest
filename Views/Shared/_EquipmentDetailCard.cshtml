@@ -1,0 +1,17 @@
+@model HeroQuest.Models.EquipmentsAndArtifacts
+<article class="detail-card">
+    <div class="detail-art hero-art">
+        <img src="@(Model.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase) ? Url.Content("~/images/heroquest/artifact-relic.svg") : Url.Content("~/images/heroquest/equipment-sword.svg"))" alt="Ilustración de @Model.Name" />
+        <span class="portrait-ribbon">TOMO DEL COMPENDIO</span>
+    </div>
+    <div class="detail-content">
+        <p class="eyebrow">@Model.Category • @Model.Type</p>
+        <h2>@Model.Name</h2>
+        <p class="detail-subtitle">@(Model.Price > 0 ? $"Precio: {Model.Price} monedas de oro" : "Obtenido como recompensa")</p>
+        <p class="detail-description">@Model.Description</p>
+        <div class="stat-grid">
+            <div><span>Peso</span><strong>@(string.IsNullOrWhiteSpace(Model.Weight) ? "-" : Model.Weight)</strong></div>
+            <div><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></div>
+        </div>
+    </div>
+</article>

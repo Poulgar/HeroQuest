@@ -2,17 +2,17 @@ namespace HeroQuest.Models;
 
 public class Heroe : Character
 {
-    public Heroe(int id, string characterType, int hp, int mind, int dicesAttack, int dicesDefend, int dicesMovement, string description)
+    public Heroe(int id, string characterType, int hp, int mind, int dicesAttack, int dicesDefend, int dicesRedMovement, string description)
         : base(id, characterType, hp, mind, dicesAttack, dicesDefend, description)
     {
-        DicesMovement = dicesMovement;
+        DicesRedMovement = dicesRedMovement;
     }
 
     public Heroe() : base(0, string.Empty, 0, 0, 0, 0, string.Empty)
     {
     }
 
-    public int DicesMovement { get; set; }
+    public int DicesRedMovement { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Player { get; set; } = string.Empty;
     public string Weapon { get; set; } = string.Empty;

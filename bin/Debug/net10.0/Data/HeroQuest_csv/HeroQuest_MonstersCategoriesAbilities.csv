@@ -1,0 +1,42 @@
+﻿Nombre,Movimiento,Ataque,Defensa,Cuerpo,Mente,Habilidad,Apariciones,Categoria
+Abominación,6,3,3,2,3,,Juego Base,Pieles Verdes
+Aparición del Terror,9,6,4,5,5,"Luces del Terror (https://app.notion.com/p/Luces-del-Terror-1711d9a0efd68202b30c019e5919b430?pvs=21) Canalizar Terror (https://app.notion.com/p/Canalizar-Terror-1a01d9a0efd6839abb74812372fde50e?pvs=21) Miedo (https://app.notion.com/p/Miedo-ab91d9a0efd6838d998901eeced95af4?pvs=21) Invocar Espectros (https://app.notion.com/p/Invocar-Espectros-76a1d9a0efd682548d770170db09e757?pvs=21) ",Luna del Terror,Criaturas del Terror
+Araña de la Maldición,7,4,4,3,4,"Engendrar (https://app.notion.com/p/Engendrar-22a1d9a0efd6821987fc81bdd40440a8?pvs=21) Ágil (https://app.notion.com/p/gil-aef1d9a0efd68327965b01e4a448d7b3?pvs=21) Venenoso (https://app.notion.com/p/Venenoso-aa61d9a0efd683f1aed2016bc85b4eb6?pvs=21) ",Junglas de Delthrak,Bestias
+Arquero Elfo,6,4,2,3,2,"Ataque a Distancia (https://app.notion.com/p/Ataque-a-Distancia-6931d9a0efd68310a44d019ebbad29f6?pvs=21) ","Luna del Terror, Maga del Espejo",Elfos
+Arquero Esqueleto,6,2,2,1,0,"Muerto Viviente (https://app.notion.com/p/Muerto-Viviente-7811d9a0efd6825cba6b819ae09bed37?pvs=21) Ataque a Distancia (https://app.notion.com/p/Ataque-a-Distancia-6931d9a0efd68310a44d019ebbad29f6?pvs=21) ","Horda del Ogro, Junglas de Delthrak",Muertos Vivientes
+Arquero Goblin,10,2,1,1,1,"Ataque a Distancia (https://app.notion.com/p/Ataque-a-Distancia-6931d9a0efd68310a44d019ebbad29f6?pvs=21) ","Horda del Ogro, Junglas de Delthrak",Pieles Verdes
+Arquero Orco,8,3,2,1,2,"Ataque a Distancia (https://app.notion.com/p/Ataque-a-Distancia-6931d9a0efd68310a44d019ebbad29f6?pvs=21) ",Horda del Ogro,Pieles Verdes
+Asesina,10,5,3,2,3,"Ataque a Distancia (https://app.notion.com/p/Ataque-a-Distancia-6931d9a0efd68310a44d019ebbad29f6?pvs=21) ",Luna del Terror,Elfos
+Calavera de la Maldición,6,3,2,2,0,"Muerto Viviente (https://app.notion.com/p/Muerto-Viviente-7811d9a0efd6825cba6b819ae09bed37?pvs=21) Raíces Apresadoras (https://app.notion.com/p/Ra-ces-Apresadoras-7301d9a0efd683769975010b702627a8?pvs=21) ",Junglas de Delthrak,Muertos Vivientes
+Campeón Ogro,6,5,4,6,1,,Horda del Ogro,Ogros
+Comandante Ogro,4,6,5,6,2,,Horda del Ogro,Ogros
+Dragón,10,5,5,7,6,"Vuelo Dracónico (https://app.notion.com/p/Vuelo-Drac-nico-e051d9a0efd6822cb6f481b7b1e43ae8?pvs=21) Bola en Llamas (https://app.notion.com/p/Bola-en-Llamas-8371d9a0efd683689f4781ad498e3ead?pvs=21) ",Despertar,Singulares
+Engendro,3,0,0,1,0,"Venenoso (https://app.notion.com/p/Venenoso-aa61d9a0efd683f1aed2016bc85b4eb6?pvs=21) Ágil (https://app.notion.com/p/gil-aef1d9a0efd68327965b01e4a448d7b3?pvs=21) ",Junglas de Delthrak,Bestias
+Espectro,8,3,3,1,0,"Muerto Viviente (https://app.notion.com/p/Muerto-Viviente-7811d9a0efd6825cba6b819ae09bed37?pvs=21) Canalizar Terror (https://app.notion.com/p/Canalizar-Terror-1a01d9a0efd6839abb74812372fde50e?pvs=21) ",Luna del Terror,Criaturas del Terror
+Esqueleto,6,2,2,1,0,"Muerto Viviente (https://app.notion.com/p/Muerto-Viviente-7811d9a0efd6825cba6b819ae09bed37?pvs=21) ",Juego Base,Muertos Vivientes
+Fellmarak,8,5,4,6,6,,Profecía de Telor,Singulares
+Fimir,6,3,3,2,3,,Juego Base,Pieles Verdes
+Gárgola,6,4,5,3,4,,Juego Base,Criaturas del Terror
+Goblin,10,2,1,1,1,,Juego Base,Pieles Verdes
+Gremlin de Hielo,10,2,3,3,3,"Robar Objetos (https://app.notion.com/p/Robar-Objetos-fb81d9a0efd683d8b36501ddce3e344f?pvs=21) ",Horror Congelado,Criaturas Congeladas
+Guardia Mágico,8,4,4,3,3,"Bola en Llamas (https://app.notion.com/p/Bola-en-Llamas-8371d9a0efd683689f4781ad498e3ead?pvs=21) Tempestad (https://app.notion.com/p/Tempestad-9631d9a0efd682a39a5b01d706269a35?pvs=21) ",Luna del Terror,Criaturas del Terror
+Guerrero del Terror,7,4,4,3,3,,Juego Base,Criaturas del Terror
+Guerrero Elfo,6,4,3,3,2,,"Luna del Terror, Maga del Espejo",Elfos
+Guerrero Ogro,6,5,4,5,1,,Horda del Ogro,Ogros
+Horror Congelado,8,5,4,6,4,"Escalofrío (https://app.notion.com/p/Escalofr-o-2251d9a0efd6839cb9b881326909eb7e?pvs=21) Tormenta de Hielo (https://app.notion.com/p/Tormenta-de-Hielo-82d1d9a0efd682d4a05f81c9daf91f67?pvs=21) Muro de Hielo (https://app.notion.com/p/Muro-de-Hielo-bbd1d9a0efd682c48ac40185172ae300?pvs=21) Congelación Mental (https://app.notion.com/p/Congelaci-n-Mental-9a11d9a0efd68361b55e012927927d69?pvs=21) Patinar (https://app.notion.com/p/Patinar-9701d9a0efd68361a8030117442aa118?pvs=21) Calma (https://app.notion.com/p/Calma-7041d9a0efd682f1a67d8141ebe6c96b?pvs=21) ",Horror Congelado,Criaturas Congeladas
+Lobo Gigante,9,6,3,5,1,,Maga del Espejo,Bestias
+Momia,4,3,4,2,0,"Muerto Viviente (https://app.notion.com/p/Muerto-Viviente-7811d9a0efd6825cba6b819ae09bed37?pvs=21) ",Juego Base,Muertos Vivientes
+Ogro,4,6,4,5,2,,Maga del Espejo,Ogros
+Orco,8,3,2,1,2,,Juego Base,Pieles Verdes
+Oso de Guerra Polar,6,4,3,6,2,"Ataque Doble (https://app.notion.com/p/Ataque-Doble-2ea1d9a0efd683539b3701f3ae81a772?pvs=21) ",Horror Congelado,Criaturas Congeladas
+Raptor,8,3,2,2,3,"Estratega Astuto (https://app.notion.com/p/Estratega-Astuto-5981d9a0efd6833bb0790118d7a3fe3f?pvs=21) ",Junglas de Delthrak,Bestias
+Reina de los Espíritus,7,4,4,6,3,,Reina de los Espíritus,Singulares
+Secretario de la Maldición,7,2,2,1,2,"Canalizar Terror (https://app.notion.com/p/Canalizar-Terror-1a01d9a0efd6839abb74812372fde50e?pvs=21) Agarre Trepador (https://app.notion.com/p/Agarre-Trepador-2021d9a0efd682cbb0ef810f4195571e?pvs=21) ",Junglas de Delthrak,Criaturas del Terror
+Secretario del Terror,7,2,2,1,2,"Canalizar Terror (https://app.notion.com/p/Canalizar-Terror-1a01d9a0efd6839abb74812372fde50e?pvs=21) Luces del Terror (https://app.notion.com/p/Luces-del-Terror-1711d9a0efd68202b30c019e5919b430?pvs=21) ",Luna del Terror,Criaturas del Terror
+Señor de los Ogros,4,6,6,10,5,,Horda del Ogro,Ogros
+Serpiente,8,4,3,6,3,"Engendrar (https://app.notion.com/p/Engendrar-22a1d9a0efd6821987fc81bdd40440a8?pvs=21) Venenoso (https://app.notion.com/p/Venenoso-aa61d9a0efd683f1aed2016bc85b4eb6?pvs=21) ",Junglas de Delthrak,Bestias
+Simio Gigante,8,4,3,7,5,"Ágil (https://app.notion.com/p/gil-aef1d9a0efd68327965b01e4a448d7b3?pvs=21) ",Junglas de Delthrak,Bestias
+Sir Ragnar,5,5,5,4,4,"Último Aliento (https://app.notion.com/p/ltimo-Aliento-1511d9a0efd68241b18e81e31eaed043?pvs=21) ",Luna del Terror,Singulares
+Venim,9,6,6,5,4,,Cripta de la Oscuridad,Singulares
+Yeti,8,3,3,5,2,"Ataque de Abrazo (https://app.notion.com/p/Ataque-de-Abrazo-0fd1d9a0efd682d5ac888111945b05be?pvs=21) ",Horror Congelado,Criaturas Congeladas
+Zombi,5,2,3,1,0,"Muerto Viviente (https://app.notion.com/p/Muerto-Viviente-7811d9a0efd6825cba6b819ae09bed37?pvs=21) ",Juego Base,Muertos Vivientes

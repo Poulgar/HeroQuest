@@ -63,6 +63,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_EquipmentDetailCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9FcXVpcG1lbnREZXRhaWxDYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_HeroDetailCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9IZXJvRGV0YWlsQ2FyZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_MiscellaneaDetailCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9NaXNjZWxsYW5lYURldGFpbENhcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_MonsterDetailCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Nb25zdGVyRGV0YWlsQ2FyZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/polgv/OneDrive/Escriptori/PersonalPrograms/HeroQuest/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

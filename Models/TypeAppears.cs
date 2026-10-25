@@ -1,34 +1,38 @@
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace HeroQuest.Models;
 
+[Flags]
 public enum TypeAppears
 {
+    [Display(Name = "Sin especificar")]
+    None = 0,
     [Display (Name = "Cripta de la Oscuridad")]
-    CriptaDeLaOscuridad,
+    CriptaDeLaOscuridad = 1 << 0,
     [Display (Name = "Despertar")]
-    Despertar,
+    Despertar = 1 << 1,
     [Display (Name = "Horda del Ogro")]
-    HordaDelOgro,
+    HordaDelOgro = 1 << 2,
     [Display (Name = "Horror Congelado")]
-    HorrorCongelado,
+    HorrorCongelado = 1 << 3,
     [Display (Name = "Juego Base")]
-    JuegoBase,
+    JuegoBase = 1 << 4,
     [Display (Name = "Junglas de Delthrak")]
-    JunglasDeDelthrak,
+    JunglasDeDelthrak = 1 << 5,
     [Display (Name = "Luna del Terror")]
-    LunaDelTerror,
+    LunaDelTerror = 1 << 6,
     [Display (Name = "Maga del Espejo")]
-    MagaDelEspejo,
+    MagaDelEspejo = 1 << 7,
     [Display (Name = "Profecía de Telor")]
-    ProfeciaDeTelor,
+    ProfeciaDeTelor = 1 << 8,
     [Display (Name = "Reina de los Espíritus")]
-    ReinaDeLosEspiritus,
+    ReinaDeLosEspiritus = 1 << 9,
     [Display (Name = "Señor de los Brujos")]
-    SeñorDeLosBrujos,
+    SeñorDeLosBrujos = 1 << 10,
     [Display (Name = "Torre de Kellar")]
-    TorreDeKellar,
+    TorreDeKellar = 1 << 11,
 
     [Display (Name = "Original")]
-    Original
+    Original = 1 << 12
 }

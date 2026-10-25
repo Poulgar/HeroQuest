@@ -1,4 +1,5 @@
 using HeroQuest.Data;
+using HeroQuest.Models;
 using HeroQuest.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,12 @@ public class MonstersController(ApplicationDbContext context) : Controller
 {
     public async Task<IActionResult> Index(int? id)
     {
-        var monsters = await context.Monsters.AsNoTracking().OrderBy(monster => monster.Id).ToListAsync();
+        // Include carga las tablas relacionadas de hechizos para que la ficha no dispare consultas adicionales.
+        var monsters = await context.Monsters.AsNoTracking()
+            .Include(monster => monster.SpellLinks)
+                .ThenInclude(link => link.SpellOfTerror)
+            .OrderBy(monster => monster.Id)
+            .ToListAsync();
         var abilities = await context.MonsterAbilities.AsNoTracking().OrderBy(ability => ability.Id).ToListAsync();
 
         var selected = monsters.FirstOrDefault(monster => monster.Id == id) ?? monsters.FirstOrDefault();

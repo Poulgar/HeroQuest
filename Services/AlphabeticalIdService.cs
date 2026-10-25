@@ -6,7 +6,7 @@ namespace HeroQuest.Services;
 
 /// <summary>
 /// Reasigna una vez los IDs para que reflejen el orden alfabético español.
-/// En el modelo actual estas tablas no tienen claves foráneas entre sí.
+/// Los enlaces monstruo-hechizo deben vaciarse antes de llamar a este servicio y reconstruirse después.
 /// </summary>
 public sealed class AlphabeticalIdService(ApplicationDbContext context)
 {
@@ -26,15 +26,18 @@ public sealed class AlphabeticalIdService(ApplicationDbContext context)
             .OrderBy(x => x.Name, comparer).ThenBy(x => x.Id).ToList();
         var abilities = (await context.MonsterAbilities.AsNoTracking().Select(x => new Row(x.Id, x.Name, "MonsterAbilities")).ToListAsync())
             .OrderBy(x => x.Name, comparer).ThenBy(x => x.Id).ToList();
+        var spells = (await context.SpellsOfTerror.AsNoTracking().Select(x => new Row(x.Id, x.Name, "SpellsOfTerror")).ToListAsync())
+            .OrderBy(x => x.Name, comparer).ThenBy(x => x.Id).ToList();
 
         var needsReordering = !HasSequentialIds(characters)
             || !HasSequentialIds(miscellaneaEntries)
             || !HasSequentialIds(equipment)
-            || !HasSequentialIds(abilities);
+            || !HasSequentialIds(abilities)
+            || !HasSequentialIds(spells);
         if (!needsReordering) return;
 
         // El desplazamiento temporal evita que los nuevos IDs choquen con claves todavía ocupadas.
-        var allRows = characters.Concat(miscellaneaEntries).Concat(equipment).Concat(abilities).ToList();
+        var allRows = characters.Concat(miscellaneaEntries).Concat(equipment).Concat(abilities).Concat(spells).ToList();
         var offset = (allRows.Count == 0 ? 0 : allRows.Max(x => x.Id)) + allRows.Count + 1;
         await using var transaction = await context.Database.BeginTransactionAsync();
 
@@ -43,6 +46,7 @@ public sealed class AlphabeticalIdService(ApplicationDbContext context)
         await ShiftAsync("Miscellanea", miscellaneaEntries, offset);
         await ShiftAsync("EquipmentsAndArtifacts", equipment, offset);
         await ShiftAsync("MonsterAbilities", abilities, offset);
+        await ShiftAsync("SpellsOfTerror", spells, offset);
 
         var nextCharacterId = 1;
         foreach (var row in characters)
@@ -53,6 +57,7 @@ public sealed class AlphabeticalIdService(ApplicationDbContext context)
         await AssignSequentialIdsAsync("Miscellanea", miscellaneaEntries, offset);
         await AssignSequentialIdsAsync("EquipmentsAndArtifacts", equipment, offset);
         await AssignSequentialIdsAsync("MonsterAbilities", abilities, offset);
+        await AssignSequentialIdsAsync("SpellsOfTerror", spells, offset);
         await transaction.CommitAsync();
 
         // Los importadores pueden haber dejado entidades rastreadas antes del reordenamiento SQL.
@@ -84,6 +89,7 @@ public sealed class AlphabeticalIdService(ApplicationDbContext context)
             "Miscellanea" => "UPDATE \"Miscellanea\" SET \"Id\" = {0} WHERE \"Id\" = {1}",
             "EquipmentsAndArtifacts" => "UPDATE \"EquipmentsAndArtifacts\" SET \"Id\" = {0} WHERE \"Id\" = {1}",
             "MonsterAbilities" => "UPDATE \"MonsterAbilities\" SET \"Id\" = {0} WHERE \"Id\" = {1}",
+            "SpellsOfTerror" => "UPDATE \"SpellsOfTerror\" SET \"Id\" = {0} WHERE \"Id\" = {1}",
             _ => throw new ArgumentOutOfRangeException(nameof(table), table, "Tabla no permitida para reindexar.")
         };
         return context.Database.ExecuteSqlRawAsync(sql, newId, oldId);

@@ -58,7 +58,7 @@ public class HeroeImportService(ApplicationDbContext context)
                 mind: Numero("Mind"),
                 dicesAttack: Numero("DicesAttack"),
                 dicesDefend: Numero("DicesDefend"),
-                dicesMovement: Numero("DicesMovement"),
+                dicesRedMovement: Numero("DicesRedMovement"),
                 description: Texto("Description"))
             {
                 CharacterType = Texto("CharacterType"),

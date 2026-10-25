@@ -1,15 +1,23 @@
 using Microsoft.EntityFrameworkCore; // Proporciona los métodos y clases necesarios para trabajar con Entity Framework Core.
-using HeroQuest.Models;
+using HeroQuest.Models; // Importa el espacio de nombres que contiene las clases de modelo.
 
 namespace HeroQuest.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
+// Clase principal para gestionar la conexión y las entidades con Entity Framework Core
+public class ApplicationDbContext : DbContext
 {
-    public DbSet<Heroe> Heroes => Set<Heroe>(); // Colección de héroes en la base de datos.
-    public DbSet<Monster> Monsters => Set<Monster>();
-    public DbSet<MiscellaneaItem> Miscellanea => Set<MiscellaneaItem>();
-    public DbSet<EquipmentsAndArtifacts> EquipmentsAndArtifacts => Set<EquipmentsAndArtifacts>();
-    public DbSet<MonsterAbility> MonsterAbilities => Set<MonsterAbility>();
+    public DbSet<Heroe> Heroes => Set<Heroe>(); // Colección de héroes en la base de datos
+    public DbSet<Monster> Monsters => Set<Monster>(); // Colección de monstruos
+    public DbSet<MiscellaneaItem> Miscellanea => Set<MiscellaneaItem>(); // Objetos variados de la sección Miscelánea
+    public DbSet<EquipmentsAndArtifacts> EquipmentsAndArtifacts => Set<EquipmentsAndArtifacts>(); // Colección unificada de equipamiento y artefactos
+    public DbSet<MonsterAbility> MonsterAbilities => Set<MonsterAbility>(); // Colección de habilidades de monstruos
+    public DbSet<SpellOfTerror> SpellsOfTerror => Set<SpellOfTerror>(); // Hechizos de la expansión El Terror
+    public DbSet<MonsterSpellOfTerror> MonsterSpellOfTerrors => Set<MonsterSpellOfTerror>(); // Relación de muchos a muchos monstruo-hechizo
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : base(options) // Constructor que recibe opciones de configuración para la base de datos y las pasa a la clase base DbContext.
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) // Método que se llama al crear el modelo de la base de datos, permite configurar las entidades y sus relaciones.
     {
@@ -18,12 +26,27 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .Property(c => c.Id) // Configura la propiedad Id de la entidad Character.
             // TPC guarda Heroes y Monsters en tablas separadas. SQLite genera IDs por tabla,
             // lo que puede repetir claves entre ambas tablas; las asignamos globalmente desde los importadores.
-            .ValueGeneratedNever(); // Indica que el valor de la propiedad Id no se generará automáticamente, sino que se asignará manualmente.
+            .ValueGeneratedNever();
 
         modelBuilder.Entity<Heroe>(); // Configura la entidad Heroe en el modelo de la base de datos.
         modelBuilder.Entity<Monster>();
         modelBuilder.Entity<MiscellaneaItem>();
         modelBuilder.Entity<EquipmentsAndArtifacts>();
         modelBuilder.Entity<MonsterAbility>();
+        modelBuilder.Entity<SpellOfTerror>().ToTable("SpellsOfTerror");
+
+        // La tabla puente representa las dos claves foráneas y evita duplicar hechizos por monstruo.
+        modelBuilder.Entity<MonsterSpellOfTerror>(entity =>
+        {
+            entity.ToTable("MonsterSpellOfTerror");
+            entity.HasKey(link => new { link.MonsterId, link.SpellOfTerrorId });
+            entity.HasOne(link => link.Monster)
+                .WithMany(monster => monster.SpellLinks)
+                .HasForeignKey(link => link.MonsterId);
+            entity.HasOne(link => link.SpellOfTerror)
+                .WithMany(spell => spell.MonsterLinks)
+                .HasForeignKey(link => link.SpellOfTerrorId);
+        });
     }
 }
+// Contexto de base de datos que gestiona todas las entidades del proyecto HeroQuest.

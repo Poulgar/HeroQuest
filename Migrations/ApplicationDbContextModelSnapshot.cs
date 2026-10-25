@@ -137,6 +137,47 @@ namespace HeroQuest.Migrations
                     b.ToTable("MonsterAbilities");
                 });
 
+            modelBuilder.Entity("HeroQuest.Models.MonsterSpellOfTerror", b =>
+                {
+                    b.Property<int>("MonsterId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SpellOfTerrorId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("MonsterId", "SpellOfTerrorId");
+
+                    b.HasIndex("SpellOfTerrorId");
+
+                    b.ToTable("MonsterSpellOfTerror", (string)null);
+                });
+
+            modelBuilder.Entity("HeroQuest.Models.SpellOfTerror", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Appears")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SpellsOfTerror", (string)null);
+                });
+
             modelBuilder.Entity("HeroQuest.Models.Heroe", b =>
                 {
                     b.HasBaseType("HeroQuest.Models.Character");
@@ -144,7 +185,7 @@ namespace HeroQuest.Migrations
                     b.Property<string>("Armor")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DicesMovement")
+                    b.Property<int>("DicesRedMovement")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Gold")
@@ -185,26 +226,50 @@ namespace HeroQuest.Migrations
                     b.Property<int>("Attack")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Body")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Defense")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("MaxMovement")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Faction")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Movement")
+                    b.Property<int>("MaxMovement")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TypeMonsterRol")
-                        .HasColumnType("INTEGER");
-
                     b.ToTable("Monsters");
+                });
+
+            modelBuilder.Entity("HeroQuest.Models.MonsterSpellOfTerror", b =>
+                {
+                    b.HasOne("HeroQuest.Models.Monster", "Monster")
+                        .WithMany("SpellLinks")
+                        .HasForeignKey("MonsterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HeroQuest.Models.SpellOfTerror", "SpellOfTerror")
+                        .WithMany("MonsterLinks")
+                        .HasForeignKey("SpellOfTerrorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Monster");
+
+                    b.Navigation("SpellOfTerror");
+                });
+
+            modelBuilder.Entity("HeroQuest.Models.SpellOfTerror", b =>
+                {
+                    b.Navigation("MonsterLinks");
+                });
+
+            modelBuilder.Entity("HeroQuest.Models.Monster", b =>
+                {
+                    b.Navigation("SpellLinks");
                 });
 #pragma warning restore 612, 618
         }

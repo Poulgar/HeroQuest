@@ -15,9 +15,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
-    <Content Include="Data\HeroQuest_Heroes.csv" CopyToOutputDirectory="PreserveNewest" />
-    <!-- Los importadores buscan estos CSV en la carpeta de salida al ejecutar la aplicación. -->
-    <Content Include="HeroQuest_csv\**\*.csv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Toda la fuente de datos vive junta en Data\HeroQuest_csv y se copia conservando esa ruta. -->
+    <Content Include="Data\HeroQuest_csv\**\*.csv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

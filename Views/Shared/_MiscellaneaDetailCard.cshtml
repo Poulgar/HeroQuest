@@ -1,0 +1,16 @@
+@model HeroQuest.Models.MiscellaneaItem
+<article class="detail-card">
+    <div class="detail-art hero-art">
+        <img src="~/images/heroquest/modifier-scroll.svg" alt="Ilustración de @Model.Name" />
+        <span class="portrait-ribbon">TOMO DEL COMPENDIO</span>
+    </div>
+    <div class="detail-content">
+        <p class="eyebrow">OBJETO • MISCELÁNEA</p>
+        <h2>@Model.Name</h2>
+        <p class="detail-subtitle">@(Model.Price > 0 ? $"Precio: {Model.Price} monedas de oro" : "Precio no especificado")</p>
+        <p class="detail-description">@Model.Description</p>
+        <div class="stat-grid">
+            <div><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></div>
+        </div>
+    </div>
+</article>

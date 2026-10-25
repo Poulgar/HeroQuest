@@ -27,13 +27,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
-var ruta = Path.Combine(
-    AppContext.BaseDirectory,
-    "Data",
-    "HeroQuest_Heroes.csv");
+var csvFolder = Path.Combine(AppContext.BaseDirectory, "Data", "HeroQuest_csv");
+var heroesCsvPath = Path.Combine(csvFolder, "HeroQuest_Heroes.csv");
 
-// Los CSV de HeroQuest_csv se copian a la salida mediante HeroQuest.csproj.
-var csvFolder = Path.Combine(AppContext.BaseDirectory, "HeroQuest_csv");
+// Todos los CSV se copian dentro de Data\HeroQuest_csv mediante HeroQuest.csproj.
 
 // Primero actualizamos el esquema y después importamos los datos en el mismo contexto.
 using (var scope = app.Services.CreateScope())
@@ -44,14 +41,11 @@ using (var scope = app.Services.CreateScope())
     await context.Database.MigrateAsync();
 
     var importer = new HeroeImportService(context);
-    await importer.ImportarAsync(ruta);
+    await importer.ImportarAsync(heroesCsvPath);
 
     var csvImporter = new CsvImportService(context);
     await csvImporter.ImportAllAsync(csvFolder);
 
-    // Los IDs sirven como índice alfabético, respetando las reglas de ordenación españolas.
-    var alphabeticalIds = new AlphabeticalIdService(context);
-    await alphabeticalIds.EnsureAlphabeticalIdsAsync();
 }
 
 // Configure the HTTP request pipeline.

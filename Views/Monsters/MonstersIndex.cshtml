@@ -22,15 +22,15 @@
                 <p class="list-caption">ÍNDICE <span>@Model.Monsters.Count CRIATURAS</span></p>
                 <div class="index-tools">
                     <label>Buscar <input class="index-search" type="search" placeholder="Nombre o habilidad…" /></label>
-                    <label>Ordenar <select class="index-sort"><option value="name-asc">Alfabético</option><option value="name-desc">Alfabético inverso</option><option value="appears">Expansión</option></select></label>
+                    <label>Ordenar <select class="index-sort"><option value="name-asc">A-Z</option><option value="name-desc">Z-A</option><option value="appears">Expansión</option></select></label>
                 </div>
                 <div class="catalog-scroll" data-index-list>
                 @foreach (var monster in Model.Monsters)
                 {
                     <a class="catalog-row @(Model.SelectedMonster?.Id == monster.Id ? "selected" : "")"
-                       data-name="@(string.IsNullOrWhiteSpace(monster.Name) ? monster.CharacterType : monster.Name)" data-search="@monster.Name @monster.CharacterType @monster.Ability" data-appears="@monster.Appears.DisplayName()" data-id="@monster.Id"
+                       data-select-record="@monster.Id" data-name="@monster.Name" data-search="@monster.Name @monster.Faction @monster.Ability" data-appears="@monster.Appears.DisplayName()" data-id="@monster.Id"
                        asp-controller="Monsters" asp-action="Index" asp-route-id="@monster.Id" aria-current="@(Model.SelectedMonster?.Id == monster.Id ? "page" : null)">
-                        <span class="row-initial monster-initial">@((!string.IsNullOrEmpty(monster.Name) ? monster.Name[..1] : (!string.IsNullOrEmpty(monster.CharacterType) ? monster.CharacterType[..1] : "?")).ToUpperInvariant())</span>
+                        <span class="faction-token faction-token-small" style="--faction-color: @monster.Faction.FactionColor()" title="@monster.Faction">@monster.Faction.FactionSymbol()</span>
                         <span class="row-main"><strong>@ShortIndexName(string.IsNullOrEmpty(monster.Name) ? monster.CharacterType : monster.Name)</strong><small>@monster.Hp HP • @monster.DicesAttack ataque</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>
@@ -38,42 +38,18 @@
                 </div>
             </aside>
 
-            @if (Model.SelectedMonster is { } monsterDetail)
-            {
-                <article class="detail-card monster-detail-card">
-                    <div class="detail-art monster-art">
-                        <img src="~/images/heroquest/monster-portrait.svg" alt="Ilustración de @monsterDetail.CharacterType" />
-                        <span class="portrait-ribbon">REGISTRO DEL BESTIARIO</span>
-                    </div>
-                    <div class="detail-content">
-                        <p class="eyebrow">@monsterDetail.TypeMonsterRol.DisplayName() • N.º @monsterDetail.Id</p>
-                        <h2>@(string.IsNullOrEmpty(monsterDetail.Name) ? monsterDetail.CharacterType : monsterDetail.Name)</h2>
-                        <p class="detail-subtitle">Criatura catalogada en las profundidades</p>
-                        @if (!string.IsNullOrWhiteSpace(monsterDetail.Description))
-                        {
-                            <p class="detail-description">@monsterDetail.Description</p>
-                        }
-                        <div class="stat-grid">
-                            <div><span>Vida</span><strong>@monsterDetail.HpCurrent / @monsterDetail.Hp</strong></div>
-                            <div><span>Mente</span><strong>@monsterDetail.Mind</strong></div>
-                            <div><span>Ataque</span><strong>@monsterDetail.DicesAttack dados</strong></div>
-                            <div><span>Defensa</span><strong>@monsterDetail.DicesDefend dados</strong></div>
-                            <div><span>Movimiento</span><strong>@monsterDetail.Movement</strong></div>
-                            <div><span>Movimiento Máximo</span><strong>@monsterDetail.MaxMovement</strong></div>
-                            <div><span>Cuerpo</span><strong>@monsterDetail.Body</strong></div>
-                            <div><span>Clasificación</span><strong>@monsterDetail.TypeMonsterRol.DisplayName()</strong></div>
-                            <div><span>Expansión</span><strong>@monsterDetail.Appears.DisplayName()</strong></div>
-                        </div>
-                        @if (!string.IsNullOrWhiteSpace(monsterDetail.Ability) &&
-                             !monsterDetail.Ability.Contains("http", StringComparison.OrdinalIgnoreCase))
-                        {
-                            <div class="detail-divider"><span>HABILIDADES</span></div>
-                            <p class="detail-description">@monsterDetail.Ability</p>
-                        }
-                    </div>
-                </article>
-            }
+            <div class="detail-host" data-detail-host>
+                @if (Model.SelectedMonster is { } monsterDetail)
+                {
+                    @await Html.PartialAsync("~/Views/Shared/_MonsterDetailCard.cshtml", monsterDetail)
+                }
+            </div>
         </div>
+
+        @foreach (var monster in Model.Monsters)
+        {
+            <template data-detail-template="@monster.Id">@await Html.PartialAsync("~/Views/Shared/_MonsterDetailCard.cshtml", monster)</template>
+        }
     }
 </section>
 
@@ -93,11 +69,12 @@
             @foreach (var ability in Model.Abilities)
             {
                 <article class="ability-card">
-                    <div class="ability-card-heading"><h3>@ability.Name</h3><span>@ability.Appears.DisplayName()</span></div>
+                    <div class="ability-card-heading"><h3><span class="ability-icon" style="--ability-color: @ability.Name.AbilityColor()" aria-hidden="true">@ability.Name.AbilitySymbol()</span>@ability.Name</h3><span>@ability.Appears.DisplayName()</span></div>
                     <p>@ability.Description</p>
                 </article>
             }
         </div>
     }
 </section>
+
 
