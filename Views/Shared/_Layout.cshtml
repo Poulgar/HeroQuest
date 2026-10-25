@@ -18,7 +18,7 @@
                 <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Heroes" ? "active" : "")" asp-controller="Heroes" asp-action="Index">Héroes</a>
                 <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Monsters" ? "active" : "")" asp-controller="Monsters" asp-action="Index">Monstruos</a>
                 <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Equipment" ? "active" : "")" asp-controller="Archive" asp-action="Equipment">Equipo y artefactos</a>
-                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Modifiers" ? "active" : "")" asp-controller="Archive" asp-action="Modifiers">Modificadores</a>
+                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Miscellanea" ? "active" : "")" asp-controller="Archive" asp-action="Miscellanea">Miscelánea</a>
             </nav>
         </div>
     </header>
@@ -34,5 +34,6 @@
             <span class="footer-caption">HEROQUEST · ARCHIVO DE CAMPAÑA</span>
         </div>
     </footer>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>

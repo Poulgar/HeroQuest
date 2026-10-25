@@ -1,0 +1,62 @@
+@model HeroQuest.ViewModels.MiscellaneaViewModel
+@{
+    ViewData["Title"] = "Miscelánea";
+    string ShortIndexName(string name, int limit = 25) => name.Length <= limit ? name : name[..(limit - 1)] + "…";
+}
+
+<section class="catalog-page page-shell">
+    <div class="page-heading">
+        <p class="eyebrow">EL COMPENDIO</p>
+        <h1>La <em>miscelánea</em></h1>
+        <p>Objetos, tesoros y consumibles del compendio de aventuras.</p>
+    </div>
+
+    @if (Model.Entries.Count == 0)
+    {
+        <div class="empty-note"><span aria-hidden="true">⚜</span><p>Aún no hay objetos de miscelánea registrados.</p></div>
+    }
+    else
+    {
+        <div class="catalog-layout">
+            <aside class="catalog-list" aria-label="Índice de miscelánea">
+                <p class="list-caption">ÍNDICE <span>@Model.Entries.Count OBJETOS</span></p>
+                <div class="index-tools">
+                    <label>Buscar <input class="index-search" type="search" placeholder="Nombre…" /></label>
+                    <label>Ordenar <select class="index-sort"><option value="name-asc">Alfabético</option><option value="name-desc">Alfabético inverso</option><option value="price-asc">Precio: menor</option><option value="price-desc">Precio: mayor</option><option value="appears">Expansión</option></select></label>
+                </div>
+                <div class="catalog-scroll" data-index-list>
+                @foreach (var entry in Model.Entries)
+                {
+                    <a class="catalog-row @(Model.SelectedEntry?.Id == entry.Id ? "selected" : "")"
+                       data-name="@entry.Name" data-search="@entry.Name" data-price="@entry.Price" data-appears="@entry.Appears.DisplayName()" data-id="@entry.Id"
+                       asp-controller="Archive" asp-action="Miscellanea" asp-route-id="@entry.Id" aria-current="@(Model.SelectedEntry?.Id == entry.Id ? "page" : null)">
+                        <span class="row-initial">@((entry.Name.Length > 0 ? entry.Name[..1] : "?").ToUpperInvariant())</span>
+                        <span class="row-main"><strong>@ShortIndexName(entry.Name)</strong><small>@(entry.Price > 0 ? $"{entry.Price} mo" : "Sin precio")</small></span>
+                        <span class="row-chevron" aria-hidden="true">›</span>
+                    </a>
+                }
+                </div>
+            </aside>
+
+            @if (Model.SelectedEntry is { } detail)
+            {
+                <article class="detail-card">
+                    <div class="detail-art hero-art">
+                        <img src="~/images/heroquest/modifier-scroll.svg" alt="Ilustración de @detail.Name" />
+                        <span class="portrait-ribbon">TOMO DEL COMPENDIO</span>
+                    </div>
+                    <div class="detail-content">
+                        <p class="eyebrow">OBJETO • MISCELÁNEA</p>
+                        <h2>@detail.Name</h2>
+                        <p class="detail-subtitle">@(detail.Price > 0 ? $"Precio: {detail.Price} monedas de oro" : "Precio no especificado")</p>
+                        <p class="detail-description">@detail.Description</p>
+                        <div class="stat-grid">
+                            <div><span>Expansión</span><strong>@detail.Appears.DisplayName()</strong></div>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>
+

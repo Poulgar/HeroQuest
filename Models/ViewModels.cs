@@ -7,7 +7,7 @@ public class HeroQuestIndexViewModel
     public int HeroesCount { get; set; }
     public int MonstersCount { get; set; }
     public int EquipmentCount { get; set; }
-    public int ModifierCount { get; set; }
+    public int MiscellaneaCount { get; set; }
     public int MonsterAbilityCount { get; set; }
 }
 
@@ -31,8 +31,8 @@ public class EquipmentsArtifactsViewModel
     public EquipmentsAndArtifacts? SelectedItem { get; set; }
 }
 
-public class ItemsViewModel
+public class MiscellaneaViewModel
 {
-    public List<Item> Items { get; set; } = [];
-    public Item? SelectedItem { get; set; }
+    public List<MiscellaneaItem> Entries { get; set; } = [];
+    public MiscellaneaItem? SelectedEntry { get; set; }
 }

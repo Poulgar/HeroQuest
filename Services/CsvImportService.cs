@@ -21,20 +21,20 @@ public class CsvImportService
     public async Task ImportAllAsync(string csvFolderPath)
     {
         var monstersPath = Path.Combine(csvFolderPath, "Monstruos (1) 3241d9a0efd682bc9ec1816c829fd228.csv");
-        var itemsPath = Path.Combine(csvFolderPath, "Objetos (1) 8311d9a0efd682478309012935880a6d.csv");
+        var miscellaneaPath = Path.Combine(csvFolderPath, "Objetos (1) 8311d9a0efd682478309012935880a6d.csv");
         var equipmentPath = Path.Combine(csvFolderPath, "Equipo (1) 3731d9a0efd6822e9d4a01c22d86ba7d.csv");
         var artifactsPath = Path.Combine(csvFolderPath, "Artefactos (1) 04b1d9a0efd683b59ae20122de2c154c.csv");
         var abilitiesPath = Path.Combine(csvFolderPath, "Habilidades de Monstruos (1) 7f31d9a0efd68269889801464866b7dc.csv");
 
         // No ocultamos una ruta incorrecta: así la app informa por qué no pudo llenar una tabla.
-        foreach (var path in new[] { monstersPath, itemsPath, equipmentPath, artifactsPath, abilitiesPath })
+        foreach (var path in new[] { monstersPath, miscellaneaPath, equipmentPath, artifactsPath, abilitiesPath })
         {
             if (!File.Exists(path))
                 throw new FileNotFoundException($"No se encontró el CSV requerido: {Path.GetFileName(path)}", path);
         }
 
         await ImportMonstersAsync(monstersPath);
-        await ImportItemsAsync(itemsPath); // Objetos/Modificadores
+        await ImportMiscellaneaAsync(miscellaneaPath); // Importa el CSV de objetos a la tabla Miscelánea.
         await ImportEquipmentsAndArtifactsAsync(
             equipmentPath, // Equipamiento
             artifactsPath); // Artefactos
@@ -97,10 +97,10 @@ public class CsvImportService
         await _context.SaveChangesAsync();
     }
 
-    private async Task ImportItemsAsync(string ruta)
+    private async Task ImportMiscellaneaAsync(string ruta)
     {
         if (!File.Exists(ruta)) return;
-        if (await _context.Items.AnyAsync()) return;
+        if (await _context.Miscellanea.AnyAsync()) return;
 
         using var reader = new StreamReader(ruta);
         using var csv = new CsvReader(reader, GetConfig());
@@ -112,14 +112,14 @@ public class CsvImportService
             string Texto(string campo) => datos.ContainsKey(campo) ? datos[campo]?.ToString()?.Trim() ?? "" : "";
             int Numero(string campo) => int.TryParse(Texto(campo), out var valor) ? valor : 0;
 
-            var item = new Item(
+            var entry = new MiscellaneaItem(
                 id: 0,
                 name: Texto("Nombre"),
                 description: Texto("Descripción"),
                 price: Numero("Precio (Monedas de Oro)"),
                 appears: TypeAppearsParser.Parse(Texto("Apariciones"))
             );
-            _context.Items.Add(item);
+            _context.Miscellanea.Add(entry);
         }
         await _context.SaveChangesAsync();
     }

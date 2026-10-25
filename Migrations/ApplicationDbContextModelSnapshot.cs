@@ -90,7 +90,7 @@ namespace HeroQuest.Migrations
                     b.ToTable("EquipmentsAndArtifacts");
                 });
 
-            modelBuilder.Entity("HeroQuest.Models.Item", b =>
+            modelBuilder.Entity("HeroQuest.Models.MiscellaneaItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,7 +112,7 @@ namespace HeroQuest.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Items");
+                    b.ToTable("Miscellanea");
                 });
 
             modelBuilder.Entity("HeroQuest.Models.MonsterAbility", b =>

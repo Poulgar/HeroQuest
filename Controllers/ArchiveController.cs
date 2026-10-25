@@ -10,11 +10,7 @@ public class ArchiveController(ApplicationDbContext context) : Controller
 {
     public async Task<IActionResult> Equipment(int? id)
     {
-        var items = await context.EquipmentsAndArtifacts.AsNoTracking()
-            .OrderBy(e => e.Category)
-            .ThenBy(e => e.Type)
-            .ThenBy(e => e.Name)
-            .ToListAsync();
+        var items = await context.EquipmentsAndArtifacts.AsNoTracking().OrderBy(e => e.Id).ToListAsync();
 
         var selected = items.FirstOrDefault(e => e.Id == id) ?? items.FirstOrDefault();
         ViewData["Title"] = "Equipo y artefactos";
@@ -22,15 +18,14 @@ public class ArchiveController(ApplicationDbContext context) : Controller
         return View("~/Views/EquipmentsArtifacts/Index.cshtml", new EquipmentsArtifactsViewModel { Items = items, SelectedItem = selected });
     }
 
-    public async Task<IActionResult> Modifiers(int? id)
+    public async Task<IActionResult> Miscellanea(int? id)
     {
-        var items = await context.Items.AsNoTracking()
-            .OrderBy(i => i.Name)
-            .ToListAsync();
+        // Ordenamos por ID porque AlphabeticalIdService mantiene esos IDs alineados con el nombre.
+        var entries = await context.Miscellanea.AsNoTracking().OrderBy(entry => entry.Id).ToListAsync();
 
-        var selected = items.FirstOrDefault(i => i.Id == id) ?? items.FirstOrDefault();
-        ViewData["Title"] = "Modificadores";
+        var selectedEntry = entries.FirstOrDefault(entry => entry.Id == id) ?? entries.FirstOrDefault();
+        ViewData["Title"] = "Miscelánea";
 
-        return View("~/Views/Modifiers/Index.cshtml", new ItemsViewModel { Items = items, SelectedItem = selected });
+        return View("~/Views/Miscellanea/Index.cshtml", new MiscellaneaViewModel { Entries = entries, SelectedEntry = selectedEntry });
     }
 }

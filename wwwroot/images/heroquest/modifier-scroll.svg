@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-labelledby="title desc">
+  <title id="title">Pergamino antiguo</title><desc id="desc">Un pergamino con runas</desc>
+  <rect width="400" height="400" fill="#cdb98d"/><path d="M28 28h344v344H28z" fill="none" stroke="#765634" stroke-width="4"/><path d="M112 87c-35 0-42 45-7 56-35 14-31 57 7 61v114h176V88z" fill="#ebdfbc" stroke="#60472d" stroke-width="9"/><path d="M105 143h147M105 188h147M105 233h110M105 278h128" stroke="#8a6840" stroke-width="10"/><path d="m284 87 21-23 21 23-21 23z" fill="#812f27" stroke="#60472d" stroke-width="7"/>
+</svg>

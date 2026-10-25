@@ -1,6 +1,7 @@
 @model HeroQuest.ViewModels.MonsterCatalogViewModel
 @{
     ViewData["Title"] = "Monstruos";
+    string ShortIndexName(string name, int limit = 25) => name.Length <= limit ? name : name[..(limit - 1)] + "…";
 }
 
 <section class="catalog-page page-shell">
@@ -19,15 +20,22 @@
         <div class="catalog-layout">
             <aside class="catalog-list" aria-label="Lista de monstruos">
                 <p class="list-caption">ÍNDICE <span>@Model.Monsters.Count CRIATURAS</span></p>
+                <div class="index-tools">
+                    <label>Buscar <input class="index-search" type="search" placeholder="Nombre o habilidad…" /></label>
+                    <label>Ordenar <select class="index-sort"><option value="name-asc">Alfabético</option><option value="name-desc">Alfabético inverso</option><option value="appears">Expansión</option></select></label>
+                </div>
+                <div class="catalog-scroll" data-index-list>
                 @foreach (var monster in Model.Monsters)
                 {
                     <a class="catalog-row @(Model.SelectedMonster?.Id == monster.Id ? "selected" : "")"
+                       data-name="@(string.IsNullOrWhiteSpace(monster.Name) ? monster.CharacterType : monster.Name)" data-search="@monster.Name @monster.CharacterType @monster.Ability" data-appears="@monster.Appears.DisplayName()" data-id="@monster.Id"
                        asp-controller="Monsters" asp-action="Index" asp-route-id="@monster.Id" aria-current="@(Model.SelectedMonster?.Id == monster.Id ? "page" : null)">
                         <span class="row-initial monster-initial">@((!string.IsNullOrEmpty(monster.Name) ? monster.Name[..1] : (!string.IsNullOrEmpty(monster.CharacterType) ? monster.CharacterType[..1] : "?")).ToUpperInvariant())</span>
-                        <span class="row-main"><strong>@(string.IsNullOrEmpty(monster.Name) ? monster.CharacterType : monster.Name)</strong><small>@monster.Hp HP • @monster.DicesAttack ataque</small></span>
+                        <span class="row-main"><strong>@ShortIndexName(string.IsNullOrEmpty(monster.Name) ? monster.CharacterType : monster.Name)</strong><small>@monster.Hp HP • @monster.DicesAttack ataque</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>
                 }
+                </div>
             </aside>
 
             @if (Model.SelectedMonster is { } monsterDetail)
@@ -92,3 +100,4 @@
         </div>
     }
 </section>
+

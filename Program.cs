@@ -48,6 +48,10 @@ using (var scope = app.Services.CreateScope())
 
     var csvImporter = new CsvImportService(context);
     await csvImporter.ImportAllAsync(csvFolder);
+
+    // Los IDs sirven como índice alfabético, respetando las reglas de ordenación españolas.
+    var alphabeticalIds = new AlphabeticalIdService(context);
+    await alphabeticalIds.EnsureAlphabeticalIdsAsync();
 }
 
 // Configure the HTTP request pipeline.

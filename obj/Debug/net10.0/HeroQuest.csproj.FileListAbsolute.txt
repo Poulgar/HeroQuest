@@ -368,7 +368,6 @@ C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\schnxmg3hk-{0}-hb7shethan-hb7shethan.gz
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\egn1kau4y1-{0}-lzfh0wj2np-lzfh0wj2np.gz
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\fbbe5zdm2b-{0}-u5ot3d8dm4-u5ot3d8dm4.gz
-C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\fws6a7tl10-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\pqcfdtd1oj-{0}-bqjiyaj88i-bqjiyaj88i.gz
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\gvqa9u6ztb-{0}-c2jlpeoesf-c2jlpeoesf.gz
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\fukxmfh9i0-{0}-erw9l3u2r3-erw9l3u2r3.gz
@@ -446,5 +445,9 @@ C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\bin\Debug\net10.0\
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\bin\Debug\net10.0\HeroQuest_csv\Habilidades de Monstruos (1) 7f31d9a0efd68269889801464866b7dc.csv
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\bin\Debug\net10.0\HeroQuest_csv\Monstruos (1) 3241d9a0efd682bc9ec1816c829fd228.csv
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\bin\Debug\net10.0\HeroQuest_csv\Objetos (1) 8311d9a0efd682478309012935880a6d.csv
-C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\l044whj17o-{0}-izasbmlej1-izasbmlej1.gz
 C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\el7rq3ywma-{0}-3clii7dfo0-3clii7dfo0.gz
+C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\ui4t8ressl-{0}-c17pvuzv9d-c17pvuzv9d.gz
+C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\9engorjduv-{0}-yuntogwvab-yuntogwvab.gz
+C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\467b6f67e1-{0}-z9xdiyccdx-z9xdiyccdx.gz
+C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\l044whj17o-{0}-pclllpjytp-pclllpjytp.gz
+C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\fws6a7tl10-{0}-r3e2392c8m-r3e2392c8m.gz

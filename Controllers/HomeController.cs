@@ -17,7 +17,7 @@ public class HomeController(ApplicationDbContext context) : Controller
             HeroesCount = await context.Heroes.CountAsync(),
             MonstersCount = await context.Monsters.CountAsync(),
             EquipmentCount = await context.EquipmentsAndArtifacts.CountAsync(),
-            ModifierCount = await context.Items.CountAsync(),
+            MiscellaneaCount = await context.Miscellanea.CountAsync(),
             MonsterAbilityCount = await context.MonsterAbilities.CountAsync()
         };
 

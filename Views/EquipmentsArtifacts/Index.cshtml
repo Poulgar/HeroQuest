@@ -1,6 +1,7 @@
 @model HeroQuest.ViewModels.EquipmentsArtifactsViewModel
 @{
     ViewData["Title"] = "Equipo y artefactos";
+    string ShortIndexName(string name, int limit = 25) => name.Length <= limit ? name : name[..(limit - 1)] + "…";
 }
 
 <section class="catalog-page page-shell">
@@ -16,25 +17,38 @@
     }
     else
     {
-        <div class="catalog-layout">
-            <aside class="catalog-list" aria-label="Lista de equipo y artefactos">
-                <p class="list-caption">ÍNDICE <span>@Model.Items.Count OBJETOS</span></p>
-                @foreach (var item in Model.Items)
+        <div class="catalog-layout equipment-layout">
+            <div class="equipment-indexes">
+            @foreach (var group in new[] { new { Category = "Equipment", Title = "Equipamiento" }, new { Category = "Artifact", Title = "Artefactos" } })
+            {
+                var groupedItems = Model.Items.Where(item => string.Equals(item.Category, group.Category, StringComparison.OrdinalIgnoreCase)).ToList();
+                <aside class="catalog-list" aria-label="Lista de @group.Title">
+                <p class="list-caption">@group.Title.ToUpperInvariant() <span>@groupedItems.Count</span></p>
+                <div class="index-tools">
+                    <label>Buscar <input class="index-search" type="search" placeholder="Nombre o tipo…" /></label>
+                    <label>Ordenar <select class="index-sort"><option value="name-asc">Alfabético</option><option value="name-desc">Alfabético inverso</option><option value="price-asc">Precio: menor</option><option value="price-desc">Precio: mayor</option><option value="appears">Expansión</option></select></label>
+                </div>
+                <div class="catalog-scroll" data-index-list>
+                @foreach (var item in groupedItems)
                 {
                     <a class="catalog-row @(Model.SelectedItem?.Id == item.Id ? "selected" : "")"
+                       data-name="@item.Name" data-search="@item.Name @item.Type @item.Description" data-price="@item.Price" data-appears="@item.Appears.DisplayName()" data-id="@item.Id"
                        asp-controller="Archive" asp-action="Equipment" asp-route-id="@item.Id" aria-current="@(Model.SelectedItem?.Id == item.Id ? "page" : null)">
                         <span class="row-initial">@((item.Name.Length > 0 ? item.Name[..1] : "?").ToUpperInvariant())</span>
-                        <span class="row-main"><strong>@item.Name</strong><small>@item.Category • @item.Type</small></span>
+                        <span class="row-main"><strong>@ShortIndexName(item.Name)</strong><small>@item.Category • @item.Type</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>
                 }
+                </div>
             </aside>
+            }
+            </div>
 
             @if (Model.SelectedItem is { } detail)
             {
                 <article class="detail-card">
                     <div class="detail-art hero-art">
-                        <img src="~/images/heroquest/treasure-chest.svg" alt="Ilustración de @detail.Name" />
+                        <img src="@(detail.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase) ? Url.Content("~/images/heroquest/artifact-relic.svg") : Url.Content("~/images/heroquest/equipment-sword.svg"))" alt="Ilustración de @detail.Name" />
                         <span class="portrait-ribbon">TOMO DEL COMPENDIO</span>
                     </div>
                     <div class="detail-content">
@@ -52,3 +66,4 @@
         </div>
     }
 </section>
+

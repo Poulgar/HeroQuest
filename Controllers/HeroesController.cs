@@ -10,10 +10,7 @@ public class HeroesController(ApplicationDbContext context) : Controller
 {
     public async Task<IActionResult> Index(int? id)
     {
-        var heroes = await context.Heroes.AsNoTracking()
-            .OrderBy(hero => hero.Name)
-            .ThenBy(hero => hero.Id)
-            .ToListAsync();
+        var heroes = await context.Heroes.AsNoTracking().OrderBy(hero => hero.Id).ToListAsync();
 
         var selected = heroes.FirstOrDefault(hero => hero.Id == id) ?? heroes.FirstOrDefault();
         ViewData["Title"] = "Héroes";

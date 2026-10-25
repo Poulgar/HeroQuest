@@ -1,6 +1,7 @@
 @model HeroQuest.ViewModels.HeroCatalogViewModel
 @{
     ViewData["Title"] = "Héroes";
+    string ShortIndexName(string name, int limit = 25) => name.Length <= limit ? name : name[..(limit - 1)] + "…";
 }
 
 <section class="catalog-page page-shell">
@@ -19,20 +20,27 @@
         <div class="catalog-layout">
             <aside class="catalog-list" aria-label="Lista de héroes">
                 <p class="list-caption">ÍNDICE <span>@Model.Heroes.Count PERSONAJES</span></p>
+                <div class="index-tools">
+                    <label>Buscar <input class="index-search" type="search" placeholder="Nombre o jugador…" /></label>
+                    <label>Ordenar <select class="index-sort"><option value="name-asc">Alfabético</option><option value="name-desc">Alfabético inverso</option><option value="appears">Expansión</option></select></label>
+                </div>
+                <div class="catalog-scroll" data-index-list>
                 @foreach (var hero in Model.Heroes)
                 {
                     <a class="catalog-row @(Model.SelectedHero?.Id == hero.Id ? "selected" : "")"
+                       data-name="@hero.Name" data-search="@hero.Name @hero.Player @hero.CharacterType" data-appears="@hero.Appears.DisplayName()" data-id="@hero.Id"
                        asp-controller="Heroes" asp-action="Index" asp-route-id="@hero.Id" aria-current="@(Model.SelectedHero?.Id == hero.Id ? "page" : null)">
                         <span class="row-initial">@((hero.Name.Length > 0 ? hero.Name[..1] : "?").ToUpperInvariant())</span>
-                        <span class="row-main"><strong>@hero.Name</strong><small>@hero.CharacterType • @hero.Hp HP</small></span>
+                        <span class="row-main"><strong>@ShortIndexName(hero.Name)</strong><small>@hero.CharacterType • @hero.Hp HP</small></span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>
                 }
+                </div>
             </aside>
 
             @if (Model.SelectedHero is { } heroDetail)
             {
-                <article class="detail-card" style="min-height: 100%;">
+                <article class="detail-card">
                     <div class="detail-art hero-art">
                         <img src="~/images/heroquest/hero-portrait.svg" alt="Ilustración de @heroDetail.Name" />
                         <span class="portrait-ribbon">FICHA DEL AVENTURERO</span>
@@ -68,3 +76,4 @@
         </div>
     }
 </section>
+
