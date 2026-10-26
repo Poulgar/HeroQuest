@@ -211,6 +211,7 @@ a[data-faction] .faction-token-small { width: 38px; height: 38px; flex-basis: 38
 .map-legend span { display: inline-flex; align-items: center; gap: 7px; }
 .map-legend i { width: 12px; height: 12px; border: 1px solid #fff4d6; border-radius: 50%; box-shadow: 0 0 0 1px #806536; }
 .legend-city { background: #7a492c; }.legend-interest { background: #526b48; }.legend-danger { background: #873e36; }
+.map-mobile-hint { display: none; }
 
 @media (max-width: 700px) {
     .world-map { min-height: 390px; aspect-ratio: auto; }
@@ -247,5 +248,88 @@ a[data-faction] .faction-token-small { width: 38px; height: 38px; flex-basis: 38
     .detail-content { padding: 0; }
     .stat-grid { gap: 7px; }
     .detail-facts div { grid-template-columns: 1fr 1.2fr; }
+}
+
+/* En pantallas estrechas la página fluye verticalmente y conserva áreas cómodas para tocar. */
+@media (max-width: 680px) {
+    html, body { width: 100%; overflow-x: hidden; }
+    .header-inner { width: calc(100% - 24px); }
+    .brand { gap: 9px; }
+    .brand-mark { width: 40px; height: 40px; }
+    .brand strong { font-size: 16px; }
+    .brand small { font-size: 11px; }
+    .main-nav { display: grid; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; }
+    .main-nav a { min-height: 40px; display: flex; align-items: center; padding: 7px 4px; font-size: 14px; line-height: 1.15; }
+    .home-hero { min-height: 0; gap: 22px; padding: 27px 20px; }
+    .home-copy h1 { font-size: clamp(36px, 10vw, 48px); line-height: 1.02; }
+    .intro-copy { margin: 18px 0; font-size: 18px; }
+    .home-actions { align-items: flex-start; gap: 14px; }
+    .button { max-width: 100%; padding: 11px 14px; font-size: 16px; }
+    .home-counts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px; margin-top: 25px; }
+    .home-counts div { min-width: 0; }
+    .home-counts strong { font-size: 27px; }
+    .home-counts span { font-size: 13px; }
+    .home-art-frame { width: min(82%, 260px); transform: none; }
+    .shelf-card { min-height: 150px; padding: 18px; }
+    .shelf-card h2 { margin-top: 13px; font-size: 23px; }
+    .shelf-card p { max-width: calc(100% - 12px); font-size: 15px; line-height: 1.3; }
+    .world-map-section { margin-top: 48px; padding-top: 24px; }
+    .world-map-heading { margin-bottom: 14px; padding: 17px 16px; border-left-width: 4px; }
+    .world-map-heading .eyebrow { font-size: 10px; letter-spacing: .12em; }
+    .world-map-heading h2 { font-size: clamp(27px, 8vw, 36px); line-height: 1.04; }
+    .world-map-heading > p:last-child { font-size: 16px; line-height: 1.35; }
+    .world-map { height: 360px; min-height: 0; aspect-ratio: auto; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; touch-action: pan-x pan-y; scrollbar-color: #806536 #e3d4af; }
+    .map-scene { position: relative; width: 640px; min-width: 640px; height: 360px; }
+    .map-terrain { width: 100%; min-width: 0; height: 100%; left: 0; transform: none; }
+    .map-location { width: 36px; height: 36px; }
+    .map-location span { max-width: 150px; font-size: 10px; }
+    .map-label { font-size: 12px; }
+    .map-compass { top: 12px; right: 16px; }
+    .map-mobile-hint { display: block; margin: 8px 0 0; color: #f0e2c2; font-size: 13px; text-align: center; }
+    .map-legend { justify-content: flex-start; gap: 10px 15px; padding: 10px; font-size: 12px; }
+    .catalog-list { height: 270px; padding: 12px; }
+    .index-tools { gap: 8px; }
+    .index-tools input, .index-tools select { min-height: 42px; padding: 9px; font-size: 16px; }
+    .catalog-row { min-height: 72px; gap: 9px; padding: 8px 6px; }
+    .row-main strong { font-size: 16px; }
+    .row-main small { font-size: 12px; }
+    .row-main .row-stats { font-size: 10px; }
+    .faction-token, .index-symbol, .faction-token-small { width: 34px; height: 34px; flex-basis: 34px; }
+    .detail-host { height: auto; }
+    .detail-card, .detail-host > .detail-card { height: auto; min-height: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; gap: 16px; padding: 18px; overflow: visible; }
+    .detail-art { width: min(100%, 270px); justify-self: center; }
+    .detail-art img { aspect-ratio: 1 / 1; }
+    .detail-content { min-height: 0; padding: 0; overflow: visible; }
+    .detail-content h2 { font-size: clamp(29px, 8vw, 38px); }
+    .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+    .stat-grid div { padding: 8px; }
+    .stat-grid strong { font-size: 15px; }
+    .detail-facts div { grid-template-columns: minmax(85px, .8fr) minmax(0, 1.2fr); gap: 7px; }
+    .detail-expansion-footer { font-size: 9px; }
+    .ability-grid { grid-auto-rows: 470px; }
+    .ability-card { height: 470px; padding: 17px; }
+    .ability-card-heading { align-items: flex-start; }
+    .ability-card-heading h3 { gap: 7px; font-size: 19px; line-height: 1.15; }
+    .ability-card-heading .ability-kind { font-size: 11px; }
+    .skill-description-dialog { width: calc(100% - 24px); max-height: 82vh; padding: 22px 18px; }
+    .skill-description-dialog h2 { font-size: 28px; }
+    .skill-description-dialog > p:last-child { font-size: 16px; }
+    .footer-inner { padding: 18px 0; gap: 10px; }
+    .footer-inner p { font-size: 15px; }
+    .footer-caption { font-size: 9px; }
+}
+
+@media (max-width: 380px) {
+    .page-shell { width: calc(100% - 20px); }
+    .home-hero { padding: 23px 16px; }
+    .home-counts { gap: 12px 10px; }
+    .home-counts span { font-size: 12px; }
+    .catalog-list { padding: 10px; }
+    .catalog-row { gap: 7px; }
+    .row-main strong { font-size: 15px; }
+    .row-main .row-stats { font-size: 9px; }
+    .detail-card, .detail-host > .detail-card { padding: 14px; }
+    .stat-grid span { font-size: 9px; }
+    .stat-grid strong { font-size: 14px; }
 }
 

@@ -53,6 +53,7 @@
         <p>Esta cartografía abre una ruta distinta por el mundo: explora caminos, asentamientos y lugares donde aguardan nuevas aventuras.</p>
     </div>
     <div class="world-map" role="group" aria-label="Mapa interactivo del reino de HeroQuest">
+      <div class="map-scene">
         <svg class="map-terrain" viewBox="0 0 1000 560" role="img" aria-label="Mapa ilustrado de montañas, ríos, bosques y caminos">
             <path class="map-sea" d="M805 340 C850 357 833 394 872 412 S902 460 878 485 C850 515 874 540 855 560 H1000 V318 C944 345 880 324 805 340Z" />
             <path class="map-lake" d="M760 388 C780 372 810 380 815 402 C820 423 800 440 778 433 C758 427 746 404 760 388Z" />
@@ -76,7 +77,9 @@
         <button class="map-location map-danger" style="--x:73.5%;--y:45%" data-lore-trigger data-lore-title="Cuevas del Dragón" data-full-description="El calor que emana de estas cuevas derrite la nieve incluso en invierno. Los rumores hablan de escamas entre las rocas y de un tesoro que atrae a aventureros imprudentes." aria-label="Lore: Cuevas del Dragón">♨<span>Cuevas del Dragón</span></button>
         <button class="map-location map-danger" style="--x:49%;--y:82%" data-lore-trigger data-lore-title="Mazmorra de las Profundidades" data-full-description="Una grieta bajo las colinas conduce a cámaras más antiguas que el reino. Los corredores cambian con las lluvias y una puerta sellada oculta algo que sigue llamando desde dentro." aria-label="Lore: Mazmorra de las Profundidades">☠<span>Mazmorra profunda</span></button>
         <div class="map-compass" role="img" aria-label="Norte, sur, oeste y este"><span class="compass-n">N</span><span class="compass-w">W</span><b>✥</b><span class="compass-e">E</span><span class="compass-s">S</span></div>
+      </div>
     </div>
+    <p class="map-mobile-hint">En el móvil, desliza horizontalmente para recorrer todo el mapa.</p>
     <div class="map-legend" aria-label="Leyenda del mapa"><span><i class="legend-city"></i>Asentamiento</span><span><i class="legend-interest"></i>Punto de interés</span><span><i class="legend-danger"></i>Zona peligrosa</span></div>
 </section>
 
