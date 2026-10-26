@@ -3,8 +3,6 @@
 
 (V1) Grandes y medianos, con escamas o pelaje, portadores de la Plaga... todos letales. Criaturas que habitan en las profundidades de los bosques y moran en la oscuridad, acechando alturas y desviviendo viajeros. Aventurero, ten cuidado con el rio, no eres el único que conoce ese sendero. No solo bosques moran...
 
----
-
 (V2 IA - SudoWrite) Escamas. Pelaje. La Plaga en sus venas... y algo más. En lo profundo del bosque, donde la luz se pierde antes de... Todo se arrastran, se encaraman, esperan en las ramas que crujen sin viento. Los viajeros que vienen... no vuelven iguales. El río cuenta otros caminantes. Huellas que no son tuyas. Huellas que no terminan donde empiezan. Y el bosque es solo el principio...
 
 ---
