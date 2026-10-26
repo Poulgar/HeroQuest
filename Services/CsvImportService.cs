@@ -63,7 +63,7 @@ public class CsvImportService
         {
             var name = CsvRecordReader.GetText(fields, "Nombre");
             var hp = CsvRecordReader.GetInteger(fields, "Cuerpo");
-            var mind = CsvRecordReader.GetInteger(fields, "Mente");
+            var dicesMind = CsvRecordReader.GetInteger(fields, "Mente");
             var attack = CsvRecordReader.GetInteger(fields, "Ataque");
             var defense = CsvRecordReader.GetInteger(fields, "Defensa");
             var maxMovement = CsvRecordReader.GetInteger(fields, "Movimiento");
@@ -73,7 +73,7 @@ public class CsvImportService
 
             if (!byName.TryGetValue(MonsterCsvParsing.NormalizeName(name), out var monster))
             {
-                monster = new Monster(nextId++, name, hp, mind, attack, defense, maxMovement, ability, faction,
+                monster = new Monster(nextId++, name, hp, dicesMind, attack, defense, maxMovement, ability, faction,
                     CreateLoreDescription(name, faction))
                 {
                     Appears = appearance
@@ -84,10 +84,10 @@ public class CsvImportService
             }
 
             // Actualizamos la ficha existente desde el CSV, pero mantenemos la vida actual de una campaña.
-            monster.CharacterType = name;
+            monster.CharacterTypeClass = name;
             monster.Name = name;
             monster.Hp = hp;
-            monster.Mind = mind;
+            monster.DicesMind = dicesMind;
             monster.DicesAttack = attack;
             monster.DicesDefend = defense;
             monster.MaxMovement = maxMovement;
@@ -99,7 +99,8 @@ public class CsvImportService
             // Sustituimos las descripciones estadísticas creadas por la versión anterior,
             // pero conservamos cualquier texto personalizado que no use esa plantilla.
             if (string.IsNullOrWhiteSpace(monster.Description) ||
-                monster.Description.Contains("pertenece a la facción", StringComparison.OrdinalIgnoreCase))
+                monster.Description.Contains("pertenece a la facción", StringComparison.OrdinalIgnoreCase) ||
+                monster.Description.Contains("ronda los dominios de", StringComparison.OrdinalIgnoreCase))
                 monster.Description = CreateLoreDescription(name, faction);
         }
 
@@ -153,10 +154,39 @@ public class CsvImportService
             "venim" => "Envuelto en rumores y venenos, este adversario aparece en relatos de intrigas y expediciones malditas. Su rastro se pierde entre las sombras de los pasadizos.",
             "yeti" => "Señor de las cumbres nevadas, acecha en ventiscas donde el viajero pierde el rumbo. Las leyendas del norte aconsejan no seguir sus huellas.",
             "zombi" => "Un cadáver reanimado por la magia negra abandona su sepultura para servir a quien lo invocó. Avanza sin voluntad, obedeciendo una orden que no termina.",
-            _ => $"Las crónicas del mundo de HeroQuest cuentan que {name} ronda los dominios de {faction}, donde su presencia alimenta antiguas leyendas y mantiene alejados a los viajeros."
+            _ => CreateFactionLore(name, faction)
         };
 
         return lore;
+    }
+
+    private static string CreateFactionLore(string name, string faction)
+    {
+        // Cada facción aporta un contexto distinto; una frase variable evita asignar la misma plantilla a monstruos nuevos.
+        var factionLore = faction.Trim() switch
+        {
+            "Bestias" => "En las espesuras donde los caminos se desvanecen, las bestias obedecen a la ley de la caza y el territorio.",
+            "Criaturas Congeladas" => "Más allá de los pasos nevados, las criaturas del hielo despiertan con las tormentas y guardan secretos enterrados bajo glaciares.",
+            "Criaturas del Terror" => "La influencia de Zargon impregna a estas criaturas, cuyo paso anuncia que una fuerza antigua vuelve a extender su dominio.",
+            "Elfos" => "Los relatos élficos hablan de guardianes y errantes ligados a bosques antiguos, donde cada sendero conserva la memoria de su pueblo.",
+            "Muertos Vivientes" => "Una magia impía quebró el descanso de los muertos vivientes y los ató a criptas, tumbas y voluntades oscuras.",
+            "Ogros" => "En los territorios fronterizos, los clanes ogros disputan fortalezas, botín y el respeto que sólo concede la fuerza.",
+            "Pieles Verdes" => "Las tribus de pieles verdes recorren túneles y tierras salvajes, siempre en busca de nuevas presas y botín.",
+            "Singulares" => "Las crónicas apenas coinciden sobre estas figuras: cada una parece seguir un destino propio, ligado a un misterio mayor.",
+            _ => "En una región olvidada del reino, los rumores sobre esta criatura se transmiten entre viajeros y cronistas."
+        };
+
+        var variants = new[]
+        {
+            $"Los exploradores describen a {name} como una presencia que surge cuando las antorchas empiezan a extinguirse.",
+            $"El nombre de {name} aparece en mapas tachados y diarios de expedición que nadie se atreve a completar.",
+            $"Quienes regresan de sus dominios aseguran que {name} deja señales antes de mostrarse, aunque pocos saben interpretarlas.",
+            $"En las aldeas cercanas se cuenta que {name} custodia un secreto por el que muchos aventureros no han vuelto.",
+            $"Una vieja balada menciona a {name} entre los peligros que aguardan al otro lado de las puertas selladas."
+        };
+        var hash = MonsterCsvParsing.NormalizeName(name).Aggregate(17, (value, character) => unchecked(value * 31 + character));
+        var variant = variants[(int)((uint)hash % (uint)variants.Length)];
+        return $"{factionLore} {variant}";
     }
 
     private async Task ImportSpellsOfTerrorAsync(string path)

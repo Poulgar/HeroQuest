@@ -27,7 +27,7 @@
                             <option value="">Todas las facciones</option>
                             @foreach (var faction in Model.Monsters.Select(monster => monster.Faction).Where(faction => !string.IsNullOrWhiteSpace(faction)).Distinct().OrderBy(faction => faction, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true)))
                             {
-                                <option value="@faction">@faction</option>
+                            <option value="@faction">@faction</option>
                             }
                         </select>
                     </label>
@@ -37,12 +37,12 @@
                 @foreach (var monster in Model.Monsters)
                 {
                     <a class="catalog-row @(Model.SelectedMonster?.Id == monster.Id ? "selected" : "")"
-                       data-select-record="@monster.Id" data-name="@monster.Name" data-faction="@monster.Faction" data-search="@monster.Name @monster.Faction @monster.Ability" data-appears="@monster.Appears.DisplayName()" data-id="@monster.Id"
+                       data-select-record="@monster.Id" data-name="@monster.Name" data-faction="@monster.Faction" data-search="@monster.Name @monster.Faction @monster.Ability" data-appears="@monster.Appears.DisplayName()" data-original="@(monster.Appears.HasFlag(HeroQuest.Models.TypeAppears.Original).ToString().ToLowerInvariant())" data-id="@monster.Id"
                        asp-controller="Monsters" asp-action="Index" asp-route-id="@monster.Id" aria-current="@(Model.SelectedMonster?.Id == monster.Id ? "page" : null)">
-                        <span class="faction-token faction-token-small" style="--faction-color: @monster.Faction.FactionColor()" title="@monster.Faction">@monster.Faction.FactionSymbol()</span>
+                        <span role="button" tabindex="0" class="faction-token faction-token-small lore-trigger hover-tooltip" style="--faction-color: @monster.Faction.FactionColor()" data-tooltip="@monster.Faction" data-lore-title="Facción: @monster.Faction" data-full-description="@monster.Faction.FactionLore()" aria-label="Consultar lore de la facción @monster.Faction">@monster.Faction.FactionSymbol()</span>
                         <span class="row-main">
-                            <strong>@ShortIndexName(string.IsNullOrEmpty(monster.Name) ? monster.CharacterType : monster.Name)</strong>
-                            <small class="row-stats">@monster.Hp HP · D@(monster.Mind) MND · D@(monster.DicesAttack) ATK · D@(monster.DicesDefend) DFC</small>
+                            <strong>@ShortIndexName(string.IsNullOrEmpty(monster.Name) ? monster.CharacterTypeClass : monster.Name)</strong>
+                            <small class="row-stats">@monster.Hp HP · D@(monster.DicesMind) MND · D@(monster.DicesAttack) ATK · D@(monster.DicesDefend) DFC</small>
                         </span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>
@@ -64,15 +64,6 @@
         }
     }
 </section>
-
-<dialog class="skill-description-dialog" data-skill-dialog aria-labelledby="skill-dialog-title">
-    <form method="dialog">
-        <button class="skill-dialog-close" aria-label="Cerrar">×</button>
-    </form>
-    <p class="eyebrow">BESTIARIO</p>
-    <h2 id="skill-dialog-title" data-skill-dialog-title></h2>
-    <p data-skill-dialog-description></p>
-</dialog>
 
 <section class="ability-archive page-shell">
     <div class="ability-heading">

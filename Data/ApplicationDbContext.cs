@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore; // Proporciona los métodos y clases necesarios para trabajar con Entity Framework Core.
-using HeroQuest.Models; // Importa el espacio de nombres que contiene las clases de modelo.
+using HeroQuest.Models;
 
 namespace HeroQuest.Data;
 

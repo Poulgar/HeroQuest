@@ -7,8 +7,10 @@ public class HeroQuestIndexViewModel
     public int HeroesCount { get; set; }
     public int MonstersCount { get; set; }
     public int EquipmentCount { get; set; }
+    public int ArtifactCount { get; set; }
     public int MiscellaneaCount { get; set; }
     public int MonsterAbilityCount { get; set; }
+    public int SpellCount { get; set; }
 }
 
 public class HeroCatalogViewModel

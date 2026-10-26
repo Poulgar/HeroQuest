@@ -93,6 +93,20 @@ public static class MonsterVisualExtensions
         _ => "#806536"
     };
 
+    /// <summary>Describe el origen de cada facción al abrir su emblema en el bestiario.</summary>
+    public static string FactionLore(this string faction) => faction.Trim() switch
+    {
+        "Bestias" => "Criadas en bosques indómitos y tierras salvajes, las Bestias siguen la ley de la caza. Sus rastros conducen a guaridas donde la naturaleza ha recuperado ruinas olvidadas.",
+        "Criaturas Congeladas" => "En las cumbres y cavernas del norte, el frío conserva secretos de eras antiguas. Estas criaturas aparecen cuando las ventiscas sepultan los caminos y apagan las últimas antorchas.",
+        "Criaturas del Terror" => "Vinculadas a la voluntad de Zargon, estas criaturas extienden el miedo allí donde se abren portales oscuros. Sus nombres sobreviven en crónicas que los reinos intentaron destruir.",
+        "Elfos" => "Los Elfos guardan bosques y senderos anteriores a los reinos humanos. Sus guerreros y exploradores actúan según pactos antiguos, aunque a veces sus destinos los llevan hasta las mazmorras.",
+        "Muertos Vivientes" => "La nigromancia quebró el descanso de los Muertos Vivientes y los ató a criptas, túmulos y templos profanados. Cada aparición anuncia que una maldición aún conserva poder.",
+        "Ogros" => "Los clanes Ogros recorren fortalezas fronterizas en busca de botín y territorios. Su jerarquía se decide por la fuerza, pero incluso sus caudillos temen aquello que duerme bajo algunas ruinas.",
+        "Pieles Verdes" => "Orcos y goblins de las tribus de Pieles Verdes se reúnen en túneles, fortalezas y pasos montañosos. Sus incursiones ponen a prueba las defensas de cualquier reino cercano.",
+        "Singulares" => "Esta categoría reúne figuras que escapan a las crónicas comunes: guardianes, visitantes de tierras lejanas y criaturas ligadas a historias irrepetibles.",
+        _ => $"Los cronistas aún discuten el origen de la facción {faction}. Sus emblemas aparecen en relatos de expediciones cuyos mapas quedaron incompletos."
+    };
+
     public static string AbilitySymbol(this string ability) => ability.Trim() switch
     {
         "Ágil" => "↯",

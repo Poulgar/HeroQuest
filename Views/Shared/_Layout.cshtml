@@ -17,7 +17,7 @@
                 <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">Inicio</a>
                 <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Heroes" ? "active" : "")" asp-controller="Heroes" asp-action="Index">Héroes</a>
                 <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Monsters" ? "active" : "")" asp-controller="Monsters" asp-action="Index">Monstruos</a>
-                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Equipment" ? "active" : "")" asp-controller="Archive" asp-action="Equipment">Equipo y artefactos</a>
+                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Equipment" ? "active" : "")" asp-controller="Archive" asp-action="Equipment">Equipos y Artefactos</a>
                 <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Miscellanea" ? "active" : "")" asp-controller="Archive" asp-action="Miscellanea">Miscelánea</a>
             </nav>
         </div>
@@ -26,6 +26,13 @@
     <main class="site-main">
         @RenderBody()
     </main>
+
+    <dialog class="skill-description-dialog" data-skill-dialog aria-labelledby="skill-dialog-title">
+        <form method="dialog"><button class="skill-dialog-close" aria-label="Cerrar">×</button></form>
+        <p class="eyebrow" data-skill-dialog-label>CRÓNICAS DEL REINO</p>
+        <h2 id="skill-dialog-title" data-skill-dialog-title></h2>
+        <p data-skill-dialog-description></p>
+    </dialog>
 
     <footer class="site-footer">
         <div class="footer-inner">

@@ -2,13 +2,12 @@ namespace HeroQuest.Models;
 
 public class Character
 {
-    public Character(int id, string characterType, int hp, int mind, int dicesAttack, int dicesDefend, string description)
+    public Character(int id, string characterTypeClass, int hp, int dicesMind, int dicesAttack, int dicesDefend, string description)
     {
         Id = id;
-        CharacterType = characterType;
+        CharacterTypeClass = characterTypeClass;
         Hp = hp;
-        HpCurrent = hp;
-        Mind = mind;
+        DicesMind = dicesMind;
         DicesAttack = dicesAttack;
         DicesDefend = dicesDefend;
         Description = description;
@@ -19,10 +18,9 @@ public class Character
     }
 
     public int Id { get; set; }
-    public string CharacterType { get; set; } = string.Empty;
+    public string CharacterTypeClass { get; set; } = string.Empty;
     public int Hp { get; set; }
-    public int HpCurrent { get; set; }
-    public int Mind { get; set; }
+    public int DicesMind { get; set; }
     public int DicesAttack { get; set; }
     public int DicesDefend { get; set; }
     public string? Description { get; set; }

@@ -43,7 +43,10 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
                 result = Number(a.dataset.price) - Number(b.dataset.price);
                 if (mode === 'price-desc') result *= -1;
             } else if (mode === 'appears') {
-                result = collator.compare(a.dataset.appears ?? '', b.dataset.appears ?? '') || collator.compare(a.dataset.name ?? '', b.dataset.name ?? '');
+                // Los elementos creados por la comunidad se reconocen primero al ordenar por expansión.
+                result = Number((b.dataset.original ?? '').toLowerCase() === 'true') - Number((a.dataset.original ?? '').toLowerCase() === 'true')
+                    || collator.compare(a.dataset.appears ?? '', b.dataset.appears ?? '')
+                    || collator.compare(a.dataset.name ?? '', b.dataset.name ?? '');
             } else {
                 result = collator.compare(a.dataset.name ?? '', b.dataset.name ?? '');
                 if (mode === 'name-desc') result *= -1;
@@ -97,15 +100,23 @@ document.querySelectorAll('[data-archive-filter]').forEach((button) => {
 // Las fichas se guardan en <template>; cambiar selección no envía otra petición ni altera el scroll del índice.
 document.addEventListener('click', (event) => {
     const skill = event.target.closest('.skill-trigger');
-    if (skill) {
+    const loreTrigger = event.target.closest('[data-lore-trigger], .lore-trigger');
+    const popupTrigger = skill ?? loreTrigger;
+    if (popupTrigger) {
+        event.preventDefault();
+        event.stopPropagation();
         const dialog = document.querySelector('[data-skill-dialog]');
         if (dialog) {
-            dialog.querySelector('[data-skill-dialog-title]').textContent = skill.dataset.skillName ?? 'Habilidad';
-            dialog.querySelector('[data-skill-dialog-description]').textContent = skill.dataset.fullDescription ?? '';
-            dialog.showModal();
+            dialog.querySelector('[data-skill-dialog-title]').textContent = popupTrigger.dataset.skillName ?? popupTrigger.dataset.loreTitle ?? 'Crónica';
+            dialog.querySelector('[data-skill-dialog-description]').textContent = popupTrigger.dataset.fullDescription ?? '';
+            dialog.querySelector('[data-skill-dialog-label]').textContent = skill ? 'BESTIARIO' : 'CRÓNICAS DEL REINO';
+            if (!dialog.open) dialog.showModal();
         }
         return;
     }
+
+    // Un clic sobre la capa oscura cierra el mismo cuadro usado por habilidades, hechizos y lore.
+    if (event.target.matches('[data-skill-dialog]')) event.target.close();
 
     const row = event.target.closest('a[data-select-record]');
     if (!row || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
@@ -127,6 +138,14 @@ document.addEventListener('click', (event) => {
 
     // Actualiza la dirección para que la selección se pueda compartir; replaceState no recarga ni desplaza la página.
     window.history.replaceState(null, '', row.href);
+});
+
+document.addEventListener('keydown', (event) => {
+    const trigger = event.target.closest('.lore-trigger[role="button"]');
+    if (trigger && (event.key === 'Enter' || event.key === ' ')) {
+        event.preventDefault();
+        trigger.click();
+    }
 });
 
 // Este tooltip flotante se coloca en <body> para que no lo recorte el área desplazable de la ficha.

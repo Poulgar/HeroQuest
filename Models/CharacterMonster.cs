@@ -2,8 +2,8 @@ namespace HeroQuest.Models;
 
 public class Monster : Character
 {
-    public Monster(int id, string name, int hp, int mind, int dicesAttack, int dicesDefend, int maxMovement, string ability, string faction, string description)
-        : base(id, name, hp, mind, dicesAttack, dicesDefend, description)
+    public Monster(int id, string name, int hp, int dicesMind, int dicesAttack, int dicesDefend, int maxMovement, string ability, string faction, string description)
+        : base(id, name, hp, dicesMind, dicesAttack, dicesDefend, description)
     {
         Name = name;
         MaxMovement = maxMovement;

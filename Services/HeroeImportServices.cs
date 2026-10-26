@@ -20,7 +20,7 @@ public class HeroeImportService(ApplicationDbContext context)
         foreach (var datos in registros)
         {
             var nombre = NormalizeClassName(CsvRecordReader.GetText(datos, "Name"));
-            var characterType = NormalizeClassName(CsvRecordReader.GetText(datos, "CharacterType"));
+            var characterTypeClass = NormalizeClassName(CsvRecordReader.GetText(datos, "CharacterTypeClass"));
             var aparicion = TypeAppearsParser.Parse(CsvRecordReader.GetText(datos, "Appearances"));
             var heroeExistente = heroesExistentes.FirstOrDefault(heroe =>
                 string.Equals(NormalizeClassName(heroe.Name), nombre, StringComparison.OrdinalIgnoreCase));
@@ -30,7 +30,7 @@ public class HeroeImportService(ApplicationDbContext context)
                 // Al volver a importar, sólo sincronizamos la expansión; preservamos el estado de la campaña.
                 // La normalización también actualiza filas antiguas que aún conservan el sufijo «/a».
                 heroeExistente.Name = nombre;
-                heroeExistente.CharacterType = characterType;
+                heroeExistente.CharacterTypeClass = characterTypeClass;
                 heroeExistente.Appears = aparicion;
                 continue;
             }
@@ -42,15 +42,15 @@ public class HeroeImportService(ApplicationDbContext context)
 
             var heroe = new Heroe(
                 id: nextId++,
-                characterType: characterType,
+                characterTypeClass: characterTypeClass,
                 hp: CsvRecordReader.GetInteger(datos, "Hp"),
-                mind: CsvRecordReader.GetInteger(datos, "Mind"),
+                dicesMind: CsvRecordReader.GetInteger(datos, "DicesMind"),
                 dicesAttack: CsvRecordReader.GetInteger(datos, "DicesAttack"),
                 dicesDefend: CsvRecordReader.GetInteger(datos, "DicesDefend"),
                 dicesRedMovement: CsvRecordReader.GetInteger(datos, "DicesRedMovement"),
                 description: CsvRecordReader.GetText(datos, "Description"))
             {
-                CharacterType = characterType,
+                CharacterTypeClass = characterTypeClass,
                 Name = nombre,
                 Player = CsvRecordReader.GetText(datos, "Player"),
                 Weapon = CsvRecordReader.GetText(datos, "Weapon"),

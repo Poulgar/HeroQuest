@@ -28,14 +28,14 @@
                 @foreach (var hero in Model.Heroes)
                 {
                     <a class="catalog-row @(Model.SelectedHero?.Id == hero.Id ? "selected" : "")"
-                       data-select-record="@hero.Id" data-name="@hero.Name" data-search="@hero.Name @hero.Player @hero.CharacterType" data-appears="@hero.Appears.DisplayName()" data-id="@hero.Id"
+                       data-select-record="@hero.Id" data-name="@hero.Name" data-search="@hero.Name @hero.CharacterTypeClass" data-appears="@hero.Appears.DisplayName()" data-original="@(hero.Appears.HasFlag(HeroQuest.Models.TypeAppears.Original).ToString().ToLowerInvariant())" data-id="@hero.Id"
                        asp-controller="Heroes" asp-action="Index" asp-route-id="@hero.Id" aria-current="@(Model.SelectedHero?.Id == hero.Id ? "page" : null)">
                         <span class="index-symbol" aria-hidden="true">
                             <svg viewBox="0 0 32 32"><path d="M5 8l6 4 5-8 5 8 6-4-2 14H7L5 8zM8 26h16M12 17h.1M20 17h.1" /></svg>
                         </span>
                         <span class="row-main">
-                            <strong>@ShortIndexName(string.IsNullOrWhiteSpace(hero.CharacterType) ? hero.Name : hero.CharacterType)</strong>
-                            <small class="row-stats">@hero.Hp HP · D@(hero.Mind) MND · D@(hero.DicesAttack) ATK · D@(hero.DicesDefend) DFC</small>
+                            <strong>@ShortIndexName(string.IsNullOrWhiteSpace(hero.CharacterTypeClass) ? hero.Name : hero.CharacterTypeClass)</strong>
+                            <small class="row-stats">@hero.Hp HP · D@(hero.DicesMind) MND · D@(hero.DicesAttack) ATK · D@(hero.DicesDefend) DFC</small>
                         </span>
                         <span class="row-chevron" aria-hidden="true">›</span>
                     </a>

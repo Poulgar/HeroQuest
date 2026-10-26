@@ -7,7 +7,7 @@
     <div class="home-copy">
         <p class="eyebrow">EL LIBRO DE LAS AVENTURAS</p>
         <h1>Que comiencen<br /><em>las leyendas.</em></h1>
-        <p class="intro-copy">Consulta los héroes que desafían la oscuridad y las criaturas que aguardan en las mazmorras.</p>
+        <p class="intro-copy">Abre los registros del reino, prepara tu expedición y explora las tierras donde comienzan las leyendas.</p>
         <div class="home-actions">
             <a class="button button-primary" asp-controller="Heroes" asp-action="Index">Abrir el registro de héroes</a>
             <a class="text-link" asp-controller="Monsters" asp-action="Index">Ver las criaturas <span aria-hidden="true">→</span></a>
@@ -15,7 +15,8 @@
         <div class="home-counts">
             <div><strong>@Model.HeroesCount</strong><span>héroes registrados</span></div>
             <div><strong>@Model.MonstersCount</strong><span>criaturas catalogadas</span></div>
-            <div><strong>@Model.EquipmentCount</strong><span>equipos y artefactos</span></div>
+            <div><strong>@Model.EquipmentCount</strong><span>equipos</span></div>
+            <div><strong>@Model.ArtifactCount</strong><span>artefactos</span></div>
             <div><strong>@Model.MiscellaneaCount</strong><span>objetos de miscelánea</span></div>
             <div><strong>@Model.MonsterAbilityCount</strong><span>habilidades de monstruo</span></div>
         </div>
@@ -29,18 +30,53 @@
 <section class="home-shelves page-shell" aria-label="Secciones del compendio">
     <a class="shelf-card" asp-controller="Heroes" asp-action="Index">
         <span class="shelf-number">I</span><span class="shelf-label">Personajes</span>
-        <h2>Los héroes</h2><p>Conoce sus atributos, equipo y relatos.</p><span class="shelf-arrow" aria-hidden="true">↗</span>
+        <h2>Los héroes</h2><p>Cuatro aventureros se alzan ante la oscuridad; sus talentos pueden decidir el destino del reino.</p><span class="shelf-arrow" aria-hidden="true">↗</span>
     </a>
     <a class="shelf-card" asp-controller="Monsters" asp-action="Index">
         <span class="shelf-number">II</span><span class="shelf-label">Bestiario</span>
-        <h2>Las criaturas</h2><p>Descubre qué se oculta en las sombras.</p><span class="shelf-arrow" aria-hidden="true">↗</span>
+        <h2>Las criaturas</h2><p>Tras cada puerta aguardan criaturas de antiguas leyendas, desde las criptas hasta las tierras heladas.</p><span class="shelf-arrow" aria-hidden="true">↗</span>
     </a>
-    <a class="shelf-card shelf-card-muted" asp-controller="Archive" asp-action="Equipment">
+    <a class="shelf-card" asp-controller="Archive" asp-action="Equipment">
         <span class="shelf-number">III</span><span class="shelf-label">Armería</span>
-        <h2>Equipo y artefactos</h2><p>El catálogo de objetos se abrirá próximamente.</p><span class="shelf-arrow" aria-hidden="true">↗</span>
+        <h2>Equipo y artefactos</h2><p>Armas, protecciones y reliquias esperan a quien se atreva a internarse en las mazmorras.</p><span class="shelf-arrow" aria-hidden="true">↗</span>
     </a>
-    <a class="shelf-card shelf-card-muted" asp-controller="Archive" asp-action="Miscellanea">
+    <a class="shelf-card" asp-controller="Archive" asp-action="Miscellanea">
         <span class="shelf-number">IV</span><span class="shelf-label">Reglas</span>
-        <h2>Miscelánea</h2><p>Objetos variados del compendio de aventuras.</p><span class="shelf-arrow" aria-hidden="true">↗</span>
+        <h2>Miscelánea</h2><p>Pociones, provisiones y hallazgos extraños: los pequeños objetos también esconden grandes historias.</p><span class="shelf-arrow" aria-hidden="true">↗</span>
     </a>
 </section>
+
+<section class="world-map-section page-shell" aria-labelledby="world-map-title">
+    <div class="world-map-heading">
+        <p class="eyebrow">SECCIÓN ESPECIAL · ATLAS INTERACTIVO</p>
+        <h2 id="world-map-title">Más allá de los registros: <em>el reino indómito</em></h2>
+        <p>Esta cartografía abre una ruta distinta por el mundo: explora caminos, asentamientos y lugares donde aguardan nuevas aventuras.</p>
+    </div>
+    <div class="world-map" role="group" aria-label="Mapa interactivo del reino de HeroQuest">
+        <svg class="map-terrain" viewBox="0 0 1000 560" role="img" aria-label="Mapa ilustrado de montañas, ríos, bosques y caminos">
+            <path class="map-sea" d="M805 340 C850 357 833 394 872 412 S902 460 878 485 C850 515 874 540 855 560 H1000 V318 C944 345 880 324 805 340Z" />
+            <path class="map-lake" d="M760 388 C780 372 810 380 815 402 C820 423 800 440 778 433 C758 427 746 404 760 388Z" />
+            <path class="map-river" d="M365 5 C310 100 460 125 390 220 S300 360 420 430 S500 478 555 495 S680 510 745 485 S802 459 842 440" />
+            <path class="map-road" d="M270 403 C340 360 400 320 460 252 M190 140 C260 115 320 118 375 135 C410 150 430 210 460 252 M460 252 C500 280 520 300 555 319 C590 350 630 380 680 392 M460 252 C560 250 650 245 735 252 C770 220 790 175 790 123 M555 319 C540 360 520 410 490 460 C560 480 620 475 680 450 C760 445 820 452 880 465 M490 460 C550 440 620 410 680 392" />
+            <path class="map-mountain" d="M590 55l45 75h-90zM650 35l54 92h-108zM730 62l40 68h-80zM790 32l57 98h-114zM845 70l42 71h-84z" />
+            <path class="map-forest" d="M110 100l25 54h-50zM155 72l30 63h-60zM190 124l24 51h-48zM95 184l29 59H66zM155 190l25 56h-50zM210 82l25 54h-50zM710 340l28 58h-56zM760 370l29 62h-58zM680 415l24 49h-48z" />
+            <path class="map-region-line" d="M40 275 Q250 240 460 290 T960 250 M330 35 Q370 240 390 530 M615 30 Q600 250 660 520" />
+            <text x="115" y="315" class="map-label">EL BOSQUE DE SOMBRAS</text>
+            <text x="615" y="205" class="map-label">MONTES DEL NORTE</text>
+            <text x="525" y="540" class="map-label">MARISMAS DE KELLAR</text>
+        </svg>
+        <button class="map-location map-city" style="--x:46%;--y:45%" data-lore-trigger data-lore-title="Bastión de Kellar" data-full-description="La fortaleza vigila el paso hacia las tierras del norte. Bajo sus cimientos se extienden galerías antiguas; las leyendas dicen que un ejército olvidado aún protege sus tesoros." aria-label="Lore: Bastión de Kellar">✦<span>Bastión de Kellar</span></button>
+        <button class="map-location map-danger" style="--x:79%;--y:22%" data-lore-trigger data-lore-title="Cumbres del Hielo" data-full-description="Los pasos helados cambian de forma con cada ventisca. En las cuevas se oyen golpes bajo el hielo y luces que no pertenecen a ninguna estrella." aria-label="Lore: Cumbres del Hielo">☠<span>Cumbres del Hielo</span></button>
+        <button class="map-location map-interest" style="--x:19%;--y:25%" data-lore-trigger data-lore-title="Bosque de las Hojas Susurrantes" data-full-description="Un bosque antiguo oculta senderos élficos, piedras rúnicas y claros donde el tiempo parece detenerse. De noche, las copas repiten nombres de viajeros desaparecidos." aria-label="Lore: Bosque de las Hojas Susurrantes">♧<span>Bosque Susurrante</span></button>
+        <button class="map-location map-city" style="--x:27%;--y:72%" data-lore-trigger data-lore-title="Villa de Robledal" data-full-description="La última aldea antes de la frontera ofrece refugio, rumores y una posada siempre iluminada. Sus habitantes pagan por cualquier noticia de las ruinas cercanas." aria-label="Lore: Villa de Robledal">⌂<span>Villa de Robledal</span></button>
+        <button class="map-location map-danger" style="--x:68%;--y:70%" data-lore-trigger data-lore-title="Cripta de la Luna Negra" data-full-description="Una escalera de piedra desciende a cámaras selladas desde hace siglos. Cuando la luna se oculta, los muertos vuelven a recorrer el camino que lleva a la superficie." aria-label="Lore: Cripta de la Luna Negra">♰<span>Cripta de la Luna Negra</span></button>
+        <button class="map-location map-interest" style="--x:88%;--y:83%" data-lore-trigger data-lore-title="Santuario de las Mareas" data-full-description="Este santuario medio inundado guarda un oráculo tallado en coral. Sus aguas revelan rutas secretas, pero también atraen criaturas que cazan bajo la superficie." aria-label="Lore: Santuario de las Mareas">✧<span>Santuario de las Mareas</span></button>
+        <button class="map-location map-interest" style="--x:37.5%;--y:24%" data-lore-trigger data-lore-title="Torre de los Ecos" data-full-description="La torre se alza sobre un camino élfico abandonado. Cada sala devuelve voces de expediciones pasadas y, en lo alto, una campana suena aunque nadie la toque." aria-label="Lore: Torre de los Ecos">♜<span>Torre de los Ecos</span></button>
+        <button class="map-location map-city" style="--x:55.5%;--y:57%" data-lore-trigger data-lore-title="Puente de Kellar" data-full-description="Este puente de piedra cruza el río en el antiguo camino a la fortaleza. Sus guardianes desaparecieron hace años, pero al anochecer aún se ven antorchas en las almenas." aria-label="Lore: Puente de Kellar">⌁<span>Puente de Kellar</span></button>
+        <button class="map-location map-danger" style="--x:73.5%;--y:45%" data-lore-trigger data-lore-title="Cuevas del Dragón" data-full-description="El calor que emana de estas cuevas derrite la nieve incluso en invierno. Los rumores hablan de escamas entre las rocas y de un tesoro que atrae a aventureros imprudentes." aria-label="Lore: Cuevas del Dragón">♨<span>Cuevas del Dragón</span></button>
+        <button class="map-location map-danger" style="--x:49%;--y:82%" data-lore-trigger data-lore-title="Mazmorra de las Profundidades" data-full-description="Una grieta bajo las colinas conduce a cámaras más antiguas que el reino. Los corredores cambian con las lluvias y una puerta sellada oculta algo que sigue llamando desde dentro." aria-label="Lore: Mazmorra de las Profundidades">☠<span>Mazmorra profunda</span></button>
+        <div class="map-compass" role="img" aria-label="Norte, sur, oeste y este"><span class="compass-n">N</span><span class="compass-w">W</span><b>✥</b><span class="compass-e">E</span><span class="compass-s">S</span></div>
+    </div>
+    <div class="map-legend" aria-label="Leyenda del mapa"><span><i class="legend-city"></i>Asentamiento</span><span><i class="legend-interest"></i>Punto de interés</span><span><i class="legend-danger"></i>Zona peligrosa</span></div>
+</section>
+

@@ -5,19 +5,18 @@
         <span class="portrait-ribbon">FICHA DEL AVENTURERO</span>
     </div>
     <div class="detail-content">
-        <p class="eyebrow">@Model.CharacterType • N.º @Model.Id</p>
+        <p class="eyebrow">@Model.CharacterTypeClass • N.º @Model.Id</p>
         <h2>@Model.Name</h2>
-        <p class="detail-subtitle">@(string.IsNullOrWhiteSpace(Model.Player) ? "Sin jugador asignado" : $"Jugador: {Model.Player}")</p>
         @if (!string.IsNullOrWhiteSpace(Model.Description))
         {
             <p class="detail-description">@Model.Description</p>
         }
         <div class="stat-grid">
-            <div><span>Vida</span><strong>@Model.HpCurrent / @Model.Hp</strong></div>
-            <div><span>Mente</span><strong>@Model.Mind</strong></div>
+            <div><span>Vida</span><strong>@Model.Hp</strong></div>
+            <div><span>Movimiento</span><strong>@Model.DicesRedMovement dados rojos</strong></div>
+            <div><span>Mente</span><strong>@Model.DicesMind dados</strong></div>
             <div><span>Ataque</span><strong>@Model.DicesAttack dados</strong></div>
             <div><span>Defensa</span><strong>@Model.DicesDefend dados</strong></div>
-            <div><span>Movimiento</span><strong>@Model.DicesRedMovement dados rojos</strong></div>
             <div><span>Oro</span><strong>@Model.Gold</strong></div>
         </div>
         <div class="detail-divider"><span>PERTENENCIAS Y HAZAÑAS</span></div>
@@ -26,7 +25,6 @@
             <div><dt>Armadura</dt><dd>@(Model.Armor ?? "-")</dd></div>
             <div><dt>Hechizos</dt><dd>@(Model.Spells ?? "-")</dd></div>
             <div><dt>Objetos</dt><dd>@(Model.Items ?? "-")</dd></div>
-            <div><dt>Misiones completadas</dt><dd>@Model.QuestsCompleted</dd></div>
         </dl>
     </div>
     <footer class="detail-expansion-footer"><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></footer>

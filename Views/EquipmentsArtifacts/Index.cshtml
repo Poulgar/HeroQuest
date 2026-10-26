@@ -33,7 +33,7 @@
                 {
                     var categoryName = item.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase) ? "Artefacto" : "Equipo";
                     <a class="catalog-row @(Model.SelectedItem?.Id == item.Id ? "selected" : "")"
-                       data-select-record="@item.Id" data-name="@item.Name" data-category="@item.Category" data-search="@item.Name @categoryName @item.Type @item.Description" data-price="@item.Price" data-appears="@item.Appears.DisplayName()" data-id="@item.Id"
+                       data-select-record="@item.Id" data-name="@item.Name" data-category="@item.Category" data-search="@item.Name @categoryName @item.Type @item.Description" data-price="@item.Price" data-appears="@item.Appears.DisplayName()" data-original="@(item.Appears.HasFlag(HeroQuest.Models.TypeAppears.Original).ToString().ToLowerInvariant())" data-id="@item.Id"
                        asp-controller="Archive" asp-action="Equipment" asp-route-id="@item.Id" aria-current="@(Model.SelectedItem?.Id == item.Id ? "page" : null)">
                         <span class="index-symbol" aria-hidden="true">
                             @if (item.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase))

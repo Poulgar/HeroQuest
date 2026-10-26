@@ -24,7 +24,7 @@ namespace HeroQuest.Migrations
                     b.Property<int>("Appears")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("CharacterType")
+                    b.Property<string>("CharacterTypeClass")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -37,13 +37,10 @@ namespace HeroQuest.Migrations
                     b.Property<int>("DicesDefend")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("DicesMind")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Hp")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("HpCurrent")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Mind")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

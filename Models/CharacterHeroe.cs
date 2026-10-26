@@ -2,8 +2,8 @@ namespace HeroQuest.Models;
 
 public class Heroe : Character
 {
-    public Heroe(int id, string characterType, int hp, int mind, int dicesAttack, int dicesDefend, int dicesRedMovement, string description)
-        : base(id, characterType, hp, mind, dicesAttack, dicesDefend, description)
+    public Heroe(int id, string characterTypeClass, int hp, int dicesMind, int dicesAttack, int dicesDefend, int dicesRedMovement, string description)
+        : base(id, characterTypeClass, hp, dicesMind, dicesAttack, dicesDefend, description)
     {
         DicesRedMovement = dicesRedMovement;
     }
