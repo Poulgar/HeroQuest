@@ -1,5 +1,4 @@
 using HeroQuest.Data;
-using HeroQuest.Models;
 using HeroQuest.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

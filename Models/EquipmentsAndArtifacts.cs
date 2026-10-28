@@ -9,5 +9,5 @@ public class EquipmentsAndArtifacts(int id, string name, string description, int
     public string Type { get; set; } = type;
     public TypeAppears Appears { get; set; } = appears;
     public string Weight { get; set; } = weight;
-    public string Category { get; set; } = category; // "Equipment" or "Artifact"
+    public string Category { get; set; } = category; // "Equipment" o "Artifact".
 }
