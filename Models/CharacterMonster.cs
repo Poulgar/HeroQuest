@@ -24,4 +24,7 @@ public class Monster : Character
     public string Ability { get; set; } = string.Empty;
     public string Faction { get; set; } = string.Empty;
     public ICollection<MonsterSpellOfTerror> SpellLinks { get; set; } = [];
+
+    /*List<T> se usa para el código interno.
+    ICollection<T> se usa para las Interfaces*/
 }

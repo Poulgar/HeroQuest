@@ -403,4 +403,4 @@ C:\Users\polgv\Documents\Codex\2026-10-15\add-heroquest-data-page\work\HeroQuest
 C:\Users\polgv\Documents\Codex\2026-10-15\add-heroquest-data-page\work\HeroQuest\verify-original-build\HeroQuest.runtimeconfig.json
 C:\Users\polgv\Documents\Codex\2026-10-15\add-heroquest-data-page\work\HeroQuest\verify-original-build\HeroQuest.dll
 C:\Users\polgv\Documents\Codex\2026-10-15\add-heroquest-data-page\work\HeroQuest\verify-original-build\HeroQuest.pdb
-C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\l044whj17o-{0}-c6q57qb1nr-c6q57qb1nr.gz
+C:\Users\polgv\OneDrive\Escriptori\PersonalPrograms\HeroQuest\obj\Debug\net10.0\compressed\l044whj17o-{0}-r0isaoxbhs-r0isaoxbhs.gz

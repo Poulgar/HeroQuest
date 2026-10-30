@@ -37,7 +37,7 @@ public enum TypeAppears
     Original = 1 << 12
 
     /*EJEMPLO
-    CharacterHeroe: Bárbaro
-    Expansiones: Horror Congelado (dec 8 - bin 000000001000) , Juego Base (dec 16 - bin 000000010000)
-    Guardado en la BBDD como: (dec 24 - bin 000000011000)*/
+    CharacterHeroe: Bárbaro.
+    Expansiones: Horror Congelado (dec 8 - bin 000000001000) , Juego Base (dec 16 - bin 000000010000).
+    Guardado en la BBDD como: (dec 24 - bin 000000011000).*/
 }

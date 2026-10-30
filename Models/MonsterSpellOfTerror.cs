@@ -4,7 +4,7 @@ namespace HeroQuest.Models;
 public class MonsterSpellOfTerror
 {
     public int MonsterId { get; set; }
-    public Monster Monster { get; set; } = null!;
+    public Monster Monster { get; set; } = null!; // <<= null!;>> indica que va a tener valor aunque se inicialice sin uno.
     public int SpellOfTerrorId { get; set; }
     public SpellOfTerror SpellOfTerror { get; set; } = null!;
 
