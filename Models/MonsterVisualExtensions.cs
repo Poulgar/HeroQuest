@@ -69,8 +69,8 @@ public static class MonsterVisualExtensions
 
     public static string FactionSymbol(this string faction) => faction.Trim() switch
     {
-        "Bestias" => "♧",
-        "Criaturas Congeladas" => "❄",
+        "Bestias" => "♧", // string trebol = "\u2667";  // ♧
+        "Criaturas Congeladas" => "❄", 
         "Criaturas del Terror" => "☠",
         "Elfos" => "➶",
         "Muertos Vivientes" => "♰",
@@ -129,10 +129,10 @@ public static class MonsterVisualExtensions
     {
         // El checksum estable da a cada habilidad un color repetible incluso tras reiniciar la aplicación.
         var palette = new[] { "#8b3f35", "#346d82", "#687b39", "#875f29", "#714d83", "#3e7863", "#a04f68" };
-        uint hash = 2166136261;
-        foreach (var character in ability.Trim().ToUpperInvariant())
-            hash = unchecked((hash ^ character) * 16777619);
-        return palette[(int)(hash % (uint)palette.Length)];
+        uint hash = 2166136261; // Es una constante del algoritmo FNV-1a (Fowler-Noll-Vo variante 1a) para convertir un texto en un número de tamaño fijo. Su equivalente hexadecimal es 0x811C9DC5.
+        foreach (var character in ability.Trim().ToUpperInvariant()) // <<.ToUpperInvariant()>> convierte todo el texto en mayusculas respetando el InvariantCulture.
+            hash = unchecked((hash ^ character) * 16777619); // <<(hash ^ character)>> compara a la inversa los bits de ambos: si el primer bit es distinto lo guarda como '1', si es diferente lo guarda como '0' y así con todos los bits. <<* 16777619>> dispersa los resultados para evitar hashes parecidos. <<unchecked>> permite que no explote el programa si el numero resultado es superior al 4.294.967.295, el cual es limite de uint.
+        return palette[(int)(hash % (uint)palette.Length)]; // <<(hash % (uint)palette.Length)>> convierte en palette.Length en uint para poder operar y realiza una operación para obtener el resto de la división (que sera entre 0 y 6, que corresponde a la cantidad de elementos del array). Al terminar devuelve todo como <<(int)>>.
     }
 
     public static string SpellSymbol(this string spell) => spell.Trim() switch
