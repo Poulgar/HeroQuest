@@ -1,6 +1,6 @@
 using HeroQuest.Models;
 
-namespace HeroQuest.ViewModels;
+namespace HeroQuest.ViewModels; // ViewModel es una plantilla de datos que se empaquetan para mostrarlos todos juntos. No es obligatoria, si no opcional, pero simplifica la creación de Views.
 
 public class HeroQuestIndexViewModel
 {
