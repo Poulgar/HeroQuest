@@ -1,6 +1,8 @@
 @model HeroQuest.ViewModels.EquipmentsArtifactsViewModel
 @{
     ViewData["Title"] = "Equipo y artefactos";
+    // Función local: acorta el nombre a «limit» caracteres con un operador de rango [..(limit-1)]
+    // (copia los primeros limit-1 caracteres) y añade puntos suspensivos para que el índice no se rompa.
     string ShortIndexName(string name, int limit = 25) => name.Length <= limit ? name : name[..(limit - 1)] + "…";
 }
 
@@ -53,6 +55,7 @@
             </aside>
 
             <div class="detail-host" data-detail-host>
+                @* «is { }» comprueba que SelectedItem no sea null Y lo copia en selectedItem (pattern matching). *@
                 @if (Model.SelectedItem is { } selectedItem)
                 {
                     @await Html.PartialAsync("~/Views/Shared/_EquipmentDetailCard.cshtml", selectedItem)

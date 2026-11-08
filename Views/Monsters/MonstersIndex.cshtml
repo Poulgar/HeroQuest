@@ -1,6 +1,9 @@
 @model HeroQuest.ViewModels.MonsterCatalogViewModel
 @{
     ViewData["Title"] = "Monstruos";
+    // Función local: acorta el nombre a «limit» caracteres usando un operador de rango [..(limit-1)]
+    // (que copia los primeros limit-1 caracteres) y añade puntos suspensivos. Así las filas del
+    // índice no rompen el diseño con nombres largos.
     string ShortIndexName(string name, int limit = 25) => name.Length <= limit ? name : name[..(limit - 1)] + "…";
 }
 
@@ -23,8 +26,12 @@
                 <div class="index-tools">
                     <label>Buscar <input class="index-search" type="search" placeholder="Nombre o habilidad…" /></label>
                     <label>Facción
+                        <!--Select que solo listará las facciones realmente existentes.-->
                         <select class="faction-filter">
                             <option value="">Todas las facciones</option>
+                            @* Proyección LINQ sobre los monsters: Select(trae cada facción) → Where(desecha vacías)
+                               → Distinct(elimina repetidas) → OrderBy(las ordena con orden alfabético español,
+                               creado por el comparador StringComparer.Create a partir de la cultura es-ES). *@
                             @foreach (var faction in Model.Monsters.Select(monster => monster.Faction).Where(faction => !string.IsNullOrWhiteSpace(faction)).Distinct().OrderBy(faction => faction, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true)))
                             {
                             <option value="@faction">@faction</option>
@@ -78,6 +85,16 @@
     else
     {
         var spanishComparer = StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true);
+        // Optimización: el CSV guarda las habilidades de cada monstruo como un único texto separado por
+        // comas. Al convertirlos una sola vez en HashSet (colección de búsqueda instantánea al comparar)
+        // por clave Id, evitamos repetir el Split por cada tarjeta de habilidad del archivo.
+        var abilitiesByMonsterId = Model.Monsters.ToDictionary(
+            monster => monster.Id,
+            monster => new HashSet<string>(
+                monster.Ability.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
+                StringComparer.OrdinalIgnoreCase));
+        // abilityCards y spellCards son listas anónimas: recordemos que "modelos anónimos" agrupan propiedades
+        // sin necesidad de crear una clase nueva para cada representación visual.
         var abilityCards = Model.Abilities.Select(ability => new
             {
                 Name = ability.Name,
@@ -86,9 +103,9 @@
                 Appears = ability.Appears,
                 Symbol = ability.Name.AbilitySymbol(),
                 Color = ability.Name.AbilityColor(),
+                // Para saber quién posee cada habilidad consultamos el HashSet ya calculado arriba.
                 Owners = Model.Monsters
-                    .Where(monster => monster.Ability.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                        .Contains(ability.Name, StringComparer.OrdinalIgnoreCase))
+                    .Where(monster => abilitiesByMonsterId[monster.Id].Contains(ability.Name))
                     .Select(monster => monster.Name)
                     .ToList()
             });

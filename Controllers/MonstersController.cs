@@ -13,8 +13,8 @@ public class MonstersController(ApplicationDbContext context) : Controller
         var monsters = await context.Monsters.AsNoTracking()
             .Include(monster => monster.SpellLinks)
                 .ThenInclude(link => link.SpellOfTerror)
-            .OrderBy(monster => monster.Id)
-            .ToListAsync();
+                .OrderBy(monster => monster.Id)
+                .ToListAsync();
         var abilities = await context.MonsterAbilities.AsNoTracking().OrderBy(ability => ability.Id).ToListAsync();
         var spells = await context.SpellsOfTerror.AsNoTracking().OrderBy(spell => spell.Id).ToListAsync();
 

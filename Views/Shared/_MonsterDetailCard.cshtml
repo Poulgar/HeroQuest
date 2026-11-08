@@ -1,9 +1,13 @@
 @model HeroQuest.ViewModels.MonsterDetailCardViewModel
 @{
     var monster = Model.Monster;
+    // El CSV guarda las habilidades como UN solo texto: "Onda mental, Olfato agudo". Lo dividimos
+    // (Split) por comas; TrimEntries elimina los espacios sobrantes y RemoveEmptyEntries descarta
+    // los huecos vacíos, por ejemplo si el texto termina en coma.
     var abilityNames = monster.Ability.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 }
 <article class="detail-card monster-detail-card">
+    <button type="button" class="detail-back" data-back-to-index>&#8249; Volver al índice</button>
     <div class="detail-art monster-art">
         <img src="~/images/heroquest/monster-portrait.svg" alt="Ilustración de @monster.Name" />
         <span class="portrait-ribbon">REGISTRO DEL BESTIARIO</span>
@@ -24,6 +28,9 @@
         <div class="monster-skill-icons" aria-label="Habilidades y hechizos de @monster.Name">
             @foreach (var abilityName in abilityNames)
             {
+                // Primero se comprueba si la habilidad es en realidad un hechizo del Terror: así es
+                // FirstOrDefault busca el enlace (de la tabla puente MonsterSpellOfTerror) cuyo hechizo
+                // coincide con el nombre; devuelve null cuando no existe, eso es lo que evalúa «is not null».
                 var spellLink = monster.SpellLinks.FirstOrDefault(link => string.Equals(link.SpellOfTerror.Name, abilityName, StringComparison.OrdinalIgnoreCase));
                 if (spellLink is not null)
                 {

@@ -134,10 +134,11 @@ Un controlador no suele escribir el HTML directamente. Carga entidades con EF Co
 - `_ViewStart.cshtml` selecciona el layout compartido para las vistas.
 - `_ViewImports.cshtml` habilita Tag Helpers y espacios de nombres comunes.
 - `Shared/_Layout.cshtml` contiene la estructura común: cabecera, navegación, pie, diálogo emergente y referencias a CSS/JavaScript.
-- `Shared/_HeroDetailCard.cshtml`, `_MonsterDetailCard.cshtml`, `_EquipmentDetailCard.cshtml` y `_MiscellaneaDetailCard.cshtml` son parciales: pequeñas fichas reutilizables dentro de sus índices.
+- `Shared/_HeroDetailCard.cshtml`, `_MonsterDetailCard.cshtml`, `_EquipmentDetailCard.cshtml` y `_MiscellaneaDetailCard.cshtml` son parciales: pequeñas fichas reutilizables dentro de sus índices. Cada ficha incluye un botón `‹ Volver al índice` con el atributo `data-back-to-index`; solo se ve en móviles (en escritorio el CSS lo oculta).
 - `Shared/Error.cshtml` muestra la página de error.
 - `Home/Privacy.cshtml` es la página de privacidad del proyecto.
 - Los índices contienen la lista seleccionable y plantillas de ficha. `site.js` cambia la ficha en el navegador sin volver a pedir la página completa.
+- `Views/Monsters/MonstersIndex.cshtml` calcula una vez, en un diccionario `abilitiesByMonsterId`, las habilidades divididas de cada monstruo para no repetir el `Split` en cada tarjeta del archivo de habilidades.
 
 ## 7. Interfaz: CSS, JavaScript e imágenes
 
@@ -149,6 +150,20 @@ Un controlador no suele escribir el HTML directamente. Carga entidades con EF Co
 | `wwwroot/favicon.ico` | Icono de la pestaña del navegador. |
 
 Todo lo que el navegador debe descargar (CSS, JavaScript e imágenes) tiene que estar bajo `wwwroot/`.
+
+### Comportamiento responsive del catálogo
+
+El punto de corte principal entre escritorio y móvil es `680px` (hay un corte intermedio en `900px` para tabletas).
+
+- **Escritorio (más de 900px):** el índice del catálogo y la ficha comparten pantalla en dos columnas; la lista tiene su propio scroll interno.
+- **Tableta (entre 680px y 900px):** la página se apila y el índice se muestra en una franja de hasta `520px` o `60vh` con scroll interno.
+- **Móvil (menos de 680px):**
+  - `.catalog-list` se vuelve `height: auto` y `.catalog-scroll` deja de recortar: la lista completa se imprime en la página y el desplazamiento lo hace el móvil.
+  - `.detail-host` recibe `order: -1`, así que la ficha se renderiza **antes** que el índice.
+  - Al tocar una fila, `site.js` (mediante `isMobileLayout`, un `matchMedia` que coincide con la media query de 680px) desplaza la vista suavemente hasta la ficha recién montada.
+  - El botón `‹ Volver al índice` de la ficha (los parciales con `data-back-to-index`) devuelve la vista a la lista; `site.js` atiende ese clic sin recargar la página.
+
+Si se cambia el punto de corte del CSS, hay que actualizar `isMobileLayout` en `site.js` para que ambos sigan de acuerdo.
 
 ## 8. Migraciones y cambios de esquema
 

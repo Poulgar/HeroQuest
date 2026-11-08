@@ -120,6 +120,11 @@ h1 em { color: var(--red); font-weight: 400; }
 .row-main .row-stats { color: #513a26; font-size: 11px; font-weight: 700; letter-spacing: .015em; }
 a[data-faction] .faction-token-small { width: 38px; height: 38px; flex-basis: 38px; }
 .row-chevron { color: #835533; font-size: 25px; }
+
+/* Botón «Volver al índice» de las fichas. En escritorio no existe visualmente,
+   por eso está oculto aquí y solo se activa dentro de la media query de móviles. */
+.detail-back { display: none; }
+
 .detail-card { position: relative; min-width: 0; height: 680px; display: grid; grid-template-columns: minmax(180px, .78fr) minmax(0, 1.22fr); grid-template-rows: minmax(0, 1fr) auto; gap: 14px 25px; padding: 24px; overflow: hidden; border: 1px solid #9e804f; outline: 1px solid #d4bd84; outline-offset: -7px; background: var(--paper); box-shadow: var(--shadow); }
 .detail-art, .detail-content { position: relative; z-index: 1; }
 .detail-art { align-self: start; padding: 10px; border: 1px solid #876840; background: #bca073; box-shadow: 3px 5px 13px #33241740; }
@@ -227,27 +232,19 @@ a[data-faction] .faction-token-small { width: 38px; height: 38px; flex-basis: 38
     .main-nav { justify-content: flex-start; }
     .home-shelves { grid-template-columns: repeat(2, 1fr); }
     .catalog-layout { height: auto; grid-template-columns: 1fr; }
-    .catalog-list { height: 280px; }
+    /* En pantallas apiladas el índice deja de ser una franja fija de 280px:
+       gana altura (máximo 60vh) y por debajo deja fluir la página con normalidad. */
+    .catalog-list { height: min(520px, 60vh); }
 }
+/* Móvil estrecho: se reduce la tipografía y el ancho del marco.
+   Las tarjetas y listas del catálogo se ajustan en el bloque de 680px de más abajo. */
 @media (max-width: 680px) {
     body { font-size: 17px; }
     .header-inner, .footer-inner, .page-shell { width: min(100% - 24px, 1180px); }
     .site-main { padding: 26px 0 42px; }
-    .main-nav { gap: 8px 16px; }
-    .main-nav a { font-size: 15px; }
-    .home-hero { grid-template-columns: 1fr; gap: 25px; padding: 32px 24px; }
-    .home-art-frame { width: min(72%, 260px); }
-    .home-counts { gap: 18px; flex-wrap: wrap; }
+    .home-hero { grid-template-columns: 1fr; }
     .home-counts div { align-items: flex-start; flex-direction: column; gap: 0; }
     .home-shelves { grid-template-columns: 1fr; }
-    .shelf-card { min-height: 165px; }
-    .catalog-list { height: 260px; }
-    .detail-card { height: 680px; grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr) auto; padding: 20px; }
-    .detail-art { width: min(100%, 330px); justify-self: center; }
-    .detail-art img { aspect-ratio: 4 / 3; }
-    .detail-content { padding: 0; }
-    .stat-grid { gap: 7px; }
-    .detail-facts div { grid-template-columns: 1fr 1.2fr; }
 }
 
 /* En pantallas estrechas la página fluye verticalmente y conserva áreas cómodas para tocar. */
@@ -287,16 +284,24 @@ a[data-faction] .faction-token-small { width: 38px; height: 38px; flex-basis: 38
     .map-compass { top: 12px; right: 16px; }
     .map-mobile-hint { display: block; margin: 8px 0 0; color: #f0e2c2; font-size: 13px; text-align: center; }
     .map-legend { justify-content: flex-start; gap: 10px 15px; padding: 10px; font-size: 12px; }
-    .catalog-list { height: 270px; padding: 12px; }
+    /* Índice del catálogo en móvil: en lugar de la antigua ventana de 260px con scroll interno,
+       la lista completa se imprime dentro de la página (el desplazamiento lo hace el móvil). */
+    .catalog-list { height: auto; padding: 12px; }
+    .catalog-scroll { overflow: visible; }
     .index-tools { gap: 8px; }
     .index-tools input, .index-tools select { min-height: 42px; padding: 9px; font-size: 16px; }
-    .catalog-row { min-height: 72px; gap: 9px; padding: 8px 6px; }
+    .catalog-row { min-height: 64px; gap: 9px; padding: 10px 8px; }
     .row-main strong { font-size: 16px; }
     .row-main small { font-size: 12px; }
     .row-main .row-stats { font-size: 10px; }
     .faction-token, .index-symbol, .faction-token-small { width: 34px; height: 34px; flex-basis: 34px; }
-    .detail-host { height: auto; }
-    .detail-card, .detail-host > .detail-card { height: auto; min-height: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; gap: 16px; padding: 18px; overflow: visible; }
+    /* La ficha se coloca ANTES del índice (order:-1): al tocar un objeto la vista sube hasta ella
+       y el índice queda debajo, como un detalle de aplicación nativa. */
+    .detail-host { height: auto; order: -1; }
+    .detail-card, .detail-host > .detail-card { height: auto; min-height: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; gap: 16px; padding: 18px; overflow: visible; }
+    /* Botón de regreso visible solo en pantallas pequeñas. */
+    .detail-back { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; border: 1px solid #a1824d; color: #513a26; background: #d9c79c; font: 700 14px 'Palatino Linotype', 'Book Antiqua', Georgia, serif; cursor: pointer; }
+    .detail-back:active { background: #c7b387; }
     .detail-art { width: min(100%, 270px); justify-self: center; }
     .detail-art img { aspect-ratio: 1 / 1; }
     .detail-content { min-height: 0; padding: 0; overflow: visible; }

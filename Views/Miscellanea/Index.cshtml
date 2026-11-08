@@ -1,6 +1,8 @@
 @model HeroQuest.ViewModels.MiscellaneaViewModel
 @{
     ViewData["Title"] = "Miscelánea";
+    // Función local: acorta el nombre a «limit» caracteres con un operador de rango [..(limit-1)]
+    // (copia los primeros limit-1 caracteres) y añade puntos suspensivos para que el índice no se rompa.
     string ShortIndexName(string name, int limit = 25) => name.Length <= limit ? name : name[..(limit - 1)] + "…";
 }
 
@@ -41,6 +43,8 @@
             </aside>
 
             <div class="detail-host" data-detail-host>
+                @* «is { }» comprueba que SelectedEntry no sea null Y la copia en la variable selectedEntry
+                   en la misma expresión (pattern matching de C#). Evita un if adicional. *@
                 @if (Model.SelectedEntry is { } selectedEntry)
                 {
                     @await Html.PartialAsync("~/Views/Shared/_MiscellaneaDetailCard.cshtml", selectedEntry)
