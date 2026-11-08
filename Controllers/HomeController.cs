@@ -33,6 +33,6 @@ public class HomeController(ApplicationDbContext context) : Controller
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)] // Indica que no debe de almacenarla en cache ni en ningún otro lugar.
     public IActionResult Error() => View(new ErrorViewModel
     {
-        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier // Si Activity.Current es nulo, se usa HttpContext.TraceIdentifier. Esto es útil para depuración y seguimiento de errores.
     });
 }
