@@ -124,8 +124,8 @@ La ruta por defecto está definida en `Program.cs` con el patrón `{controller=H
 | `/` o `/Home/Index` — `HomeController` | Recuentos para la portada. | `Views/Home/HomeIndex.cshtml` |
 | `/Heroes/Index/{id?}` — `HeroesController` | Héroes y héroe seleccionado. | `Views/Heroes/HeroesIndex.cshtml` |
 | `/Monsters/Index/{id?}` — `MonstersController` | Monstruos, habilidades, hechizos y vínculos relacionados. | `Views/Monsters/MonstersIndex.cshtml` |
-| `/Archive/Equipment/{id?}` — `ArchiveController` | Equipo y artefactos de la tabla compartida. | `Views/EquipmentsArtifacts/Index.cshtml` |
-| `/Archive/Miscellanea/{id?}` — `ArchiveController` | Objetos de Miscelánea. | `Views/Miscellanea/Index.cshtml` |
+| `/Archive/Equipment/{id?}` — `ArchiveController` | Equipo y artefactos de la tabla compartida. | `Views/Archive/EquipmentsArtifactsIndex.cshtml` |
+| `/Archive/Miscellanea/{id?}` — `ArchiveController` | Objetos de Miscelánea. | `Views/Archive/MiscellaneaIndex.cshtml` |
 
 Un controlador no suele escribir el HTML directamente. Carga entidades con EF Core, construye un ViewModel y lo entrega a `View(...)`.
 

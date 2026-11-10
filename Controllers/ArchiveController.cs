@@ -16,7 +16,7 @@ public class ArchiveController(ApplicationDbContext context) : Controller
         var selected = items.FirstOrDefault(e => e.Id == id) ?? items.FirstOrDefault();
         ViewData["Title"] = "Equipo y Artefactos";
 
-        return View("~/Views/EquipmentsArtifacts/Index.cshtml", new EquipmentsArtifactsViewModel { Items = items, SelectedItem = selected });
+        return View("EquipmentsArtifactsIndex", new EquipmentsArtifactsViewModel { Items = items, SelectedItem = selected });
     }
 
     public async Task<IActionResult> Miscellanea(int? id)
@@ -29,6 +29,6 @@ public class ArchiveController(ApplicationDbContext context) : Controller
         var selectedEntry = entries.FirstOrDefault(entry => entry.Id == id) ?? entries.FirstOrDefault();
         ViewData["Title"] = "Miscelánea";
 
-        return View("~/Views/Miscellanea/Index.cshtml", new MiscellaneaViewModel { Entries = entries, SelectedEntry = selectedEntry });
+        return View("MiscellaneaIndex", new MiscellaneaViewModel { Entries = entries, SelectedEntry = selectedEntry });
     }
 }
