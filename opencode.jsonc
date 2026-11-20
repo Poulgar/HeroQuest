@@ -1,5 +1,39 @@
 {
-  // Sin $schema
-  "model": "anthropic/claude-sonnet-4.5",
-  "instructions": ["README.md"]
+  "$schema": "https://opencode.ai/config.json",
+  "model": "ollama/qwen3-programador:latest",
+  "instructions": [
+    "README.md"
+  ],
+  "default_agent": "build",
+  "formatter": true,
+  "watcher": {
+    "ignore": [
+      "**/bin/**",
+      "**/obj/**",
+      "**/node_modules/**",
+      "**/.git/**"
+    ]
+  },
+  
+  "compaction": {
+    "auto": true
+  },
+
+  "permissions": [
+    {
+      "action": "edit",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "git push *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "git reset --hard *",
+      "effect": "ask"
+    }
+  ]
 }
