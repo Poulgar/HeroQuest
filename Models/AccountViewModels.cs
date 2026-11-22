@@ -16,6 +16,7 @@ public sealed class CatalogEditViewModel
 {
     public string Type { get; set; } = string.Empty;
     public int? Id { get; set; }
+    public string? SourceName { get; set; }
     public string Key { get; set; } = string.Empty;
     [Required, StringLength(120)] public string Name { get; set; } = string.Empty;
     [StringLength(2000)] public string Description { get; set; } = string.Empty;
@@ -64,4 +65,19 @@ public sealed class LibraryListSectionViewModel
     public List<CatalogListItem> Items { get; set; } = [];
     public string Section { get; set; } = string.Empty;
     public CatalogListViewModel Library { get; set; } = null!;
+}
+
+public sealed record SearchPickerViewModel(
+    string FieldName, string Label, IReadOnlyList<string> Options,
+    IReadOnlyList<string> SelectedValues, bool AllowMultiple, bool Locked);
+
+public sealed class PlayerProfileInput
+{
+    [System.ComponentModel.DataAnnotations.Required, System.ComponentModel.DataAnnotations.StringLength(80)]
+    public string Name { get; set; } = string.Empty;
+
+    [System.ComponentModel.DataAnnotations.Required, System.ComponentModel.DataAnnotations.StringLength(60)]
+    public string Nickname { get; set; } = string.Empty;
+
+    public int? HeroId { get; set; }
 }

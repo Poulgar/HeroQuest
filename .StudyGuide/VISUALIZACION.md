@@ -47,7 +47,11 @@ La Biblioteca requiere la cuenta `admin`; la cuenta `user` se muestra como Avent
 
 ## Biblioteca y Archivo
 
-El Maestro de Juego abre la Biblioteca desde el menú de su emblema. En la página puede cambiar de estante; los elementos activos aparecen arriba y los archivados al pie. Cada lista tiene búsqueda, orden alfabético y filtros. Los versos de WorldPoems también se editan en su estante.
+El Maestro de Juego abre la Biblioteca desde el menú de su emblema. En la página puede cambiar de estante; los elementos activos aparecen arriba y los archivados al pie. Cada lista tiene búsqueda, orden alfabético y filtros. En las fichas existentes, cada dato permanece bloqueado hasta pulsar su propio botón **Editar**; al guardar, el servidor actualiza solo ese campo. Los buscadores de selección muestran sugerencias y una lista de valores añadidos. Los versos de WorldPoems también se editan en su estante.
+
+Las fichas de Héroes y Monstruos importadas del CSV guardan su nombre de referencia para que **Restablecer valores originales** recupere sus atributos desde `Data/HeroQuest_csv/`. El formulario avisa antes de aplicar cambios que podrían alterar el balance.
+
+La portada muestra el registro de jugadores solo a la cuenta Admin. Cada entrada conserva nombre y apodo y puede vincularse con un héroe existente.
 
 Los botones de edición, guardado, archivado y borrado usan colores semánticos coherentes en ambos temas. El catálogo público de equipo y miscelánea vive en `Storehouse` para no confundirlo con el Archivo de elementos desactivados.
 

@@ -1,54 +1,100 @@
 @model HeroQuest.Models.CatalogEditViewModel
-@{ ViewData["Title"] = Model.Id is null ? "Nueva ficha · Biblioteca" : "Consultar ficha · Biblioteca"; }
+@{
+    var existing = Model.Id.HasValue;
+    var locked = existing;
+    string[] Selected(string? value) => string.IsNullOrWhiteSpace(value) ? [] : [value];
+    ViewData["Title"] = existing ? "Consultar ficha · Biblioteca" : "Nueva ficha · Biblioteca";
+}
 <section class="admin-page page-shell">
-    <p class="eyebrow">BIBLIOTECA DEL REINO · @(Model.Id is null ? "NUEVA FICHA" : $"FICHA N.º {Model.Id}")</p><h1>@(Model.Id is null ? "Añadir al" : "Consultar en la") <em>Biblioteca</em></h1>
-    <form asp-action="Save" method="post" class="study-form admin-edit-form">
+    <p class="eyebrow">BIBLIOTECA DEL REINO · @(existing ? $"FICHA N.º {Model.Id}" : "NUEVA FICHA")</p>
+    <h1>@(existing ? "Consultar en la" : "Añadir a la") <em>Biblioteca</em></h1>
+    <p class="editor-help">@(existing ? "Cada dato está protegido. Pulsa «Editar» junto al campo concreto que quieras cambiar." : "Completa la ficha. En los campos de catálogo, escribe unas letras y añade el resultado elegido a la lista.")</p>
+    @if (TempData["CharacterResetMessage"] is string resetMessage) { <p class="player-form-message">@resetMessage</p> }
+
+    <form asp-action="Save" method="post" class="study-form admin-edit-form" data-field-editor data-update-url="@Url.Action("UpdateField", "Admin")">
         <div asp-validation-summary="ModelOnly" class="form-error"></div>
         <input asp-for="Type" type="hidden"/><input asp-for="Id" type="hidden"/>
         @if (Model.Type == "poems")
         {
-            <label asp-for="Key">Clave breve (por ejemplo: saludo-del-rey)</label><input asp-for="Key"/><span asp-validation-for="Key" class="form-error"></span>
-            <label asp-for="Name">Título del verso</label><input asp-for="Name"/><span asp-validation-for="Name" class="form-error"></span>
-            <label asp-for="Description">Texto del poema o leyenda</label><textarea asp-for="Description" rows="6"></textarea>
+            <div class="editable-field" data-edit-field data-update-field="Key"><label asp-for="Key">Clave breve</label><input asp-for="Key" readonly="@locked"/><span asp-validation-for="Key" class="form-error"></span>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div>
+            <div class="editable-field" data-edit-field data-update-field="Name"><label asp-for="Name">Título del verso</label><input asp-for="Name" readonly="@locked"/><span asp-validation-for="Name" class="form-error"></span>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div>
+            <div class="editable-field" data-edit-field data-update-field="Description"><label asp-for="Description">Texto del poema o leyenda</label><textarea asp-for="Description" rows="6" readonly="@locked"></textarea>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div>
         }
         else
         {
-            <label asp-for="Name">Nombre</label><input asp-for="Name"/><span asp-validation-for="Name" class="form-error"></span>
-            <label asp-for="Description">Descripción / lore</label><textarea asp-for="Description" rows="4"></textarea>
-            <label asp-for="AppearsOptions">Expansiones (puedes elegir varias)</label>
-            <select asp-for="AppearsOptions" multiple size="7">
-                @foreach (string option in ViewBag.AppearanceOptions) { <option value="@option">@option</option> }
-            </select>
+            <div class="editable-field" data-edit-field data-update-field="Name"><label asp-for="Name">Nombre</label><input asp-for="Name" readonly="@locked"/><span asp-validation-for="Name" class="form-error"></span>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div>
+            <div class="editable-field" data-edit-field data-update-field="Description"><label asp-for="Description">Descripción / lore</label><textarea asp-for="Description" rows="4" readonly="@locked"></textarea>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div>
+            <div class="editable-field picker-edit-field" data-edit-field data-update-field="AppearsOptions">
+                @await Html.PartialAsync("_SearchPicker", new HeroQuest.Models.SearchPickerViewModel("AppearsOptions", "Expansiones", (string[])ViewBag.AppearanceOptions, Model.AppearsOptions, true, locked))
+                @if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }
+            </div>
         }
+
         @if (Model.Type == "heroes")
         {
-            <label asp-for="CharacterTypeClass">Clase</label><select asp-for="CharacterTypeClass"><option value="">Elige una clase</option>@foreach (string option in ViewBag.HeroClassOptions) { <option value="@option">@option</option> }</select>
-            <div class="edit-stats"><label>Vida<input asp-for="Hp" type="number" min="0"/></label><label>Dados de mente<input asp-for="DicesMind" type="number" min="0"/></label><label>Dados de ataque<input asp-for="DicesAttack" type="number" min="0"/></label><label>Dados de defensa<input asp-for="DicesDefend" type="number" min="0"/></label><label>Movimiento (dados rojos)<input asp-for="DicesRedMovement" type="number" min="0"/></label></div>
-            <label asp-for="Player">Jugador</label><input asp-for="Player"/><label asp-for="Weapon">Arma</label><input asp-for="Weapon"/><label asp-for="Armor">Armadura</label><input asp-for="Armor"/>
-            <label asp-for="AbilityOptions">Habilidades y hechizos (puedes elegir varios)</label><select asp-for="AbilityOptions" multiple size="6">@foreach (string option in ViewBag.AbilityCatalogOptions) { <option value="@option">@option</option> }</select>
-            <label asp-for="Items">Objetos</label><input asp-for="Items"/><label asp-for="Gold">Oro</label><input asp-for="Gold" type="number"/><label asp-for="QuestsCompleted">Misiones completadas</label><input asp-for="QuestsCompleted" type="number"/>
+            <div class="editable-field picker-edit-field" data-edit-field data-update-field="CharacterTypeClass">
+                @await Html.PartialAsync("_SearchPicker", new HeroQuest.Models.SearchPickerViewModel("CharacterTypeClass", "Clase", (string[])ViewBag.HeroClassOptions, Selected(Model.CharacterTypeClass), false, locked))
+                @if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }
+            </div>
+            <div class="edit-stats">
+                @foreach (var stat in new[] { ("Hp", "Vida", Model.Hp), ("DicesMind", "Dados de mente", Model.DicesMind), ("DicesAttack", "Dados de ataque", Model.DicesAttack), ("DicesDefend", "Dados de defensa", Model.DicesDefend), ("DicesRedMovement", "Movimiento (dados rojos)", Model.DicesRedMovement) })
+                { <div class="editable-field" data-edit-field data-update-field="@stat.Item1"><label>@stat.Item2<input name="@stat.Item1" value="@stat.Item3" type="number" min="0" readonly="@locked"/></label>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div> }
+            </div>
+            @foreach (var field in new[] { ("Player", "Jugador", Model.Player), ("Weapon", "Arma", Model.Weapon), ("Armor", "Armadura", Model.Armor ?? ""), ("Items", "Objetos", Model.Items ?? "") })
+            { <div class="editable-field" data-edit-field data-update-field="@field.Item1"><label>@field.Item2<input name="@field.Item1" value="@field.Item3" readonly="@locked"/></label>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div> }
+            <div class="editable-field picker-edit-field" data-edit-field data-update-field="AbilityOptions">
+                @await Html.PartialAsync("_SearchPicker", new HeroQuest.Models.SearchPickerViewModel("AbilityOptions", "Habilidades y hechizos", (string[])ViewBag.AbilityCatalogOptions, Model.AbilityOptions, true, locked))
+                @if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }
+            </div>
+            @foreach (var field in new[] { ("Gold", "Oro", Model.Gold), ("QuestsCompleted", "Misiones completadas", Model.QuestsCompleted) })
+            { <div class="editable-field" data-edit-field data-update-field="@field.Item1"><label>@field.Item2<input name="@field.Item1" value="@field.Item3" type="number" min="0" readonly="@locked"/></label>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div> }
         }
         else if (Model.Type == "monsters")
         {
-            <label asp-for="Faction">Facción</label><select asp-for="Faction"><option value="">Elige una facción</option>@foreach (string option in ViewBag.FactionOptions) { <option value="@option">@option</option> }</select>
-            <label asp-for="AbilityOptions">Habilidades y hechizos (puedes elegir varios)</label><select asp-for="AbilityOptions" multiple size="6">@foreach (string option in ViewBag.AbilityCatalogOptions) { <option value="@option">@option</option> }</select>
-            <div class="edit-stats"><label>Vida<input asp-for="Hp" type="number" min="0"/></label><label>Dados de mente<input asp-for="DicesMind" type="number" min="0"/></label><label>Dados de ataque<input asp-for="DicesAttack" type="number" min="0"/></label><label>Dados de defensa<input asp-for="DicesDefend" type="number" min="0"/></label><label>Movimiento máximo<input asp-for="MaxMovement" type="number" min="0"/></label></div>
+            <div class="editable-field picker-edit-field" data-edit-field data-update-field="Faction">
+                @await Html.PartialAsync("_SearchPicker", new HeroQuest.Models.SearchPickerViewModel("Faction", "Facción", (string[])ViewBag.FactionOptions, Selected(Model.Faction), false, locked))
+                @if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }
+            </div>
+            <div class="editable-field picker-edit-field" data-edit-field data-update-field="AbilityOptions">
+                @await Html.PartialAsync("_SearchPicker", new HeroQuest.Models.SearchPickerViewModel("AbilityOptions", "Habilidades y hechizos", (string[])ViewBag.AbilityCatalogOptions, Model.AbilityOptions, true, locked))
+                @if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }
+            </div>
+            <div class="edit-stats">
+                @foreach (var stat in new[] { ("Hp", "Vida", Model.Hp), ("DicesMind", "Dados de mente", Model.DicesMind), ("DicesAttack", "Dados de ataque", Model.DicesAttack), ("DicesDefend", "Dados de defensa", Model.DicesDefend), ("MaxMovement", "Movimiento máximo", Model.MaxMovement) })
+                { <div class="editable-field" data-edit-field data-update-field="@stat.Item1"><label>@stat.Item2<input name="@stat.Item1" value="@stat.Item3" type="number" min="0" readonly="@locked"/></label>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div> }
+            </div>
         }
         else if (Model.Type == "equipment")
         {
-            <label asp-for="Category">Categoría</label><select asp-for="Category"><option value="Equipment">Equipo</option><option value="Artifact">Artefacto</option></select>
-            <label asp-for="ItemType">Tipo</label><select asp-for="ItemType"><option value="">Elige un tipo</option>@foreach (string option in ViewBag.EquipmentTypeOptions) { <option value="@option">@option</option> }</select>
-            <label asp-for="Price">Precio en monedas de oro</label><input asp-for="Price" type="number" min="0"/><label asp-for="Weight">Peso</label><input asp-for="Weight"/>
+            <div class="editable-field picker-edit-field" data-edit-field data-update-field="Category">
+                @await Html.PartialAsync("_SearchPicker", new HeroQuest.Models.SearchPickerViewModel("Category", "Categoría", new[] { "Equipo", "Artefacto" }, Selected(Model.Category == "Artifact" ? "Artefacto" : "Equipo"), false, locked))
+                @if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }
+            </div>
+            <div class="editable-field picker-edit-field" data-edit-field data-update-field="ItemType">
+                @await Html.PartialAsync("_SearchPicker", new HeroQuest.Models.SearchPickerViewModel("ItemType", "Tipo", (string[])ViewBag.EquipmentTypeOptions, Selected(Model.ItemType), false, locked))
+                @if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }
+            </div>
+            <div class="edit-stats"><div class="editable-field" data-edit-field data-update-field="Price"><label>Precio en monedas de oro<input name="Price" value="@Model.Price" type="number" min="0" readonly="@locked"/></label>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div>
+                <div class="editable-field" data-edit-field data-update-field="Weight"><label>Peso<input name="Weight" value="@Model.Weight" readonly="@locked"/></label>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div></div>
         }
         else if (Model.Type == "miscellanea")
-        {
-            <label asp-for="Price">Precio en monedas de oro</label><input asp-for="Price" type="number" min="0"/>
-        }
+        { <div class="editable-field" data-edit-field data-update-field="Price"><label>Precio en monedas de oro<input name="Price" value="@Model.Price" type="number" min="0" readonly="@locked"/></label>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div> }
         else if (Model.Type == "spells")
         {
-            <label asp-for="SpellType">Tipo de hechizo</label><select asp-for="SpellType"><option value="">Elige un tipo</option>@foreach (string option in ViewBag.SpellTypeOptions) { <option value="@option">@option</option> }</select>
+            <div class="editable-field picker-edit-field" data-edit-field data-update-field="SpellType">
+                @await Html.PartialAsync("_SearchPicker", new HeroQuest.Models.SearchPickerViewModel("SpellType", "Tipo de hechizo", (string[])ViewBag.SpellTypeOptions, Selected(Model.SpellType), false, locked))
+                @if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }
+            </div>
         }
-        @if (Model.Id is not null) { <label class="archive-toggle"><input asp-for="IsArchived"/> Archivado (desmarcar para restaurarlo)</label> }
-        <div class="admin-actions"><button class="fantasy-button small library-action-save" type="submit">Guardar cambios</button><a class="fantasy-button small" asp-action="Index" asp-route-type="@Model.Type">Volver al estante</a></div>
+        @if (!existing) { <div class="admin-actions"><button class="fantasy-button small library-action-save" type="submit">Guardar ficha</button></div> }
+        <div class="admin-actions"><a class="fantasy-button small" asp-action="Index" asp-route-type="@Model.Type">Volver al estante</a></div>
     </form>
+
+    @if (existing && (Model.Type is "heroes" or "monsters") && !string.IsNullOrWhiteSpace(Model.SourceName))
+    {
+        <form asp-action="ResetCharacterDefaults" method="post" class="reset-defaults-form" onsubmit="return confirm('Atención: vas a restaurar los valores de referencia de @Model.Name. Si los habíais equilibrado o personalizado, esos cambios se reemplazarán. ¿Continuar?');">
+            <input type="hidden" name="type" value="@Model.Type"/><input type="hidden" name="id" value="@Model.Id"/>
+            <button class="fantasy-button small library-action-archive" type="submit">Restablecer valores originales</button>
+        </form>
+    }
 </section>

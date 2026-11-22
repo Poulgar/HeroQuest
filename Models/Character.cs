@@ -18,6 +18,8 @@ public class Character : IArchivable
     }
 
     public int Id { get; set; }
+    // Nombre de origen que permite recuperar la ficha de referencia aunque el título visible se edite.
+    public string? SourceName { get; set; }
     public string CharacterTypeClass { get; set; } = string.Empty;
     public int Hp { get; set; }
     public int DicesMind { get; set; }

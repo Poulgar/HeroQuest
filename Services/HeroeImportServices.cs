@@ -23,15 +23,18 @@ public class HeroeImportService(ApplicationDbContext context)
             var characterTypeClass = NormalizeClassName(CsvRecordReader.GetText(datos, "CharacterTypeClass"));
             var aparicion = TypeAppearsParser.Parse(CsvRecordReader.GetText(datos, "Appearances"));
             var heroeExistente = heroesExistentes.FirstOrDefault(heroe =>
-                string.Equals(NormalizeClassName(heroe.Name), nombre, StringComparison.OrdinalIgnoreCase));
+                string.Equals(NormalizeClassName(heroe.SourceName ?? heroe.Name), nombre, StringComparison.OrdinalIgnoreCase));
 
             if (heroeExistente is not null)
             {
-                // Al volver a importar, sólo sincronizamos la expansión; preservamos el estado de la campaña.
-                // La normalización también actualiza filas antiguas que aún conservan el sufijo «/a».
-                heroeExistente.Name = nombre;
-                heroeExistente.CharacterTypeClass = characterTypeClass;
-                heroeExistente.Appears = aparicion;
+                // El CSV solo completa la referencia una vez; editar después la ficha no se pierde al reiniciar.
+                if (heroeExistente.SourceName is null)
+                {
+                    heroeExistente.SourceName = nombre;
+                    heroeExistente.Name = nombre;
+                    heroeExistente.CharacterTypeClass = characterTypeClass;
+                    heroeExistente.Appears = aparicion;
+                }
                 continue;
             }
 
@@ -52,6 +55,7 @@ public class HeroeImportService(ApplicationDbContext context)
             {
                 CharacterTypeClass = characterTypeClass,
                 Name = nombre,
+                SourceName = nombre,
                 Player = CsvRecordReader.GetText(datos, "Player"),
                 Weapon = CsvRecordReader.GetText(datos, "Weapon"),
                 Armor = CsvRecordReader.GetText(datos, "Armor"),

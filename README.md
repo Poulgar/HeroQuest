@@ -47,6 +47,7 @@ El proyecto usa ASP.NET Core MVC, Entity Framework Core y SQLite. Para iniciarlo
 
 - `user` / `user123`: dentro del Compendio aparece como **Aventurero** y puede consultar los datos.
 - `admin` / `admin123`: dentro del Compendio aparece como **Maestro de Juego** y puede usar la **Biblioteca** y su sección **Archivo**.
+- El Maestro de Juego también puede registrar jugadores desde la portada, con nombre, apodo y un vínculo opcional a un héroe ya existente.
 
 Las cuentas están configuradas en `appsettings.json` para uso local de prueba. No publiques la aplicación en Internet con estas contraseñas.
 

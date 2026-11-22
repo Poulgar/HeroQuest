@@ -37,7 +37,7 @@ Program.cs
 
 | Carpeta | Para qué sirve |
 | --- | --- |
-| `Controllers/` | Recibe las rutas web, consulta datos y elige qué vista mostrar. `PoemsController` ofrece versos guardados en SQLite. |
+| `Controllers/` | Recibe las rutas web, consulta datos y elige qué vista mostrar. `PlayersController` guarda los jugadores vinculados a héroes. |
 | `.StudyGuide/` | Guías para estudiar el mapa MVC, la autenticación y la organización visual del CSS. |
 | `Data/` | Configura Entity Framework Core y guarda los CSV fuente. |
 | `Migrations/` | Historial de cambios del esquema de SQLite. |
@@ -48,6 +48,8 @@ Program.cs
 | `Properties/` | Perfiles de ejecución local, incluidos HTTP, HTTPS y red local. |
 
 `Services/DatabaseBackupService.cs` crea copias semanales verificadas en `DataBase/Backups/` y conserva las ocho más recientes. La carpeta se excluye de Git para evitar subir archivos SQLite grandes con cambios pequeños.
+
+Las claves que protegen las cookies y formularios se guardan en `DataBase/DataProtectionKeys/`, fuera de Git. En Windows se cifran con DPAPI y permanecen estables entre reinicios.
 
 Al ejecutar o compilar pueden aparecer `DataBase/`, `bin/` y `obj/`. `DataBase/HeroQuest.db` es la base SQLite local; `bin/` y `obj/` contienen resultados temporales de compilación. No son el código de las páginas.
 
@@ -69,7 +71,7 @@ Al ejecutar o compilar pueden aparecer `DataBase/`, `bin/` y `obj/`. `DataBase/H
 
 ### `Data/ApplicationDbContext.cs`
 
-Es el puente entre el código C# y SQLite. Sus `DbSet` representan las colecciones/tablas principales: `Heroes`, `Monsters`, `Miscellanea`, `EquipmentsAndArtifacts`, `MonsterAbilities`, `SpellsOfTerror` y `WorldPoems` (versos, que también se administran desde la Biblioteca).
+Es el puente entre el código C# y SQLite. Sus `DbSet` representan las colecciones/tablas principales: `Heroes`, `Monsters`, `Miscellanea`, `EquipmentsAndArtifacts`, `MonsterAbilities`, `SpellsOfTerror`, `WorldPoems` y `PlayerProfiles`.
 
 En `OnModelCreating` se configura la herencia `Character` mediante **TPC** (*Table per Concrete Class*): héroes y monstruos se guardan en tablas concretas separadas. También se configura la relación entre monstruos y hechizos del Terror mediante la tabla puente `MonsterSpellOfTerror`.
 
@@ -80,6 +82,7 @@ En `OnModelCreating` se configura la herencia `Character` mediante **TPC** (*Tab
 | `Character.cs` | Propiedades comunes a los personajes, como clase, vida, dados de mente, ataque y defensa. |
 | `IArchivable.cs` | Contrato compartido para ocultar y restaurar fichas sin borrarlas de SQLite. |
 | `CharacterHeroe.cs` | Datos propios de un héroe: movimiento con dados rojos, equipo, oro y otros datos de campaña. |
+| `PlayerProfile.cs` | Nombre y apodo de una persona jugadora y vínculo opcional con un héroe. |
 | `CharacterMonster.cs` | Datos propios de un monstruo: movimiento máximo, facción, habilidad y enlaces a hechizos. |
 | `EquipmentsAndArtifacts.cs` | Registro de equipo o artefacto; ambos se almacenan en una tabla y se distinguen por categoría. |
 | `MiscellaneaItem.cs` | Objeto de la sección Miscelánea. |
@@ -128,7 +131,8 @@ La ruta por defecto está definida en `Program.cs` con el patrón `{controller=H
 
 | Ruta/controlador | Datos que carga | Vista |
 | --- | --- | --- |
-| `/` o `/Home/Index` — `HomeController` | Recuentos para la portada. | `Views/Home/HomeIndex.cshtml` |
+| `/` o `/Home/Index` — `HomeController` | Recuentos y, para el Maestro de Juego, el registro de jugadores. | `Views/Home/HomeIndex.cshtml` |
+| `/Players/Create` — `PlayersController` | Añade un jugador con nombre, apodo y vínculo opcional a un héroe; solo Admin. | Formulario de `Views/Home/HomeIndex.cshtml` |
 | `/Heroes/Index/{id?}` — `HeroesController` | Héroes y héroe seleccionado. | `Views/Heroes/HeroesIndex.cshtml` |
 | `/Monsters/Index/{id?}` — `MonstersController` | Monstruos, habilidades, hechizos y vínculos relacionados. | `Views/Monsters/MonstersIndex.cshtml` |
 | `/Account/Login` — `AccountController` | Valida las cuentas de prueba y crea una cookie de sesión con rol User o Admin. | `Views/Account/Login.cshtml` |
@@ -162,7 +166,7 @@ Todo lo que el navegador debe descargar (CSS, JavaScript e imágenes) tiene que 
 
 ## 8. Migraciones y cambios de esquema
 
-`Migrations/` conserva el historial de cambios de tablas y columnas. Cada migración incluye:
+`Migrations/` conserva el historial de cambios de tablas y columnas. `AddPlayerProfiles` crea la tabla de jugadores; `AddCharacterSourceNames` guarda el nombre de origen para recuperar los valores de referencia. Cada migración incluye:
 
 - Un archivo principal `.cs` con los pasos `Up` (aplicar) y `Down` (revertir).
 - Un `.Designer.cs` generado con el modelo de esa versión.
@@ -199,5 +203,7 @@ Así puedes ver separadas las responsabilidades: **Model** representa los datos,
 
 
 
-- La Biblioteca tiene estantes para Héroes, Monstruos, Equipo y Artefactos, Miscelánea, Habilidades, Hechizos del Terror y Versos y Leyendas. En cada estante se puede buscar y filtrar por expansión y clasificación; las opciones del formulario se presentan como listas desplegables.
+- La Biblioteca tiene estantes para Héroes, Monstruos, Equipo y Artefactos, Miscelánea, Habilidades, Hechizos del Terror y Versos y Leyendas. Los campos de catálogo usan buscadores con sugerencias y una lista de selecciones; cada campo existente se modifica por separado con su botón **Editar**.
+- Las fichas de Héroes y Monstruos importadas conservan `SourceName`. El botón **Restablecer valores originales** recupera clases, atributos y equipo inicial desde los CSV de referencia y avisa antes de reemplazar cambios de balance.
+- `PlayerProfile` guarda nombre, apodo y una relación opcional uno a uno con `Heroe`. El apartado de Jugadores de la portada solo se muestra al Maestro de Juego. El enlace está sobre la tabla `Heroes` porque la herencia TPC no ofrece una tabla común de personajes a la que SQLite pueda apuntar con una clave foránea.
 

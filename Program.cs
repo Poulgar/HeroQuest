@@ -4,6 +4,7 @@ using HeroQuest.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<WorldPoemService>();
+
+// Guardamos las claves de sesión junto a los datos locales y fuera de Git; Windows las cifra con DPAPI.
+var protectionKeysPath = Path.Combine(builder.Environment.ContentRootPath, "DataBase", "DataProtectionKeys");
+Directory.CreateDirectory(protectionKeysPath);
+var dataProtection = builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(protectionKeysPath))
+    .SetApplicationName("HeroQuest");
+if (OperatingSystem.IsWindows()) dataProtection.ProtectKeysWithDpapi();
 
 // Fijamos la ruta a la carpeta del proyecto para que Visual Studio y `dotnet run`
 // usen la misma base y no creen por accidente otro HeroQuest.db en bin/Debug.

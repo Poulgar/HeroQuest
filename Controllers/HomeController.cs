@@ -24,6 +24,15 @@ public class HomeController(ApplicationDbContext context) : Controller
             SpellCount = await context.SpellsOfTerror.CountAsync(item => !item.IsArchived)
         };
 
+        // Los datos privados del grupo solo se cargan para la sesión del Maestro de Juego.
+        if (User.IsInRole("Admin"))
+        {
+            model.Players = await context.PlayerProfiles.AsNoTracking().Include(player => player.Hero)
+                .OrderBy(player => player.Name).ToListAsync();
+            model.AvailableHeroes = await context.Heroes.AsNoTracking().Where(hero => !hero.IsArchived)
+                .OrderBy(hero => hero.Name).ToListAsync();
+        }
+
         return View("HomeIndex", model);
     }
 

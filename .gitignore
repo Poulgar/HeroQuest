@@ -23,6 +23,7 @@ coverage/
 
 # ASP.NET local data and secrets
 DataBase/Backups/
+DataBase/DataProtectionKeys/
 **/App_Data/*.db
 **/App_Data/*.db-shm
 **/App_Data/*.db-wal

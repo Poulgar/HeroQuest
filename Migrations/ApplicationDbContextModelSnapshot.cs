@@ -46,6 +46,9 @@ namespace HeroQuest.Migrations
                     b.Property<bool>("IsArchived")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("SourceName")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Character");
@@ -159,6 +162,33 @@ namespace HeroQuest.Migrations
                     b.HasIndex("SpellOfTerrorId");
 
                     b.ToTable("MonsterSpellOfTerror", (string)null);
+                });
+
+            modelBuilder.Entity("HeroQuest.Models.PlayerProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("HeroId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nickname")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HeroId")
+                        .IsUnique();
+
+                    b.ToTable("PlayerProfiles");
                 });
 
             modelBuilder.Entity("HeroQuest.Models.SpellOfTerror", b =>
@@ -303,9 +333,24 @@ namespace HeroQuest.Migrations
                     b.Navigation("SpellOfTerror");
                 });
 
+            modelBuilder.Entity("HeroQuest.Models.PlayerProfile", b =>
+                {
+                    b.HasOne("HeroQuest.Models.Heroe", "Hero")
+                        .WithOne("PlayerProfile")
+                        .HasForeignKey("HeroQuest.Models.PlayerProfile", "HeroId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Hero");
+                });
+
             modelBuilder.Entity("HeroQuest.Models.SpellOfTerror", b =>
                 {
                     b.Navigation("MonsterLinks");
+                });
+
+            modelBuilder.Entity("HeroQuest.Models.Heroe", b =>
+                {
+                    b.Navigation("PlayerProfile");
                 });
 
             modelBuilder.Entity("HeroQuest.Models.Monster", b =>

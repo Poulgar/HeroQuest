@@ -14,6 +14,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<SpellOfTerror> SpellsOfTerror => Set<SpellOfTerror>(); // Hechizos de la expansión El Terror
     public DbSet<MonsterSpellOfTerror> MonsterSpellOfTerrors => Set<MonsterSpellOfTerror>(); // Relación de muchos a muchos monstruo-hechizo
     public DbSet<WorldPoem> WorldPoems => Set<WorldPoem>(); // Poemas breves que acompañan el acceso y los temas visuales.
+    public DbSet<PlayerProfile> PlayerProfiles => Set<PlayerProfile>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : base(options) // Constructor que recibe opciones de configuración para la base de datos y las pasa a la clase base DbContext.
@@ -31,6 +32,11 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<SpellOfTerror>().ToTable("SpellsOfTerror");
         modelBuilder.Entity<WorldPoem>().HasIndex(poem => poem.Key).IsUnique();
+        modelBuilder.Entity<PlayerProfile>()
+            .HasOne(player => player.Hero)
+            .WithOne(hero => hero.PlayerProfile)
+            .HasForeignKey<PlayerProfile>(player => player.HeroId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         // La tabla puente representa las dos claves foráneas y evita duplicar hechizos por monstruo.
         modelBuilder.Entity<MonsterSpellOfTerror>(entity =>

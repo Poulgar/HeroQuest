@@ -124,6 +124,127 @@ document.querySelectorAll('[data-library-section]').forEach((section) => {
     updateLibraryList();
 });
 
+// Los selectores de biblioteca buscan mientras se escribe y guardan los valores elegidos como etiquetas.
+document.querySelectorAll('[data-search-picker]').forEach((picker) => {
+    const input = picker.querySelector('[data-picker-input]');
+    const add = picker.querySelector('[data-picker-add]');
+    const suggestionBox = picker.querySelector('[data-picker-suggestions]');
+    const options = [...picker.querySelectorAll('[data-picker-option]')];
+    const selectedList = picker.querySelector('[data-picker-selected]');
+    const multiple = picker.dataset.multiple === 'True' || picker.dataset.multiple === 'true';
+    const normalizePicker = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
+
+    const selectedValues = () => [...selectedList.querySelectorAll('[data-picker-item]')].map((item) => item.dataset.value);
+    const refreshSuggestions = () => {
+        const query = normalizePicker(input.value.trim());
+        let visibleCount = 0;
+        options.forEach((option) => {
+            const alreadySelected = selectedValues().some((value) => normalizePicker(value) === normalizePicker(option.dataset.pickerOption));
+            const matches = query && normalizePicker(option.dataset.pickerOption).includes(query) && !alreadySelected && visibleCount < 8;
+            option.hidden = !matches;
+            if (matches) visibleCount += 1;
+        });
+        suggestionBox.hidden = visibleCount === 0;
+    };
+    const addValue = (value) => {
+        const match = options.find((option) => normalizePicker(option.dataset.pickerOption) === normalizePicker(value));
+        if (!match) return;
+        value = match.dataset.pickerOption;
+        const current = selectedValues();
+        if (!multiple) current.length = 0;
+        if (!current.some((item) => normalizePicker(item) === normalizePicker(value))) current.push(value);
+        selectedList.replaceChildren(...current.map((itemValue) => {
+            const item = document.createElement('li');
+            item.dataset.pickerItem = '';
+            item.dataset.value = itemValue;
+            const label = document.createElement('span');
+            label.textContent = itemValue;
+            const hidden = document.createElement('input');
+            hidden.type = 'hidden'; hidden.name = picker.dataset.fieldName; hidden.value = itemValue;
+            const remove = document.createElement('button');
+            remove.type = 'button'; remove.dataset.pickerRemove = ''; remove.setAttribute('aria-label', `Quitar ${itemValue}`); remove.textContent = '×';
+            remove.disabled = picker.dataset.locked === 'True' || picker.dataset.locked === 'true';
+            item.append(label, hidden, remove);
+            return item;
+        }));
+        input.value = '';
+        suggestionBox.hidden = true;
+        refreshSuggestions();
+    };
+
+    input.addEventListener('input', refreshSuggestions);
+    add.addEventListener('click', () => {
+        const query = normalizePicker(input.value.trim());
+        const match = options.find((option) => normalizePicker(option.dataset.pickerOption) === query);
+        const firstVisible = options.find((option) => !option.hidden);
+        addValue(match?.dataset.pickerOption ?? firstVisible?.dataset.pickerOption ?? '');
+    });
+    suggestionBox.addEventListener('click', (event) => {
+        const option = event.target.closest('[data-picker-option]');
+        if (option) addValue(option.dataset.pickerOption);
+    });
+    selectedList.addEventListener('click', (event) => {
+        const remove = event.target.closest('[data-picker-remove]');
+        if (remove) { remove.closest('[data-picker-item]').remove(); refreshSuggestions(); }
+    });
+    input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') { event.preventDefault(); add.click(); }
+    });
+});
+
+// Al editar una ficha existente, el servidor recibe una solicitud por campo para evitar cambios accidentales en el resto.
+document.querySelectorAll('[data-field-editor][data-update-url]').forEach((editor) => {
+    editor.addEventListener('click', async (event) => {
+        const editButton = event.target.closest('[data-field-edit]');
+        const saveButton = event.target.closest('[data-field-save]');
+        const cancelButton = event.target.closest('[data-field-cancel]');
+        const field = event.target.closest('[data-edit-field]');
+        if (!field) return;
+
+        const controls = [...field.querySelectorAll('input:not([type="hidden"]), textarea, select, [data-picker-add], [data-picker-remove]')];
+        const setEditing = (editing) => {
+            field.classList.toggle('is-editing', editing);
+            controls.forEach((control) => {
+                if (control.hasAttribute('readonly')) control.readOnly = !editing;
+                else control.disabled = !editing;
+            });
+            field.querySelectorAll('[data-field-edit]').forEach((button) => { button.hidden = editing; });
+            field.querySelectorAll('[data-field-save], [data-field-cancel]').forEach((button) => { button.hidden = !editing; });
+            field.querySelector('[data-search-picker]')?.setAttribute('data-locked', String(!editing));
+        };
+
+        if (editButton) { setEditing(true); field.querySelector('input:not([type="hidden"]), textarea, [data-picker-input]')?.focus(); return; }
+        if (cancelButton) { window.location.reload(); return; }
+        if (!saveButton) return;
+
+        const form = editor.closest('form');
+        const formData = new FormData();
+        formData.append('type', form.querySelector('[name="Type"]').value);
+        formData.append('id', form.querySelector('[name="Id"]').value);
+        formData.append('field', field.dataset.updateField);
+        const picker = field.querySelector('[data-search-picker]');
+        if (picker) {
+            const values = [...picker.querySelectorAll('[data-picker-item]')].map((item) => item.dataset.value);
+            if (field.dataset.updateField === 'AppearsOptions' || field.dataset.updateField === 'AbilityOptions') values.forEach((value) => formData.append('values', value));
+            else formData.append('value', values[0] ?? '');
+        } else {
+            const input = field.querySelector('input:not([type="hidden"]), textarea, select');
+            formData.append('value', input?.value ?? '');
+        }
+        formData.append('__RequestVerificationToken', editor.querySelector('[name="__RequestVerificationToken"]').value);
+        saveButton.disabled = true;
+        try {
+            const response = await fetch(editor.dataset.updateUrl, { method: 'POST', body: formData, headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            if (!response.ok) throw new Error('El dato no se pudo guardar. Revisa el valor e inténtalo de nuevo.');
+            setEditing(false);
+        } catch (error) {
+            window.alert(error.message);
+        } finally {
+            saveButton.disabled = false;
+        }
+    });
+});
+
 document.querySelectorAll('[data-archive-filter]').forEach((button) => {
     button.addEventListener('click', () => {
         const selection = button.dataset.archiveFilter;
@@ -240,7 +361,7 @@ if (themeButton) {
         toastTimer = window.setTimeout(() => {
             toast.classList.remove('is-visible');
             window.setTimeout(() => { toast.hidden = true; }, 850);
-        }, 3300);
+        }, 5500);
     };
     themeButton.addEventListener('click', () => showThemePoem(document.documentElement.dataset.theme === 'moonlit' ? 'night' : 'day'));
 }

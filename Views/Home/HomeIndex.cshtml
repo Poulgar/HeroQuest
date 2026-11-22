@@ -27,6 +27,38 @@
     </div>
 </section>
 
+@if (User.IsInRole("Admin"))
+{
+    <section class="player-roster page-shell" aria-labelledby="player-roster-title">
+        <div class="world-map-heading">
+            <p class="eyebrow">SOLO PARA EL MAESTRO DE JUEGO</p>
+            <h2 id="player-roster-title">Jugadores de la <em>campaña</em></h2>
+            <p>Registra a cada persona y, si ya lo sabes, vincúlala con el héroe que llevará a la aventura.</p>
+        </div>
+        @if (TempData["PlayerFormError"] is string error) { <p class="form-error">@error</p> }
+        @if (TempData["PlayerFormMessage"] is string message) { <p class="player-form-message">@message</p> }
+        <form asp-controller="Players" asp-action="Create" method="post" class="player-create-form">
+            <label>Nombre del jugador<input name="Name" maxlength="80" required autocomplete="name" /></label>
+            <label>Apodo<input name="Nickname" maxlength="60" required /></label>
+            <label>Héroe vinculado
+                <select name="HeroId"><option value="">Todavía sin asignar</option>
+                    @foreach (var hero in Model.AvailableHeroes) { <option value="@hero.Id">@hero.Name · @hero.CharacterTypeClass</option> }
+                </select>
+            </label>
+            <button class="fantasy-button fantasy-button-primary" type="submit">Añadir jugador</button>
+        </form>
+        @if (Model.Players.Count > 0)
+        {
+            <ul class="player-roster-list">
+                @foreach (var player in Model.Players)
+                {
+                    <li><strong>@player.Name</strong><span>«@player.Nickname»</span><small>Héroe: @(player.Hero?.Name ?? "sin asignar")</small></li>
+                }
+            </ul>
+        }
+    </section>
+}
+
 <section class="home-shelves page-shell" aria-label="Secciones del compendio">
     <a class="shelf-card" asp-controller="Heroes" asp-action="Index">
         <span class="shelf-number">I</span><span class="shelf-label">Personajes</span>
@@ -61,7 +93,8 @@
             <path class="map-road" d="M270 403 C340 360 400 320 460 252 M190 140 C260 115 320 118 375 135 C410 150 430 210 460 252 M460 252 C500 280 520 300 555 319 C590 350 630 380 680 392 M460 252 C560 250 650 245 735 252 C770 220 790 175 790 123 M555 319 C540 360 520 410 490 460 C560 480 620 475 680 450 C760 445 820 452 880 465 M490 460 C550 440 620 410 680 392" />
             <path class="map-mountain" d="M590 55l45 75h-90zM650 35l54 92h-108zM730 62l40 68h-80zM790 32l57 98h-114zM845 70l42 71h-84z" />
             <path class="map-forest" d="M110 100l25 54h-50zM155 72l30 63h-60zM190 124l24 51h-48zM95 184l29 59H66zM155 190l25 56h-50zM210 82l25 54h-50zM710 340l28 58h-56zM760 370l29 62h-58zM680 415l24 49h-48z" />
-            <path class="map-region-line" d="M40 275 Q250 240 460 290 T960 250 M330 35 Q370 240 390 530 M615 30 Q600 250 660 520" />
+            @* Se conserva esta capa por si se rediseña el mapa; ahora mismo sus líneas no coinciden con el terreno. *@
+            @* <path class="map-region-line" d="M40 275 Q250 240 460 290 T960 250 M330 35 Q370 240 390 530 M615 30 Q600 250 660 520" /> *@
             <text x="115" y="315" class="map-label">EL BOSQUE DE SOMBRAS</text>
             <text x="615" y="205" class="map-label">MONTES DEL NORTE</text>
             <text x="525" y="540" class="map-label">MARISMAS DE KELLAR</text>

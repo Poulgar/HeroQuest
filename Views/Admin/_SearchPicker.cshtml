@@ -1,0 +1,23 @@
+@model HeroQuest.Models.SearchPickerViewModel
+<div class="search-picker" data-search-picker data-field-name="@Model.FieldName" data-multiple="@Model.AllowMultiple" data-locked="@Model.Locked">
+    <label class="search-picker-label">@Model.Label</label>
+    <div class="search-picker-entry">
+        <input type="search" data-picker-input placeholder="Escribe para buscar…" autocomplete="off" disabled="@Model.Locked" aria-label="Buscar @Model.Label" />
+        <button type="button" class="fantasy-button small" data-picker-add disabled="@Model.Locked">Añadir</button>
+    </div>
+    <div class="search-picker-suggestions" data-picker-suggestions hidden role="listbox">
+        @foreach (var option in Model.Options)
+        {
+            <button type="button" data-picker-option="@option" hidden role="option">@option</button>
+        }
+    </div>
+    <ul class="search-picker-selected" data-picker-selected aria-label="@Model.Label elegidos">
+        @foreach (var selected in Model.SelectedValues.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            <li data-picker-item data-value="@selected">
+                <span>@selected</span><input type="hidden" name="@Model.FieldName" value="@selected" />
+                <button type="button" data-picker-remove aria-label="Quitar @selected" disabled="@Model.Locked">×</button>
+            </li>
+        }
+    </ul>
+</div>

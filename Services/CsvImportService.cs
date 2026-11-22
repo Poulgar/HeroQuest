@@ -49,8 +49,9 @@ public class CsvImportService
     {
         var existingMonsters = await _context.Monsters.ToListAsync();
         var byName = existingMonsters
-            .GroupBy(monster => MonsterCsvParsing.NormalizeName(monster.Name))
+            .GroupBy(monster => MonsterCsvParsing.NormalizeName(monster.SourceName ?? monster.Name))
             .ToDictionary(group => group.Key, group => group.First());
+        var seedEmptyMonsterTable = existingMonsters.Count == 0;
 
         // Heroes y Monsters comparten la clave de Character en TPC; los nuevos IDs parten del máximo global.
         var maxHeroId = await _context.Heroes.Select(h => (int?)h.Id).MaxAsync() ?? 0;
@@ -73,9 +74,12 @@ public class CsvImportService
 
             if (!byName.TryGetValue(MonsterCsvParsing.NormalizeName(name), out var monster))
             {
+                // Solo se importan plantillas automáticamente cuando la tabla está vacía; así no se recrea un monstruo renombrado.
+                if (!seedEmptyMonsterTable) continue;
                 monster = new Monster(nextId++, name, hp, dicesMind, attack, defense, maxMovement, ability, faction,
                     CreateLoreDescription(name, faction))
                 {
+                    SourceName = name,
                     Appears = appearance
                 };
                 _context.Monsters.Add(monster);
@@ -83,21 +87,8 @@ public class CsvImportService
                 continue;
             }
 
-            // Actualizamos la ficha existente desde el CSV, pero mantenemos la vida actual de una campaña.
-            monster.CharacterTypeClass = name;
-            monster.Name = name;
-            monster.Hp = hp;
-            monster.DicesMind = dicesMind;
-            monster.DicesAttack = attack;
-            monster.DicesDefend = defense;
-            monster.MaxMovement = maxMovement;
-            monster.Attack = attack;
-            monster.Defense = defense;
-            monster.Faction = faction;
-            monster.Ability = ability;
-            monster.Appears = appearance;
-            // Sustituimos las descripciones estadísticas creadas por la versión anterior,
-            // pero conservamos cualquier texto personalizado que no use esa plantilla.
+            monster.SourceName ??= name;
+            // Completa solo el lore vacío; las estadísticas y el nombre se cambian explícitamente desde la Biblioteca.
             if (string.IsNullOrWhiteSpace(monster.Description) ||
                 monster.Description.Contains("pertenece a la facción", StringComparison.OrdinalIgnoreCase) ||
                 monster.Description.Contains("ronda los dominios de", StringComparison.OrdinalIgnoreCase))
@@ -219,7 +210,7 @@ public class CsvImportService
     private async Task ImportMonsterSpellLinksAsync(string monsterCsvPath)
     {
         var monstersByName = (await _context.Monsters.AsNoTracking().ToListAsync())
-            .ToDictionary(monster => MonsterCsvParsing.NormalizeName(monster.Name));
+            .ToDictionary(monster => MonsterCsvParsing.NormalizeName(monster.SourceName ?? monster.Name));
         var spellsByName = (await _context.SpellsOfTerror.AsNoTracking().ToListAsync())
             .GroupBy(spell => MonsterCsvParsing.NormalizeName(spell.Name))
             .ToDictionary(group => group.Key, group => group.First());
