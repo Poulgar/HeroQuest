@@ -46,6 +46,12 @@ html[data-theme="moonlit"] .theme-moon { opacity: 1; filter: drop-shadow(0 0 6px
 .fantasy-button-primary, .button-primary { color: #fff1d0; border-color: #d1ad62; background: linear-gradient(145deg, #9b4937, #6d2c25 65%, #4b221e); }
 .fantasy-button.small, .button.small { min-height: 37px; padding: 7px 12px; font-size: 12px; }
 .fantasy-button.danger { border-color: #a75a4e; background: linear-gradient(145deg, #7c3935, #482421); }
+.library-action-edit, .library-action-save, .library-action-archive, .library-action-delete { color: #fff8ec !important; border-color: transparent !important; box-shadow: inset 0 1px 0 #ffffff35, 0 3px 0 #201711, 0 5px 10px #130c0855 !important; }
+.library-action-edit { background: linear-gradient(145deg, #66849a, #42647d) !important; }
+.library-action-save { background: linear-gradient(145deg, #718968, #4f704a) !important; }
+.library-action-archive { background: linear-gradient(145deg, #a17d43, #80602e) !important; }
+.library-action-delete { background: linear-gradient(145deg, #ad6258, #874139) !important; }
+.library-action-edit:hover, .library-action-save:hover, .library-action-archive:hover, .library-action-delete:hover { filter: brightness(1.08); }
 .fantasy-button:focus-visible, .button:focus-visible, .theme-toggle:focus-visible, .account-emblem:focus-visible, .nav-library summary:focus-visible { outline: 3px solid #e2c476; outline-offset: 3px; }
 .ability-filter-button, .equipment-category-button { color: #4d3825; background: linear-gradient(145deg, #e7d4a9, #b39867); }
 .ability-filter-button.active, .equipment-category-button.active { color: #fff1d0; background: linear-gradient(145deg, #9b4937, #6d2c25); }
@@ -71,6 +77,23 @@ html[data-theme="moonlit"] .theme-moon { opacity: 1; filter: drop-shadow(0 0 6px
 .library-shelves .fantasy-button.active { color: #fff1d0; background: linear-gradient(145deg, #9b4937, #6d2c25); }
 .library-tab-note { font-size: 11px; font-weight: 400; }
 .library-section-intro { margin: 18px 0; color: var(--muted-ink); font-style: italic; }
+.library-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin: 24px 0 12px; }
+.library-section-heading h2 { margin: 0; color: var(--ink); font-size: clamp(23px, 3vw, 31px); }
+.library-section-heading h2 span { color: var(--muted-ink); font: 15px Georgia, serif; }
+.library-archive-section { margin-top: 50px; padding-top: 24px; border-top: 2px solid var(--line); }
+.library-filter-tools { display: grid; grid-template-columns: minmax(190px, 1.5fr) repeat(3, minmax(125px, 1fr)); gap: 10px; margin: 14px 0; }
+.library-filter-tools label { display: grid; gap: 5px; color: var(--muted-ink); font: 700 11px Georgia, serif; letter-spacing: .06em; text-transform: uppercase; }
+.library-search-wrap { position: relative; display: block; }
+.library-filter-tools input, .library-filter-tools select { width: 100%; min-width: 0; min-height: 42px; padding: 9px 34px 9px 11px; border: 1px solid var(--line); border-radius: 8px 3px; color: var(--ink); background: var(--paper-light); font: 15px 'Palatino Linotype', Georgia, serif; }
+.library-filter-tools select { padding-right: 9px; }
+.library-no-results { padding: 14px; color: var(--muted-ink); text-align: center; font-style: italic; }
+.library-item-copy { min-width: 0; }
+.library-item-copy strong { display: block; overflow-wrap: anywhere; }
+.library-item-copy small { display: block; color: var(--muted-ink); overflow-wrap: anywhere; }
+.library-list-section .admin-list { margin-top: 10px; }
+.library-action-save { color: #fff8ec !important; }
+.admin-edit-form select[multiple] { min-height: 135px; padding: 8px; }
+.admin-edit-form select:not([multiple]) { cursor: pointer; }
 .library-empty { padding: 17px; border: 1px dashed #aa8a54; color: var(--muted-ink); text-align: center; }
 .admin-list { display: grid; gap: 10px; margin-top: 22px; }
 .admin-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 14px; border: 1px solid #a98b57; border-radius: 12px 3px 12px 3px; background: var(--paper-light); box-shadow: 0 4px 12px #24170f20; }
@@ -112,5 +135,10 @@ html[data-theme="moonlit"] .theme-moon { opacity: 1; filter: drop-shadow(0 0 6px
     .library-shelves, .library-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .library-shelves .fantasy-button, .library-tabs .fantasy-button { width: 100%; min-height: 44px; padding-inline: 7px; font-size: 11px; }
     .library-tabs .fantasy-button-primary:last-child { grid-column: 1 / -1; }
+    .library-filter-tools { grid-template-columns: 1fr 1fr; }
+    .library-filter-tools label:first-child { grid-column: 1 / -1; }
+    .library-section-heading { align-items: flex-start; flex-direction: column; }
+    .library-section-heading > .fantasy-button { width: 100%; }
+    .library-archive-section { margin-top: 34px; padding-top: 18px; }
     .poem-toast { right: 12px; bottom: 12px; width: calc(100vw - 24px); }
 }

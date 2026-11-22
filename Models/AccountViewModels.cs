@@ -22,11 +22,12 @@ public sealed class CatalogEditViewModel
     public string CharacterTypeClass { get; set; } = string.Empty;
     public string Faction { get; set; } = string.Empty;
     public string Ability { get; set; } = string.Empty;
+    public string[] AbilityOptions { get; set; } = [];
     public string Category { get; set; } = string.Empty;
     public string ItemType { get; set; } = string.Empty;
     public string Weight { get; set; } = string.Empty;
     public string SpellType { get; set; } = string.Empty;
-    public string Appears { get; set; } = "Original";
+    public string[] AppearsOptions { get; set; } = ["Original"];
     public int Hp { get; set; }
     public int DicesMind { get; set; }
     public int DicesAttack { get; set; }
@@ -44,10 +45,23 @@ public sealed class CatalogEditViewModel
     public int QuestsCompleted { get; set; }
 }
 
-public sealed record CatalogListItem(int Id, string Name, string Details, bool IsArchived);
+public sealed record CatalogListItem(
+    int Id, string Name, string Details, bool IsArchived,
+    string SearchText, string Expansion, string Classification);
 public sealed class CatalogListViewModel
 {
     public string Type { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
+    public string CreateLabel { get; set; } = "Añadir ficha";
     public List<CatalogListItem> Items { get; set; } = [];
+    public List<CatalogListItem> ArchivedItems { get; set; } = [];
+    public List<string> ExpansionOptions { get; set; } = [];
+    public List<string> ClassificationOptions { get; set; } = [];
+}
+
+public sealed class LibraryListSectionViewModel
+{
+    public List<CatalogListItem> Items { get; set; } = [];
+    public string Section { get; set; } = string.Empty;
+    public CatalogListViewModel Library { get; set; } = null!;
 }

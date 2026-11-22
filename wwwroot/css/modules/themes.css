@@ -148,3 +148,87 @@ html[data-theme="moonlit"] .detail-content h2,
 html[data-theme="moonlit"] .ability-card-heading h3 { color: #eadbff; }
 html[data-theme="moonlit"] .text-link { color: #f0a6d3; }
 html[data-theme="moonlit"] .catalog-row[data-original="true"] { background-color: #1c1930; }
+
+/* Ajustes de contraste para componentes que aún tenían tinta o papel claros fijos. */
+html[data-theme="moonlit"] .page-heading,
+html[data-theme="moonlit"] .ability-heading { color: var(--ink); }
+html[data-theme="moonlit"] .page-heading .eyebrow,
+html[data-theme="moonlit"] .ability-heading .eyebrow { color: var(--gold); }
+html[data-theme="moonlit"] .page-heading h1,
+html[data-theme="moonlit"] .page-heading h1 em,
+html[data-theme="moonlit"] .home-copy h1,
+html[data-theme="moonlit"] .detail-content h2,
+html[data-theme="moonlit"] .skill-description-dialog h2 { color: #eee4ff; }
+html[data-theme="moonlit"] .page-heading > p:last-child,
+html[data-theme="moonlit"] .ability-heading p:last-child { color: #c7bddf; }
+html[data-theme="moonlit"] .catalog-list { border-color: #786998; background: #26213f; }
+html[data-theme="moonlit"] .catalog-scroll { scrollbar-color: #8271a3 #26213f; }
+html[data-theme="moonlit"] .index-tools label { color: #c7bddf; }
+html[data-theme="moonlit"] .index-tools input,
+html[data-theme="moonlit"] .index-tools select,
+html[data-theme="moonlit"] .library-filter-tools input,
+html[data-theme="moonlit"] .library-filter-tools select { color: #eee8ff; border-color: #786998; background: #1b1830; }
+html[data-theme="moonlit"] .equipment-category-button { color: #e9e1fb; border-color: #7a689b; background: #393052; }
+html[data-theme="moonlit"] .catalog-row { border-color: #5d5279; color: #eee8ff; background: #26213f; }
+html[data-theme="moonlit"] .catalog-row[data-original="true"] { background: #1e1a34; }
+html[data-theme="moonlit"] .catalog-row:hover,
+html[data-theme="moonlit"] .catalog-row.selected { background: #40365c; }
+html[data-theme="moonlit"] .catalog-row[data-original="true"]:hover,
+html[data-theme="moonlit"] .catalog-row[data-original="true"].selected { background: #342b50; }
+html[data-theme="moonlit"] .row-main small,
+html[data-theme="moonlit"] .row-main .row-stats,
+html[data-theme="moonlit"] .list-caption span,
+html[data-theme="moonlit"] .row-chevron { color: #c8bddf; }
+html[data-theme="moonlit"] .index-symbol { border-color: #9380b8; color: #f2e9ff; background: #594773; }
+html[data-theme="moonlit"] .detail-card { border-color: #8573ac; outline-color: #ad9acb; background: #211d38; }
+html[data-theme="moonlit"] .detail-art, html[data-theme="moonlit"] .home-art-frame { border-color: #7f6c9f; background: #393052; }
+html[data-theme="moonlit"] .portrait-ribbon, html[data-theme="moonlit"] .art-caption { color: #e8ddff; }
+html[data-theme="moonlit"] .detail-description,
+html[data-theme="moonlit"] .detail-facts dd,
+html[data-theme="moonlit"] .ability-card-description,
+html[data-theme="moonlit"] .ability-card-owners { color: #e1d9f2; }
+html[data-theme="moonlit"] .stat-grid div { border-color: #62547d; background: #2b2547; }
+html[data-theme="moonlit"] .stat-grid span,
+html[data-theme="moonlit"] .detail-facts dt,
+html[data-theme="moonlit"] .detail-expansion-footer { color: #c3b7de; }
+html[data-theme="moonlit"] .detail-divider::after,
+html[data-theme="moonlit"] .detail-facts div,
+html[data-theme="moonlit"] .detail-expansion-footer,
+html[data-theme="moonlit"] .ability-card-heading,
+html[data-theme="moonlit"] .ability-card-owners,
+html[data-theme="moonlit"] .ability-card-expansion { border-color: #655780; }
+html[data-theme="moonlit"] .ability-card-owners strong { color: #e4c8ff; }
+html[data-theme="moonlit"] .ability-card-expansion { color: #c7bddf; }
+html[data-theme="moonlit"] .shelf-card:hover,
+html[data-theme="moonlit"] .shelf-card-muted { color: #f0eaff; background: #352d52; }
+html[data-theme="moonlit"] .shelf-number { color: #bda9e5; }
+html[data-theme="moonlit"] .floating-tooltip { border-color: #957fbc; color: #f5efff; background: #292241; }
+html[data-theme="moonlit"] .skill-description-dialog { border-color: #927db6; outline-color: #b5a0d6; background: #25203f; }
+html[data-theme="moonlit"] .skill-description-dialog > p:last-child { color: #e1d9f2; }
+html[data-theme="moonlit"] .world-map-heading { border-color: #786998; border-left-color: #cf82bd; color: #eee7ff; background: linear-gradient(145deg, #302849, #211d38); }
+html[data-theme="moonlit"] .world-map-heading h2,
+html[data-theme="moonlit"] .world-map-heading h2 em,
+html[data-theme="moonlit"] .world-map-heading > p:last-child,
+html[data-theme="moonlit"] .world-map-heading .eyebrow { color: #eee4ff; }
+html[data-theme="moonlit"] .world-map { border-color: #8876ad; outline-color: #ad9acb; background-color: #211d38; background-image: radial-gradient(ellipse at 50% 45%, #393052, #1b1830 75%); }
+html[data-theme="moonlit"] .map-river { stroke: #668daa; opacity: .8; }
+html[data-theme="moonlit"] .map-sea, html[data-theme="moonlit"] .map-lake { fill: #476c86; stroke: #b2b0d2; }
+html[data-theme="moonlit"] .map-road { stroke: #c4a975; }
+html[data-theme="moonlit"] .map-mountain { fill: #696080; stroke: #c9bce4; }
+html[data-theme="moonlit"] .map-forest { fill: #3e665b; stroke: #9bb5a4; }
+html[data-theme="moonlit"] .map-region-line { stroke: #c2aeda; }
+html[data-theme="moonlit"] .map-label { fill: #f1eaff; stroke: #221d3b; }
+html[data-theme="moonlit"] .map-location span,
+html[data-theme="moonlit"] .map-compass { border-color: #9a86bd; color: #eee7ff; background: #2a2443ee; }
+html[data-theme="moonlit"] .map-compass b { color: #f3a6d6; }
+html[data-theme="moonlit"] .map-legend { border-color: #8573ac; color: #eee7ff; background: #2a2443; }
+html[data-theme="moonlit"] .map-mobile-hint { color: #e3d9fa; }
+html[data-theme="moonlit"] .empty-note { border-color: #8573ac; background: #211d38; }
+html[data-theme="moonlit"] .library-filter-tools label { color: #c7bddf; }
+html[data-theme="moonlit"] .library-shelves { border-bottom-color: #655780; }
+html[data-theme="moonlit"] .library-shelves .fantasy-button.active { color: #fff4ff; background: linear-gradient(145deg, #9a527e, #59345f 70%, #392646); }
+html[data-theme="moonlit"] .admin-row.is-archived { color: #ddd3f3; background: #1b1830; }
+html[data-theme="moonlit"] .library-action-edit { background: linear-gradient(145deg, #526a7d, #344c60) !important; }
+html[data-theme="moonlit"] .library-action-save { background: linear-gradient(145deg, #5d7358, #41583f) !important; }
+html[data-theme="moonlit"] .library-action-archive { background: linear-gradient(145deg, #806a47, #665132) !important; }
+html[data-theme="moonlit"] .library-action-delete { background: linear-gradient(145deg, #89534e, #70403c) !important; }

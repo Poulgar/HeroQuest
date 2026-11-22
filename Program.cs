@@ -40,6 +40,8 @@ var connectionString = new SqliteConnectionStringBuilder(
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
+builder.Services.AddHostedService(serviceProvider => new DatabaseBackupService(
+    databasePath, serviceProvider.GetRequiredService<ILogger<DatabaseBackupService>>()));
 
 var app = builder.Build();
 

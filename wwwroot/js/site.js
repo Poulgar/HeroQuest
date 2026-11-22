@@ -83,6 +83,47 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
     update();
 });
 
+// Cada estante filtra su lista activa o desactivada en el navegador, sin recargar la página.
+document.querySelectorAll('[data-library-section]').forEach((section) => {
+    const search = section.querySelector('[data-library-search]');
+    const clear = section.querySelector('[data-library-clear]');
+    const expansion = section.querySelector('[data-library-expansion]');
+    const classification = section.querySelector('[data-library-classification]');
+    const sort = section.querySelector('[data-library-sort]');
+    const list = section.querySelector('[data-library-list]');
+    const empty = section.querySelector('[data-library-empty]');
+    if (!list) return;
+
+    const normalizeLibraryText = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
+    const collator = new Intl.Collator('es', { sensitivity: 'accent', numeric: true });
+    const updateLibraryList = () => {
+        const query = normalizeLibraryText(search?.value ?? '');
+        const rows = [...list.querySelectorAll('[data-library-row]')];
+        rows.forEach((row) => {
+            const matchesText = normalizeLibraryText(row.dataset.search ?? '').includes(query);
+            const matchesExpansion = !expansion?.value || (row.dataset.expansion ?? '').split(',').some(value => normalizeLibraryText(value.trim()) === normalizeLibraryText(expansion.value));
+            const matchesClassification = !classification?.value || normalizeLibraryText(row.dataset.classification ?? '') === normalizeLibraryText(classification.value);
+            row.hidden = !matchesText || !matchesExpansion || !matchesClassification;
+        });
+
+        rows.sort((a, b) => collator.compare(a.dataset.name ?? '', b.dataset.name ?? '') * (sort?.value === 'za' ? -1 : 1));
+        rows.forEach((row) => list.append(row));
+        if (empty) empty.hidden = rows.some(row => !row.hidden);
+        if (clear) clear.hidden = !search?.value;
+    };
+
+    search?.addEventListener('input', updateLibraryList);
+    clear?.addEventListener('click', () => {
+        search.value = '';
+        updateLibraryList();
+        search.focus();
+    });
+    expansion?.addEventListener('change', updateLibraryList);
+    classification?.addEventListener('change', updateLibraryList);
+    sort?.addEventListener('change', updateLibraryList);
+    updateLibraryList();
+});
+
 document.querySelectorAll('[data-archive-filter]').forEach((button) => {
     button.addEventListener('click', () => {
         const selection = button.dataset.archiveFilter;

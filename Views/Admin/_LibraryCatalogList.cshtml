@@ -1,0 +1,60 @@
+@model HeroQuest.Models.LibraryListSectionViewModel
+@{
+    var archived = Model.Section == "archived";
+    var library = Model.Library;
+}
+<div class="library-list-section" data-library-section="@Model.Section">
+    <div class="library-filter-tools">
+        <label>Buscar
+            <span class="library-search-wrap"><input type="search" data-library-search placeholder="Nombre o descripción" /><button type="button" class="index-search-clear" data-library-clear aria-label="Limpiar búsqueda" hidden>×</button></span>
+        </label>
+        <label>Ordenar
+            <select data-library-sort><option value="az">A-Z</option><option value="za">Z-A</option></select>
+        </label>
+        @if (library.ExpansionOptions.Count > 0)
+        {
+            <label>Expansión
+                <select data-library-expansion><option value="">Todas</option>@foreach (var option in library.ExpansionOptions) { <option value="@option">@option</option> }</select>
+            </label>
+        }
+        @if (library.ClassificationOptions.Count > 1)
+        {
+            <label>Categoría / clase
+                <select data-library-classification><option value="">Todas</option>@foreach (var option in library.ClassificationOptions) { <option value="@option">@option</option> }</select>
+            </label>
+        }
+    </div>
+
+    @if (Model.Items.Count == 0)
+    {
+        <p class="library-empty">@(archived ? "No hay elementos desactivados en este estante." : "Todavía no hay elementos en este estante.")</p>
+    }
+    else
+    {
+        <div class="admin-list" data-library-list>
+            @foreach (var item in Model.Items)
+            {
+                <article class="admin-row @(archived ? "is-archived" : "")" data-library-row data-name="@item.Name"
+                         data-search="@item.SearchText" data-expansion="@item.Expansion" data-classification="@item.Classification">
+                    <div class="library-item-copy"><strong>@item.Name</strong><small>#@item.Id · @item.Details</small></div>
+                    <div class="admin-actions">
+                        <a class="fantasy-button small library-action-edit" asp-action="Edit" asp-route-type="@library.Type" asp-route-id="@item.Id">Editar</a>
+                        <form asp-action="Archive" method="post">
+                            <input type="hidden" name="type" value="@library.Type" />
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="hidden" name="inArchive" value="@archived" />
+                            <button class="fantasy-button small library-action-archive" type="submit">@(archived ? "Reactivar" : "Desactivar")</button>
+                        </form>
+                        <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar definitivamente este elemento? Esta acción no se puede deshacer.');">
+                            <input type="hidden" name="type" value="@library.Type" />
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="hidden" name="archived" value="@archived" />
+                            <button class="fantasy-button small library-action-delete" type="submit">Eliminar definitivamente</button>
+                        </form>
+                    </div>
+                </article>
+            }
+        </div>
+        <p class="library-no-results" data-library-empty hidden>No hay resultados con estos filtros.</p>
+    }
+</div>

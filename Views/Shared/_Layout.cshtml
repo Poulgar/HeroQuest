@@ -17,8 +17,8 @@
                 <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">Inicio</a>
                 <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Heroes" ? "active" : "")" asp-controller="Heroes" asp-action="Index">Héroes</a>
                 <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Monsters" ? "active" : "")" asp-controller="Monsters" asp-action="Index">Monstruos</a>
-                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Equipment" ? "active" : "")" asp-controller="Archive" asp-action="Equipment">Equipos y Artefactos</a>
-                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Miscellanea" ? "active" : "")" asp-controller="Archive" asp-action="Miscellanea">Miscelánea</a>
+                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Equipment" ? "active" : "")" asp-controller="Storehouse" asp-action="Equipment">Equipos y Artefactos</a>
+                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Miscellanea" ? "active" : "")" asp-controller="Storehouse" asp-action="Miscellanea">Miscelánea</a>
                 <div class="nav-account">
                     @if (User.Identity?.IsAuthenticated == true)
                     {
@@ -42,16 +42,12 @@
                                 @if (isGameMaster)
                                 {
                                     <strong>Maestro de Juego</strong>
-                                    <a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Consultar en biblioteca</a>
+                                    <a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Abrir la Biblioteca</a>
                                 }
                                 else { <strong>Aventurero</strong> }
                                 <form asp-controller="Account" asp-action="Logout" method="post"><button class="fantasy-button small" type="submit">Cerrar el portal</button></form>
                             </div>
                         </details>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <details class="nav-library"><summary>Consultar en biblioteca</summary><div><a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Héroes</a><a asp-controller="Admin" asp-action="Index" asp-route-type="monsters">Monstruos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="equipment">Equipos y Artefactos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="miscellanea">Miscelánea</a><a asp-controller="Admin" asp-action="Index" asp-route-type="abilities">Habilidades</a><a asp-controller="Admin" asp-action="Index" asp-route-type="spells">Hechizos del Terror</a><a asp-controller="Admin" asp-action="Index" asp-route-type="poems">Versos y Leyendas</a></div></details>
-                        }
                     }
                     else
                     {
@@ -99,3 +95,4 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>
+

@@ -54,3 +54,7 @@ Las cuentas están configuradas en `appsettings.json` para uso local de prueba. 
 
 Los documentos de aprendizaje están en `.StudyGuide/`: `SCHEMA.md` describe las carpetas y el flujo MVC; `VISUALIZACION.md` explica cómo se organiza el CSS, cómo cambiar los temas y cómo adaptar el diseño móvil.
 
+## Copias de seguridad de SQLite
+
+Mientras la aplicación está en ejecución, comprueba cada 12 horas si necesita una copia. Crea como máximo una copia semanal en `DataBase/Backups/`, verifica la integridad de SQLite antes y después, y conserva las ocho copias semanales más recientes. Así no genera un archivo por cada edición. Para restaurar una copia, detén la aplicación y sustituye `DataBase/HeroQuest.db` por una copia elegida de esa carpeta; conserva antes una copia del archivo que vas a sustituir.
+

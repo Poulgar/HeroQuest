@@ -33,7 +33,7 @@ site.css (índice)
 
 - `user / user123`: consulta el compendio sin herramientas de edición.
 - `admin / admin123`: puede abrir **Biblioteca**, crear y editar fichas, eliminarlas o archivarlas.
-- Archivar oculta la ficha de los catálogos públicos y permite restaurarla desde su Archivo de la Biblioteca. Eliminar sí la borra de SQLite.
+- Archivar oculta la ficha de los catálogos públicos y la coloca en la sección inferior de elementos archivados de la misma Biblioteca. Eliminar sí la borra de SQLite.
 
 Estas credenciales son solo de demostración local y no son adecuadas para publicar la web en Internet.
 
@@ -43,9 +43,15 @@ La barra superior usa un emblema para abrir el portal: gris si no hay sesión, v
 
 **Pergamino** mantiene la lectura de libro antiguo. **Luz de luna** cambia la escena a un grimorio: fondos azul violeta, tinta clara y destellos. Los botones usan bordes tallados y colores de cuero o magia; `responsive.css` conserva los ajustes para móvil.
 
-La Biblioteca y el Archivo requieren la cuenta `admin`; la cuenta `user` se muestra como Aventurero y solo consulta los catálogos.
+La Biblioteca requiere la cuenta `admin`; la cuenta `user` se muestra como Aventurero y solo consulta los catálogos.
 
 ## Biblioteca y Archivo
 
-El Maestro de Juego abre la Biblioteca desde el menú de su emblema. En la página puede cambiar de estante y alternar entre fichas activas y el Archivo; ambos apartados usan la misma vista y se adaptan a móvil. Los versos de WorldPoems también se editan en su estante.
+El Maestro de Juego abre la Biblioteca desde el menú de su emblema. En la página puede cambiar de estante; los elementos activos aparecen arriba y los archivados al pie. Cada lista tiene búsqueda, orden alfabético y filtros. Los versos de WorldPoems también se editan en su estante.
+
+Los botones de edición, guardado, archivado y borrado usan colores semánticos coherentes en ambos temas. El catálogo público de equipo y miscelánea vive en `Storehouse` para no confundirlo con el Archivo de elementos desactivados.
+
+## Copias de seguridad de la base de datos
+
+`DatabaseBackupService` comprueba cada 12 horas si corresponde guardar una copia semanal. Verifica la integridad de la copia SQLite y conserva solo las ocho más recientes en `DataBase/Backups/`. No crea una copia por cada edición; estos archivos están excluidos de Git.
 

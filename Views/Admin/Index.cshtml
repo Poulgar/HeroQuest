@@ -1,6 +1,5 @@
 @model HeroQuest.Models.CatalogListViewModel
 @{
-    var isArchive = (bool)(ViewData["IsArchive"] ?? false);
     var shelves = new[]
     {
         ("heroes", "Héroes"), ("monsters", "Monstruos"), ("equipment", "Equipos y Artefactos"),
@@ -12,51 +11,27 @@
 <section class="admin-page page-shell library-page">
     <p class="eyebrow">BIBLIOTECA DEL REINO · SOLO PARA EL MAESTRO DE JUEGO</p>
     <h1>Biblioteca de <em>@Model.Title</em></h1>
-    <p>Abre cualquier estante para consultar, corregir, inscribir o archivar sus fichas.</p>
+    <p>Elige un estante. Busca por nombre o descripción y filtra por expansión o categoría.</p>
 
     <nav class="library-shelves" aria-label="Estantes de la Biblioteca">
         @foreach (var shelf in shelves)
         {
             <a class="fantasy-button small @(Model.Type == shelf.Item1 ? "active" : "")"
-               asp-action="Index" asp-route-type="@shelf.Item1" asp-route-archived="@isArchive">@shelf.Item2</a>
+               asp-action="Index" asp-route-type="@shelf.Item1">@shelf.Item2</a>
         }
     </nav>
 
-    <div class="library-tabs" aria-label="Sección de la Biblioteca">
-        <a class="fantasy-button @(isArchive ? "" : "fantasy-button-primary")" asp-action="Index" asp-route-type="@Model.Type" asp-route-archived="false">Estantes activos</a>
-        <a class="fantasy-button @(isArchive ? "fantasy-button-primary" : "")" asp-action="Index" asp-route-type="@Model.Type" asp-route-archived="true">Archivo <span class="library-tab-note">(fichas ocultas)</span></a>
-        @if (!isArchive)
-        {
-            <a class="fantasy-button fantasy-button-primary" asp-action="Edit" asp-route-type="@Model.Type">Inscribir una ficha</a>
-        }
+    <div class="library-section-heading">
+        <div><p class="eyebrow">ESTANTE PRINCIPAL</p><h2>Elementos activos <span>(@Model.Items.Count)</span></h2></div>
+        <a class="fantasy-button fantasy-button-primary" asp-action="Edit" asp-route-type="@Model.Type">@Model.CreateLabel</a>
     </div>
+    @await Html.PartialAsync("_LibraryCatalogList", new HeroQuest.Models.LibraryListSectionViewModel { Items = Model.Items, Section = "active", Library = Model })
 
-    <p class="library-section-intro">@(isArchive ? "Estas fichas están selladas y solo el Maestro de Juego puede consultarlas. Restáuralas para devolverlas a su estante." : "Estas son las fichas que aparecen en el Compendio de los Aventureros.")</p>
-    <div class="admin-list" role="list">
-        @if (Model.Items.Count == 0)
-        {
-            <p class="library-empty">@(isArchive ? "Este apartado del Archivo está vacío." : "Aún no hay fichas en este estante.")</p>
-        }
-        @foreach (var item in Model.Items)
-        {
-            <article class="admin-row @(isArchive ? "is-archived" : "")">
-                <div><strong>@item.Name</strong><small>#@item.Id · @item.Details @(isArchive ? "· Sellada" : "")</small></div>
-                <div class="admin-actions">
-                    <a class="fantasy-button small" asp-action="Edit" asp-route-type="@Model.Type" asp-route-id="@item.Id">Editar ficha</a>
-                    <form asp-action="Archive" method="post">
-                        <input type="hidden" name="type" value="@Model.Type" />
-                        <input type="hidden" name="id" value="@item.Id" />
-                        <input type="hidden" name="inArchive" value="@isArchive" />
-                        <button class="fantasy-button small" type="submit">@(isArchive ? "Restaurar al estante" : "Guardar en el Archivo")</button>
-                    </form>
-                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Borrar definitivamente esta ficha? Esta acción no se puede deshacer.');">
-                        <input type="hidden" name="type" value="@Model.Type" />
-                        <input type="hidden" name="id" value="@item.Id" />
-                        <input type="hidden" name="archived" value="@isArchive" />
-                        <button class="fantasy-button small danger" type="submit">Destruir ficha</button>
-                    </form>
-                </div>
-            </article>
-        }
-    </div>
+    <section class="library-archive-section" aria-labelledby="archive-heading">
+        <div class="library-section-heading">
+            <div><p class="eyebrow">AL PIE DE LA BIBLIOTECA</p><h2 id="archive-heading">Archivo · elementos desactivados <span>(@Model.ArchivedItems.Count)</span></h2></div>
+        </div>
+        <p class="library-section-intro">Los elementos de esta lista no aparecen en los catálogos de los Aventureros. Puedes reactivarlos cuando quieras.</p>
+        @await Html.PartialAsync("_LibraryCatalogList", new HeroQuest.Models.LibraryListSectionViewModel { Items = Model.ArchivedItems, Section = "archived", Library = Model })
+    </section>
 </section>

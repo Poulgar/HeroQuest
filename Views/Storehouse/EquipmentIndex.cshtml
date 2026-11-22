@@ -9,7 +9,6 @@
         <p class="eyebrow">EL COMPENDIO</p>
         <h1>Equipo y <em>artefactos</em></h1>
         <p>Armas, armaduras, artefactos mágicos y reliquias del mundo de HeroQuest.</p>
-        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Index" asp-route-type="equipment">Consultar en Biblioteca</a> }
     </div>
 
     @if (Model.Items.Count == 0)
@@ -35,7 +34,7 @@
                     var categoryName = item.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase) ? "Artefacto" : "Equipo";
                     <a class="catalog-row @(Model.SelectedItem?.Id == item.Id ? "selected" : "")"
                        data-select-record="@item.Id" data-name="@item.Name" data-category="@item.Category" data-search="@item.Name @categoryName @item.Type @item.Description" data-price="@item.Price" data-appears="@item.Appears.DisplayName()" data-original="@(item.Appears.HasFlag(HeroQuest.Models.TypeAppears.Original).ToString().ToLowerInvariant())" data-id="@item.Id"
-                       asp-controller="Archive" asp-action="Equipment" asp-route-id="@item.Id" aria-current="@(Model.SelectedItem?.Id == item.Id ? "page" : null)">
+                       asp-controller="Storehouse" asp-action="Equipment" asp-route-id="@item.Id" aria-current="@(Model.SelectedItem?.Id == item.Id ? "page" : null)">
                         <span class="index-symbol" aria-hidden="true">
                             @if (item.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase))
                             {
@@ -67,4 +66,5 @@
         }
     }
 </section>
+
 

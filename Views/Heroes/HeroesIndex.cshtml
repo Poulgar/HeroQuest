@@ -9,7 +9,6 @@
         <p class="eyebrow">EL GRUPO DE AVENTUREROS</p>
         <h1>Registro de <em>héroes</em></h1>
         <p>Selecciona un nombre para consultar su ficha.</p>
-        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Consultar en Biblioteca</a> }
     </div>
 
     @if (Model.Heroes.Count == 0)
@@ -58,3 +57,4 @@
         }
     }
 </section>
+

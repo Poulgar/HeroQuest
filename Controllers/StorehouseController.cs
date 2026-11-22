@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HeroQuest.Controllers;
 
-public class ArchiveController(ApplicationDbContext context) : Controller
+public class StorehouseController(ApplicationDbContext context) : Controller
 {
     public async Task<IActionResult> Equipment(int? id)
     {
@@ -17,7 +17,7 @@ public class ArchiveController(ApplicationDbContext context) : Controller
             ?? items.FirstOrDefault();
         ViewData["Title"] = "Equipo y artefactos";
 
-        return View("~/Views/EquipmentsArtifacts/Index.cshtml", new EquipmentsArtifactsViewModel { Items = items, SelectedItem = selected });
+        return View("~/Views/Storehouse/EquipmentIndex.cshtml", new EquipmentsArtifactsViewModel { Items = items, SelectedItem = selected });
     }
 
     public async Task<IActionResult> Miscellanea(int? id)
@@ -28,6 +28,6 @@ public class ArchiveController(ApplicationDbContext context) : Controller
         var selectedEntry = entries.FirstOrDefault(entry => entry.Id == id) ?? entries.FirstOrDefault();
         ViewData["Title"] = "Miscelánea";
 
-        return View("~/Views/Miscellanea/Index.cshtml", new MiscellaneaViewModel { Entries = entries, SelectedEntry = selectedEntry });
+        return View("~/Views/Storehouse/MiscellaneaIndex.cshtml", new MiscellaneaViewModel { Entries = entries, SelectedEntry = selectedEntry });
     }
 }

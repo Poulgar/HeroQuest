@@ -47,6 +47,8 @@ Program.cs
 | `wwwroot/` | Archivos estáticos que descarga el navegador: CSS, JavaScript e imágenes. |
 | `Properties/` | Perfiles de ejecución local, incluidos HTTP, HTTPS y red local. |
 
+`Services/DatabaseBackupService.cs` crea copias semanales verificadas en `DataBase/Backups/` y conserva las ocho más recientes. La carpeta se excluye de Git para evitar subir archivos SQLite grandes con cambios pequeños.
+
 Al ejecutar o compilar pueden aparecer `DataBase/`, `bin/` y `obj/`. `DataBase/HeroQuest.db` es la base SQLite local; `bin/` y `obj/` contienen resultados temporales de compilación. No son el código de las páginas.
 
 ## 3. Archivos de arranque y configuración
@@ -131,8 +133,8 @@ La ruta por defecto está definida en `Program.cs` con el patrón `{controller=H
 | `/Monsters/Index/{id?}` — `MonstersController` | Monstruos, habilidades, hechizos y vínculos relacionados. | `Views/Monsters/MonstersIndex.cshtml` |
 | `/Account/Login` — `AccountController` | Valida las cuentas de prueba y crea una cookie de sesión con rol User o Admin. | `Views/Account/Login.cshtml` |
 | `/Admin/Index?type=...` — `AdminController` | Herramientas de catálogo protegidas en servidor con el rol Admin. Incluye alta, edición, borrado y archivado reversible. | `Views/Admin/Index.cshtml` y `Edit.cshtml` |
-| `/Archive/Equipment/{id?}` — `ArchiveController` | Equipo y artefactos de la tabla compartida. | `Views/EquipmentsArtifacts/Index.cshtml` |
-| `/Archive/Miscellanea/{id?}` — `ArchiveController` | Objetos de Miscelánea. | `Views/Miscellanea/Index.cshtml` |
+| `/Storehouse/Equipment/{id?}` — `StorehouseController` | Equipo y artefactos de la tabla compartida. | `Views/Storehouse/EquipmentIndex.cshtml` |
+| `/Storehouse/Miscellanea/{id?}` — `StorehouseController` | Objetos de Miscelánea. | `Views/Storehouse/MiscellaneaIndex.cshtml` |
 
 Un controlador no suele escribir el HTML directamente. Carga entidades con EF Core, construye un ViewModel y lo entrega a `View(...)`.
 
@@ -191,11 +193,11 @@ Así puedes ver separadas las responsabilidades: **Model** representa los datos,
 ## Roles, Biblioteca y versos
 
 - Las credenciales de demo se mantienen como `user / user123` y `admin / admin123`; dentro de la interfaz aparecen como **Aventurero** y **Maestro de Juego**.
-- La **Biblioteca** es el espacio del Maestro de Juego para crear y editar fichas. Archivar las oculta a los Aventureros y las mueve a **Archivo**, que también es exclusivo del Maestro de Juego.
+- La **Biblioteca** es el espacio del Maestro de Juego para crear y editar fichas. Muestra primero las fichas activas y al final de la misma página las archivadas; el Aventurero no puede verlas.
 - `Models/WorldPoem.cs` define versos con una clave, título, texto y estado de archivo. `AddWorldPoems` crea la tabla y `AddArchiveToWorldPoems` añade el archivado; `WorldPoemService` conserva los versos iniciales y `PoemsController` sirve los que están activos.
 - `AlphabeticalIdService` ordena las fichas de personaje por nombre y asigna IDs impares a Héroes y pares a Monstruos. Al crear manualmente una ficha también se respeta esa paridad.
 
 
 
-- La Biblioteca tiene estantes para Héroes, Monstruos, Equipo y Artefactos, Miscelánea, Habilidades, Hechizos del Terror y Versos y Leyendas. El Archivo es una pestaña dentro de Views/Admin/Index.cshtml, con la misma ruta y el filtro de fichas archivadas.
+- La Biblioteca tiene estantes para Héroes, Monstruos, Equipo y Artefactos, Miscelánea, Habilidades, Hechizos del Terror y Versos y Leyendas. En cada estante se puede buscar y filtrar por expansión y clasificación; las opciones del formulario se presentan como listas desplegables.
 

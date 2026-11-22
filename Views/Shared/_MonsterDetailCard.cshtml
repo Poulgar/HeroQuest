@@ -11,7 +11,7 @@
     <div class="detail-content">
         <p class="eyebrow">BESTIARIO • N.º @monster.Id</p>
         <h2>@monster.Name</h2>
-        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Edit" asp-route-type="monsters" asp-route-id="@monster.Id">Consultar en Biblioteca</a> }
+        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Edit" asp-route-type="monsters" asp-route-id="@monster.Id">Editar en Biblioteca</a> }
         <p class="detail-description"><strong>Descripción:</strong> @monster.Description</p>
         <div class="stat-grid">
             <div><span>Vida</span><strong>@monster.Hp</strong></div>
@@ -43,3 +43,4 @@
     </div>
     <footer class="detail-expansion-footer"><span>Expansión</span><strong>@monster.Appears.DisplayName()</strong></footer>
 </article>
+

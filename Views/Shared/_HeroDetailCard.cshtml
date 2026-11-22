@@ -7,7 +7,7 @@
     <div class="detail-content">
         <p class="eyebrow">@Model.CharacterTypeClass • N.º @Model.Id</p>
         <h2>@Model.Name</h2>
-        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Edit" asp-route-type="heroes" asp-route-id="@Model.Id">Consultar en Biblioteca</a> }
+        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Edit" asp-route-type="heroes" asp-route-id="@Model.Id">Editar en Biblioteca</a> }
         @if (!string.IsNullOrWhiteSpace(Model.Description))
         {
             <p class="detail-description">@Model.Description</p>
@@ -30,3 +30,4 @@
     </div>
     <footer class="detail-expansion-footer"><span>Expansión</span><strong>@Model.Appears.DisplayName()</strong></footer>
 </article>
+
