@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace HeroQuest.Services;
 
 /// <summary>
-/// Reasigna una vez los IDs para que reflejen el orden alfabético español.
+/// Asigna IDs alfabéticos alternados: Héroes impares y Monstruos pares.
 /// Los enlaces monstruo-hechizo deben vaciarse antes de llamar a este servicio y reconstruirse después.
 /// </summary>
 public sealed class AlphabeticalIdService(ApplicationDbContext context)
@@ -19,7 +19,6 @@ public sealed class AlphabeticalIdService(ApplicationDbContext context)
             .OrderBy(x => x.Name, comparer).ThenBy(x => x.Id).ToList();
         var monsters = (await context.Monsters.AsNoTracking().Select(x => new Row(x.Id, x.Name, "Monsters")).ToListAsync())
             .OrderBy(x => x.Name, comparer).ThenBy(x => x.Id).ToList();
-        var characters = heroes.Concat(monsters).OrderBy(x => x.Name, comparer).ThenBy(x => x.Id).ToList();
         var miscellaneaEntries = (await context.Miscellanea.AsNoTracking().Select(x => new Row(x.Id, x.Name, "Miscellanea")).ToListAsync())
             .OrderBy(x => x.Name, comparer).ThenBy(x => x.Id).ToList();
         var equipment = (await context.EquipmentsAndArtifacts.AsNoTracking().Select(x => new Row(x.Id, x.Name, "EquipmentsAndArtifacts")).ToListAsync())
@@ -29,7 +28,8 @@ public sealed class AlphabeticalIdService(ApplicationDbContext context)
         var spells = (await context.SpellsOfTerror.AsNoTracking().Select(x => new Row(x.Id, x.Name, "SpellsOfTerror")).ToListAsync())
             .OrderBy(x => x.Name, comparer).ThenBy(x => x.Id).ToList();
 
-        var needsReordering = !HasSequentialIds(characters)
+        var needsReordering = !HasAlternatingIds(heroes, 1)
+            || !HasAlternatingIds(monsters, 2)
             || !HasSequentialIds(miscellaneaEntries)
             || !HasSequentialIds(equipment)
             || !HasSequentialIds(abilities)
@@ -37,7 +37,7 @@ public sealed class AlphabeticalIdService(ApplicationDbContext context)
         if (!needsReordering) return;
 
         // El desplazamiento temporal evita que los nuevos IDs choquen con claves todavía ocupadas.
-        var allRows = characters.Concat(miscellaneaEntries).Concat(equipment).Concat(abilities).Concat(spells).ToList();
+        var allRows = heroes.Concat(monsters).Concat(miscellaneaEntries).Concat(equipment).Concat(abilities).Concat(spells).ToList();
         var offset = (allRows.Count == 0 ? 0 : allRows.Max(x => x.Id)) + allRows.Count + 1;
         await using var transaction = await context.Database.BeginTransactionAsync();
 
@@ -48,11 +48,9 @@ public sealed class AlphabeticalIdService(ApplicationDbContext context)
         await ShiftAsync("MonsterAbilities", abilities, offset);
         await ShiftAsync("SpellsOfTerror", spells, offset);
 
-        var nextCharacterId = 1;
-        foreach (var row in characters)
-        {
-            await SetIdAsync(row.Table, row.Id + offset, nextCharacterId++);
-        }
+        // Cada clase conserva su orden alfabético, pero ocupa una paridad distinta y nunca comparte IDs.
+        await AssignAlternatingIdsAsync(heroes, offset, firstId: 1);
+        await AssignAlternatingIdsAsync(monsters, offset, firstId: 2);
 
         await AssignSequentialIdsAsync("Miscellanea", miscellaneaEntries, offset);
         await AssignSequentialIdsAsync("EquipmentsAndArtifacts", equipment, offset);
@@ -64,8 +62,17 @@ public sealed class AlphabeticalIdService(ApplicationDbContext context)
         context.ChangeTracker.Clear();
     }
 
+    private static bool HasAlternatingIds(IReadOnlyList<Row> rows, int firstId)
+        => rows.Select((row, index) => row.Id == firstId + index * 2).All(matches => matches);
+
     private static bool HasSequentialIds(IReadOnlyList<Row> rows)
         => rows.Select((row, index) => row.Id == index + 1).All(matches => matches);
+
+    private async Task AssignAlternatingIdsAsync(IReadOnlyList<Row> rows, int offset, int firstId)
+    {
+        for (var index = 0; index < rows.Count; index++)
+            await SetIdAsync(rows[index].Table, rows[index].Id + offset, firstId + index * 2);
+    }
 
     private async Task AssignSequentialIdsAsync(string table, IReadOnlyList<Row> rows, int offset)
     {

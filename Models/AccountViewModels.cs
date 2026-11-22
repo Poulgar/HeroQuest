@@ -4,10 +4,10 @@ namespace HeroQuest.Models;
 
 public sealed class LoginViewModel
 {
-    [Required, Display(Name = "Usuario")]
+    [Required, Display(Name = "Nombre de viajero")]
     public string Username { get; set; } = string.Empty;
 
-    [Required, DataType(DataType.Password), Display(Name = "Contraseña")]
+    [Required, DataType(DataType.Password), Display(Name = "Código secreto")]
     public string Password { get; set; } = string.Empty;
 }
 

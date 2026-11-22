@@ -190,6 +190,32 @@ namespace HeroQuest.Migrations
                     b.ToTable("SpellsOfTerror", (string)null);
                 });
 
+            modelBuilder.Entity("HeroQuest.Models.WorldPoem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.ToTable("WorldPoems");
+                });
+
             modelBuilder.Entity("HeroQuest.Models.Heroe", b =>
                 {
                     b.HasBaseType("HeroQuest.Models.Character");

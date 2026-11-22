@@ -26,6 +26,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
     });
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<WorldPoemService>();
 
 // Fijamos la ruta a la carpeta del proyecto para que Visual Studio y `dotnet run`
 // usen la misma base y no creen por accidente otro HeroQuest.db en bin/Debug.
@@ -55,6 +56,9 @@ using (var scope = app.Services.CreateScope())
 
     await context.Database.MigrateAsync();
 
+    // Los versos se guardan en SQLite y solo se añaden las claves iniciales que falten.
+    await scope.ServiceProvider.GetRequiredService<WorldPoemService>().EnsureFirstPoemsAsync();
+
     var importer = new HeroeImportService(context);
     await importer.ImportarAsync(heroesCsvPath);
 
@@ -78,6 +82,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",

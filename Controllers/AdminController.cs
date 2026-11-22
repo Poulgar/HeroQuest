@@ -18,20 +18,26 @@ public class AdminController(ApplicationDbContext db) : Controller
     };
 
     [HttpGet]
-    public async Task<IActionResult> Index(string type)
+    public Task<IActionResult> Index(string type) => BuildCatalogPage(type, archived: false, viewName: "Index");
+
+    [HttpGet]
+    public Task<IActionResult> Archive(string type) => BuildCatalogPage(type, archived: true, viewName: "Archive");
+
+    private async Task<IActionResult> BuildCatalogPage(string type, bool archived, string viewName)
     {
         if (!Titles.TryGetValue(type, out var title)) return BadRequest();
         var rows = type.ToLowerInvariant() switch
         {
-            "heroes" => await db.Heroes.Select(x => new CatalogListItem(x.Id, x.Name, $"{x.Hp} HP · {x.CharacterTypeClass}", x.IsArchived)).ToListAsync(),
-            "monsters" => await db.Monsters.Select(x => new CatalogListItem(x.Id, x.Name, $"{x.Hp} HP · {x.Faction}", x.IsArchived)).ToListAsync(),
-            "equipment" => await db.EquipmentsAndArtifacts.Select(x => new CatalogListItem(x.Id, x.Name, $"{x.Category} · {x.Price} mo", x.IsArchived)).ToListAsync(),
-            "miscellanea" => await db.Miscellanea.Select(x => new CatalogListItem(x.Id, x.Name, $"{x.Price} mo", x.IsArchived)).ToListAsync(),
-            "abilities" => await db.MonsterAbilities.Select(x => new CatalogListItem(x.Id, x.Name, x.Appears.ToString(), x.IsArchived)).ToListAsync(),
-            "spells" => await db.SpellsOfTerror.Select(x => new CatalogListItem(x.Id, x.Name, x.Type, x.IsArchived)).ToListAsync(),
+            "heroes" => await db.Heroes.Where(x => x.IsArchived == archived).Select(x => new CatalogListItem(x.Id, x.Name, $"{x.Hp} HP · {x.CharacterTypeClass}", x.IsArchived)).ToListAsync(),
+            "monsters" => await db.Monsters.Where(x => x.IsArchived == archived).Select(x => new CatalogListItem(x.Id, x.Name, $"{x.Hp} HP · {x.Faction}", x.IsArchived)).ToListAsync(),
+            "equipment" => await db.EquipmentsAndArtifacts.Where(x => x.IsArchived == archived).Select(x => new CatalogListItem(x.Id, x.Name, $"{x.Category} · {x.Price} mo", x.IsArchived)).ToListAsync(),
+            "miscellanea" => await db.Miscellanea.Where(x => x.IsArchived == archived).Select(x => new CatalogListItem(x.Id, x.Name, $"{x.Price} mo", x.IsArchived)).ToListAsync(),
+            "abilities" => await db.MonsterAbilities.Where(x => x.IsArchived == archived).Select(x => new CatalogListItem(x.Id, x.Name, x.Appears.ToString(), x.IsArchived)).ToListAsync(),
+            "spells" => await db.SpellsOfTerror.Where(x => x.IsArchived == archived).Select(x => new CatalogListItem(x.Id, x.Name, x.Type, x.IsArchived)).ToListAsync(),
             _ => []
         };
-        return View(new CatalogListViewModel { Type = type.ToLowerInvariant(), Title = title, Items = rows.OrderBy(x => x.Id).ToList() });
+        ViewData["IsArchive"] = archived;
+        return View(viewName, new CatalogListViewModel { Type = type.ToLowerInvariant(), Title = title, Items = rows.OrderBy(x => x.Id).ToList() });
     }
 
     [HttpGet]
@@ -49,43 +55,42 @@ public class AdminController(ApplicationDbContext db) : Controller
         if (!ModelState.IsValid) return View("Edit", model);
         // El texto de expansiones se convierte aquí a banderas del enum antes de guardar la entidad.
         var appearance = TypeAppearsParser.Parse(model.Appears);
-        var createdId = model.Id ?? 0;
 
         switch (model.Type)
         {
             case "heroes":
                 var hero = model.Id is null ? new Heroe() : await db.Heroes.FindAsync(model.Id.Value) ?? new Heroe();
-                if (model.Id is null) { hero.Id = await NextCharacterId(); db.Heroes.Add(hero); }
+                if (model.Id is null) { hero.Id = await NextCharacterId(isHero: true); db.Heroes.Add(hero); }
                 hero.Name = model.Name.Trim(); hero.CharacterTypeClass = model.CharacterTypeClass;
                 hero.Hp = model.Hp; hero.DicesMind = model.DicesMind; hero.DicesAttack = model.DicesAttack; hero.DicesDefend = model.DicesDefend;
                 hero.DicesRedMovement = model.DicesRedMovement; hero.Description = model.Description; hero.Appears = appearance;
                 hero.Player = model.Player; hero.Weapon = model.Weapon; hero.Armor = model.Armor; hero.Spells = model.Spells; hero.Items = model.Items;
-                hero.Gold = model.Gold; hero.QuestsCompleted = model.QuestsCompleted; hero.IsArchived = model.IsArchived; createdId = hero.Id; break;
+                hero.Gold = model.Gold; hero.QuestsCompleted = model.QuestsCompleted; hero.IsArchived = model.IsArchived; break;
             case "monsters":
                 var monster = model.Id is null ? new Monster() : await db.Monsters.FindAsync(model.Id.Value) ?? new Monster();
-                if (model.Id is null) { monster.Id = await NextCharacterId(); db.Monsters.Add(monster); }
+                if (model.Id is null) { monster.Id = await NextCharacterId(isHero: false); db.Monsters.Add(monster); }
                 monster.Name = model.Name.Trim(); monster.CharacterTypeClass = model.Name.Trim(); monster.Hp = model.Hp;
                 monster.DicesMind = model.DicesMind; monster.DicesAttack = model.DicesAttack; monster.DicesDefend = model.DicesDefend;
                 monster.MaxMovement = model.MaxMovement; monster.Faction = model.Faction; monster.Ability = model.Ability;
                 monster.Description = model.Description; monster.Appears = appearance; monster.IsArchived = model.IsArchived;
-                monster.Attack = model.DicesAttack; monster.Defense = model.DicesDefend; createdId = monster.Id; break;
+                monster.Attack = model.DicesAttack; monster.Defense = model.DicesDefend; break;
             case "equipment":
                 var item = model.Id is null ? new EquipmentsAndArtifacts(0, "", "", 0, "", TypeAppears.None, "", "Equipment") : await db.EquipmentsAndArtifacts.FindAsync(model.Id.Value) ?? new EquipmentsAndArtifacts(0, "", "", 0, "", TypeAppears.None, "", "Equipment");
                 if (model.Id is null) { item.Id = await db.EquipmentsAndArtifacts.Select(x => (int?)x.Id).MaxAsync() + 1 ?? 1; db.EquipmentsAndArtifacts.Add(item); }
                 item.Name = model.Name.Trim(); item.Description = model.Description; item.Price = model.Price; item.Type = model.ItemType;
-                item.Weight = model.Weight; item.Category = model.Category; item.Appears = appearance; item.IsArchived = model.IsArchived; createdId = item.Id; break;
+                item.Weight = model.Weight; item.Category = model.Category; item.Appears = appearance; item.IsArchived = model.IsArchived; break;
             case "miscellanea":
                 var entry = model.Id is null ? new MiscellaneaItem(0, "", "", 0, TypeAppears.None) : await db.Miscellanea.FindAsync(model.Id.Value) ?? new MiscellaneaItem(0, "", "", 0, TypeAppears.None);
                 if (model.Id is null) { entry.Id = await db.Miscellanea.Select(x => (int?)x.Id).MaxAsync() + 1 ?? 1; db.Miscellanea.Add(entry); }
-                entry.Name = model.Name.Trim(); entry.Description = model.Description; entry.Price = model.Price; entry.Appears = appearance; entry.IsArchived = model.IsArchived; createdId = entry.Id; break;
+                entry.Name = model.Name.Trim(); entry.Description = model.Description; entry.Price = model.Price; entry.Appears = appearance; entry.IsArchived = model.IsArchived; break;
             case "abilities":
                 var ability = model.Id is null ? new MonsterAbility(0, "", "", TypeAppears.None) : await db.MonsterAbilities.FindAsync(model.Id.Value) ?? new MonsterAbility(0, "", "", TypeAppears.None);
                 if (model.Id is null) { ability.Id = await db.MonsterAbilities.Select(x => (int?)x.Id).MaxAsync() + 1 ?? 1; db.MonsterAbilities.Add(ability); }
-                ability.Name = model.Name.Trim(); ability.Description = model.Description; ability.Appears = appearance; ability.IsArchived = model.IsArchived; createdId = ability.Id; break;
+                ability.Name = model.Name.Trim(); ability.Description = model.Description; ability.Appears = appearance; ability.IsArchived = model.IsArchived; break;
             case "spells":
                 var spell = model.Id is null ? new SpellOfTerror(0, "", "", "", TypeAppears.None) : await db.SpellsOfTerror.FindAsync(model.Id.Value) ?? new SpellOfTerror(0, "", "", "", TypeAppears.None);
                 if (model.Id is null) { spell.Id = await db.SpellsOfTerror.Select(x => (int?)x.Id).MaxAsync() + 1 ?? 1; db.SpellsOfTerror.Add(spell); }
-                spell.Name = model.Name.Trim(); spell.Description = model.Description; spell.Type = model.SpellType; spell.Appears = appearance; spell.IsArchived = model.IsArchived; createdId = spell.Id; break;
+                spell.Name = model.Name.Trim(); spell.Description = model.Description; spell.Type = model.SpellType; spell.Appears = appearance; spell.IsArchived = model.IsArchived; break;
         }
 
         await db.SaveChangesAsync();
@@ -122,9 +127,16 @@ public class AdminController(ApplicationDbContext db) : Controller
         return RedirectToAction(nameof(Index), new { type });
     }
 
-    private async Task<int> NextCharacterId() => Math.Max(
-        await db.Heroes.Select(x => (int?)x.Id).MaxAsync() ?? 0,
-        await db.Monsters.Select(x => (int?)x.Id).MaxAsync() ?? 0) + 1;
+    private async Task<int> NextCharacterId(bool isHero)
+    {
+        // Elegimos siempre una clave libre con la paridad reservada para ese tipo de personaje.
+        var usedIds = await db.Heroes.Select(hero => hero.Id)
+            .Concat(db.Monsters.Select(monster => monster.Id))
+            .ToHashSetAsync();
+        var candidate = isHero ? 1 : 2;
+        while (usedIds.Contains(candidate)) candidate += 2;
+        return candidate;
+    }
 
     // El archivado conserva las claves foráneas y permite recuperar el registro después.
     private static async Task<bool> SetArchive<TEntity>(DbSet<TEntity> set, int id) where TEntity : class, IArchivable
@@ -158,3 +170,4 @@ public class AdminController(ApplicationDbContext db) : Controller
         return model;
     }
 }
+

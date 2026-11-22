@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore; // Proporciona los métodos y clases necesarios para trabajar con Entity Framework Core.
-using HeroQuest.Models;
+using HeroQuest.Models; // Importa el espacio de nombres que contiene las clases de modelo.
 
 namespace HeroQuest.Data;
 
@@ -13,6 +13,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<MonsterAbility> MonsterAbilities => Set<MonsterAbility>(); // Colección de habilidades de monstruos
     public DbSet<SpellOfTerror> SpellsOfTerror => Set<SpellOfTerror>(); // Hechizos de la expansión El Terror
     public DbSet<MonsterSpellOfTerror> MonsterSpellOfTerrors => Set<MonsterSpellOfTerror>(); // Relación de muchos a muchos monstruo-hechizo
+    public DbSet<WorldPoem> WorldPoems => Set<WorldPoem>(); // Poemas breves que acompañan el acceso y los temas visuales.
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : base(options) // Constructor que recibe opciones de configuración para la base de datos y las pasa a la clase base DbContext.
@@ -29,6 +30,7 @@ public class ApplicationDbContext : DbContext
             .ValueGeneratedNever();
 
         modelBuilder.Entity<SpellOfTerror>().ToTable("SpellsOfTerror");
+        modelBuilder.Entity<WorldPoem>().HasIndex(poem => poem.Key).IsUnique();
 
         // La tabla puente representa las dos claves foráneas y evita duplicar hechizos por monstruo.
         modelBuilder.Entity<MonsterSpellOfTerror>(entity =>
