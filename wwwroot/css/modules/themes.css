@@ -1,0 +1,18 @@
+/* Tema inicial Pergamino: colores originales definidos en base.css. */
+/* Tema Luz de luna: conserva el aspecto de grimorio, con papel oscuro y tinta clara. */
+html[data-theme="moonlit"] { color-scheme: dark; --ink: #e8ddc4; --muted-ink: #c0b496; --paper: #332f2b; --paper-light: #403a33; --paper-deep: #655b4b; --line: #99825b; --red: #bd7563; --red-dark: #7d443c; --gold: #d0ae6c; --shadow: 0 22px 52px #0008; }
+html[data-theme="moonlit"] body { color: var(--ink); background: radial-gradient(ellipse at 50% 0, #4a4034 0, #28231f 68%, #1d1916 100%); }
+html[data-theme="moonlit"] .site-header, html[data-theme="moonlit"] .site-footer { background: #1c1917; }
+html[data-theme="moonlit"] .home-hero, html[data-theme="moonlit"] .detail-card, html[data-theme="moonlit"] .ability-card, html[data-theme="moonlit"] .skill-description-dialog, html[data-theme="moonlit"] .account-panel, html[data-theme="moonlit"] .admin-page { color: var(--ink); background-color: var(--paper); }
+html[data-theme="moonlit"] .home-copy h1, html[data-theme="moonlit"] .detail-content h2, html[data-theme="moonlit"] .skill-description-dialog h2, html[data-theme="moonlit"] .ability-card-heading h3, html[data-theme="moonlit"] .account-panel h1, html[data-theme="moonlit"] .admin-page h1 { color: #f1e6cf; }
+html[data-theme="moonlit"] .detail-description, html[data-theme="moonlit"] .detail-subtitle, html[data-theme="moonlit"] .detail-facts dd, html[data-theme="moonlit"] .ability-card-description, html[data-theme="moonlit"] .ability-card-owners, html[data-theme="moonlit"] .skill-description-dialog > p:last-child { color: #e0d3b9; }
+html[data-theme="moonlit"] .catalog-list { border-color: #877453; background: #39332c; }
+html[data-theme="moonlit"] .catalog-row { border-color: #655944; color: #f0e4ca; }
+html[data-theme="moonlit"] .catalog-row[data-original="true"] { background-color: #302b26; }
+html[data-theme="moonlit"] .catalog-row:hover, html[data-theme="moonlit"] .catalog-row.selected { background: #51483b; }
+html[data-theme="moonlit"] .row-main small, html[data-theme="moonlit"] .list-caption span { color: #c6b89a; }
+html[data-theme="moonlit"] .index-tools label, html[data-theme="moonlit"] .detail-facts dt { color: #ddc99f; }
+html[data-theme="moonlit"] .index-tools input, html[data-theme="moonlit"] .index-tools select, html[data-theme="moonlit"] .study-form input, html[data-theme="moonlit"] .study-form textarea, html[data-theme="moonlit"] .study-form select { color: #f3e8d0; background: #292521; }
+html[data-theme="moonlit"] .shelf-card, html[data-theme="moonlit"] .admin-row { color: var(--ink); background: #403a33; }
+html[data-theme="moonlit"] .world-map-heading { color: #2b1d12; background: #e7d8b4; }
+html[data-theme="moonlit"] .page-heading { color: #f1e3c2; }

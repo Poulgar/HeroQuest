@@ -42,3 +42,14 @@ Todos los móviles conectados a ese Wi‑Fi pueden abrir la misma dirección. Cu
 ## Desarrollo
 
 El proyecto usa ASP.NET Core MVC, Entity Framework Core y SQLite. Para iniciarlo desde Visual Studio se puede usar el perfil `http`; para compartirlo en una red local, usa el perfil `lan` descrito arriba.
+
+## Cuentas de prueba y edición
+
+- `user` / `user123`: puede consultar los datos.
+- `admin` / `admin123`: además puede crear, editar, eliminar y archivar/restaurar fichas desde el menú **Administrar**.
+
+Las cuentas están configuradas en `appsettings.json` para uso local de prueba. No publiques la aplicación en Internet con estas contraseñas.
+
+## Guías para estudiar el proyecto
+
+Los documentos de aprendizaje están en `StudyGuide/`: `SCHEMA.md` describe las carpetas y el flujo MVC; `VISUALIZACION.md` explica cómo se organiza el CSS, cómo cambiar los temas y cómo adaptar el diseño móvil.

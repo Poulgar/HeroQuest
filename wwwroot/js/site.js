@@ -97,10 +97,7 @@ document.querySelectorAll('[data-archive-filter]').forEach((button) => {
     });
 });
 
-// La ficha se guarda en <template>; cambiar selección no envía otra petición ni altera el scroll del índice.
-// Punto de corte que debe coincidir con la media query de móviles definida en site.css.
-const isMobileLayout = window.matchMedia('(max-width: 680px)');
-
+// Las fichas se guardan en <template>; cambiar selección no envía otra petición ni altera el scroll del índice.
 document.addEventListener('click', (event) => {
     const skill = event.target.closest('.skill-trigger');
     const loreTrigger = event.target.closest('[data-lore-trigger], .lore-trigger');
@@ -141,19 +138,6 @@ document.addEventListener('click', (event) => {
 
     // Actualiza la dirección para que la selección se pueda compartir; replaceState no recarga ni desplaza la página.
     window.history.replaceState(null, '', row.href);
-
-    // En móvil la ficha se muestra encima del índice (order:-1 en CSS). Al elegir un registro
-    // desplazamos la vista hasta ella para que la respuesta al toque sea inmediata.
-    if (isMobileLayout.matches) host.scrollIntoView({ behavior: 'smooth', block: 'start' });
-});
-
-// Botón «Volver al índice» incluido en las fichas (solo visible en móvil): devuelve la vista
-// a la lista del catálogo sin recargar la página.
-document.addEventListener('click', (event) => {
-    const back = event.target.closest('[data-back-to-index]');
-    if (!back) return;
-    const list = back.closest('.catalog-page')?.querySelector('.catalog-list');
-    if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
 document.addEventListener('keydown', (event) => {
@@ -163,6 +147,24 @@ document.addEventListener('keydown', (event) => {
         trigger.click();
     }
 });
+
+// El tema elegido vive en el navegador de cada persona y no cambia los colores guardados en la base de datos.
+const themeButton = document.querySelector('[data-theme-toggle]');
+if (themeButton) {
+    const themes = ['parchment', 'moonlit'];
+    const applyTheme = (theme) => {
+        document.documentElement.dataset.theme = theme;
+        const label = document.querySelector('[data-theme-label]');
+        if (label) label.textContent = theme === 'moonlit' ? 'Luz de luna' : 'Pergamino';
+        themeButton.querySelector('[aria-hidden="true"]').textContent = theme === 'moonlit' ? '☀' : '☾';
+    };
+    applyTheme(localStorage.getItem('heroquest-theme') || themes[0]);
+    themeButton.addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === themes[0] ? themes[1] : themes[0];
+        localStorage.setItem('heroquest-theme', next);
+        applyTheme(next);
+    });
+}
 
 // Este tooltip flotante se coloca en <body> para que no lo recorte el área desplazable de la ficha.
 const hoverTooltip = document.createElement('div');

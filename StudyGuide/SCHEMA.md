@@ -4,6 +4,8 @@ Este documento explica cómo está organizado el proyecto y cómo viajan los dat
 
 > **Regla de mantenimiento:** cuando se añadan, eliminen o cambien carpetas o archivos importantes, actualiza esta guía para que siga describiendo el proyecto real.
 
+Los documentos de estudio están agrupados aquí: este mapa MVC y `VISUALIZACION.md`, que explica el CSS modular y los temas.
+
 ## 1. Vista general
 
 El proyecto usa **ASP.NET Core MVC**: el navegador pide una página, un controlador consulta la base de datos y una vista Razor genera el HTML.
@@ -36,6 +38,7 @@ Program.cs
 | Carpeta | Para qué sirve |
 | --- | --- |
 | `Controllers/` | Recibe las rutas web, consulta datos y elige qué vista mostrar. |
+| `StudyGuide/` | Guías para estudiar el mapa MVC, la autenticación y la organización visual del CSS. |
 | `Data/` | Configura Entity Framework Core y guarda los CSV fuente. |
 | `Migrations/` | Historial de cambios del esquema de SQLite. |
 | `Models/` | Entidades que representan personajes y registros de la base de datos. |
@@ -73,6 +76,7 @@ En `OnModelCreating` se configura la herencia `Character` mediante **TPC** (*Tab
 | Archivo | Qué representa |
 | --- | --- |
 | `Character.cs` | Propiedades comunes a los personajes, como clase, vida, dados de mente, ataque y defensa. |
+| `IArchivable.cs` | Contrato compartido para ocultar y restaurar fichas sin borrarlas de SQLite. |
 | `CharacterHeroe.cs` | Datos propios de un héroe: movimiento con dados rojos, equipo, oro y otros datos de campaña. |
 | `CharacterMonster.cs` | Datos propios de un monstruo: movimiento máximo, facción, habilidad y enlaces a hechizos. |
 | `EquipmentsAndArtifacts.cs` | Registro de equipo o artefacto; ambos se almacenan en una tabla y se distinguen por categoría. |
@@ -84,6 +88,7 @@ En `OnModelCreating` se configura la herencia `Character` mediante **TPC** (*Tab
 | `EnumDisplayExtensions.cs` | Convierte valores del enum en nombres legibles para las vistas. |
 | `MonsterVisualExtensions.cs` | Símbolos, colores y textos de presentación/lore para facciones, habilidades y hechizos. |
 | `ViewModels.cs` | Agrupa los datos que cada vista necesita, por ejemplo lista de registros y ficha seleccionada. No son tablas de la base. |
+| `AccountViewModels.cs` | Modelos de formulario de acceso y de edición para los catálogos. |
 | `ErrorViewModel.cs` | Datos mínimos que necesita la página de error. |
 
 ## 5. CSV e importación
@@ -124,8 +129,10 @@ La ruta por defecto está definida en `Program.cs` con el patrón `{controller=H
 | `/` o `/Home/Index` — `HomeController` | Recuentos para la portada. | `Views/Home/HomeIndex.cshtml` |
 | `/Heroes/Index/{id?}` — `HeroesController` | Héroes y héroe seleccionado. | `Views/Heroes/HeroesIndex.cshtml` |
 | `/Monsters/Index/{id?}` — `MonstersController` | Monstruos, habilidades, hechizos y vínculos relacionados. | `Views/Monsters/MonstersIndex.cshtml` |
-| `/Archive/Equipment/{id?}` — `ArchiveController` | Equipo y artefactos de la tabla compartida. | `Views/Archive/EquipmentsArtifactsIndex.cshtml` |
-| `/Archive/Miscellanea/{id?}` — `ArchiveController` | Objetos de Miscelánea. | `Views/Archive/MiscellaneaIndex.cshtml` |
+| `/Account/Login` — `AccountController` | Valida las cuentas de prueba y crea una cookie de sesión con rol User o Admin. | `Views/Account/Login.cshtml` |
+| `/Admin/Index?type=...` — `AdminController` | Herramientas de catálogo protegidas en servidor con el rol Admin. Incluye alta, edición, borrado y archivado reversible. | `Views/Admin/Index.cshtml` y `Edit.cshtml` |
+| `/Archive/Equipment/{id?}` — `ArchiveController` | Equipo y artefactos de la tabla compartida. | `Views/EquipmentsArtifacts/Index.cshtml` |
+| `/Archive/Miscellanea/{id?}` — `ArchiveController` | Objetos de Miscelánea. | `Views/Miscellanea/Index.cshtml` |
 
 Un controlador no suele escribir el HTML directamente. Carga entidades con EF Core, construye un ViewModel y lo entrega a `View(...)`.
 
@@ -134,36 +141,22 @@ Un controlador no suele escribir el HTML directamente. Carga entidades con EF Co
 - `_ViewStart.cshtml` selecciona el layout compartido para las vistas.
 - `_ViewImports.cshtml` habilita Tag Helpers y espacios de nombres comunes.
 - `Shared/_Layout.cshtml` contiene la estructura común: cabecera, navegación, pie, diálogo emergente y referencias a CSS/JavaScript.
-- `Shared/_HeroDetailCard.cshtml`, `_MonsterDetailCard.cshtml`, `_EquipmentDetailCard.cshtml` y `_MiscellaneaDetailCard.cshtml` son parciales: pequeñas fichas reutilizables dentro de sus índices. Cada ficha incluye un botón `‹ Volver al índice` con el atributo `data-back-to-index`; solo se ve en móviles (en escritorio el CSS lo oculta).
+- `Shared/_HeroDetailCard.cshtml`, `_MonsterDetailCard.cshtml`, `_EquipmentDetailCard.cshtml` y `_MiscellaneaDetailCard.cshtml` son parciales: pequeñas fichas reutilizables dentro de sus índices.
 - `Shared/Error.cshtml` muestra la página de error.
 - `Home/Privacy.cshtml` es la página de privacidad del proyecto.
 - Los índices contienen la lista seleccionable y plantillas de ficha. `site.js` cambia la ficha en el navegador sin volver a pedir la página completa.
-- `Views/Monsters/MonstersIndex.cshtml` calcula una vez, en un diccionario `abilitiesByMonsterId`, las habilidades divididas de cada monstruo para no repetir el `Split` en cada tarjeta del archivo de habilidades.
 
 ## 7. Interfaz: CSS, JavaScript e imágenes
 
 | Archivo/carpeta | Función |
 | --- | --- |
-| `wwwroot/css/site.css` | Tema visual tipo libro antiguo, tarjetas, tamaños y ajustes responsive para móviles. |
+| `wwwroot/css/site.css` | Índice breve que importa los módulos CSS en el orden adecuado. |
+| `wwwroot/css/modules/` | Estilos separados para base, portada, catálogos, mapa, formularios, temas y móviles. |
 | `wwwroot/js/site.js` | Búsqueda y orden de índices, filtros, selección de fichas, tooltips y ventanas emergentes. |
 | `wwwroot/images/heroquest/` | Ilustraciones SVG usadas por las fichas y la portada. |
 | `wwwroot/favicon.ico` | Icono de la pestaña del navegador. |
 
 Todo lo que el navegador debe descargar (CSS, JavaScript e imágenes) tiene que estar bajo `wwwroot/`.
-
-### Comportamiento responsive del catálogo
-
-El punto de corte principal entre escritorio y móvil es `680px` (hay un corte intermedio en `900px` para tabletas).
-
-- **Escritorio (más de 900px):** el índice del catálogo y la ficha comparten pantalla en dos columnas; la lista tiene su propio scroll interno.
-- **Tableta (entre 680px y 900px):** la página se apila y el índice se muestra en una franja de hasta `520px` o `60vh` con scroll interno.
-- **Móvil (menos de 680px):**
-  - `.catalog-list` se vuelve `height: auto` y `.catalog-scroll` deja de recortar: la lista completa se imprime en la página y el desplazamiento lo hace el móvil.
-  - `.detail-host` recibe `order: -1`, así que la ficha se renderiza **antes** que el índice.
-  - Al tocar una fila, `site.js` (mediante `isMobileLayout`, un `matchMedia` que coincide con la media query de 680px) desplaza la vista suavemente hasta la ficha recién montada.
-  - El botón `‹ Volver al índice` de la ficha (los parciales con `data-back-to-index`) devuelve la vista a la lista; `site.js` atiende ese clic sin recargar la página.
-
-Si se cambia el punto de corte del CSS, hay que actualizar `isMobileLayout` en `site.js` para que ambos sigan de acuerdo.
 
 ## 8. Migraciones y cambios de esquema
 
@@ -183,5 +176,14 @@ Al iniciar, `Program.cs` ejecuta `Database.MigrateAsync()`, que aplica las migra
 4. Sigue la vista `.cshtml` hasta su parcial en `Views/Shared/`.
 5. Cambia una etiqueta o estilo en `wwwroot/css/site.css` y recarga la página.
 6. Para un cambio de datos, sigue el CSV → servicio importador → modelo → DbContext → controlador → vista.
+
+### Acceso, administración y temas
+
+- `Program.cs` registra autenticación por cookie y autorización por roles. `app.UseAuthentication()` debe ir antes de `app.UseAuthorization()`.
+- `appsettings.json` guarda los hashes de dos cuentas de demostración locales: `user` (solo lectura) y `admin` (gestión). `AccountController` comprueba la contraseña mediante PBKDF2. No reutilices estas cuentas en un sitio público.
+- Las acciones de `AdminController` exigen el rol Admin también en el servidor. No basta con ocultar los botones en Razor.
+- `IsArchived` se guarda en SQLite y una migración lo añade a las tablas. Archivar oculta; eliminar borra definitivamente.
+- La elección del tema se guarda en `localStorage` del navegador; es independiente para cada dispositivo.
+- Al añadir o quitar archivos de estudio, vistas o módulos CSS, actualiza este mapa y `StudyGuide/VISUALIZACION.md` cuando corresponda.
 
 Así puedes ver separadas las responsabilidades: **Model** representa los datos, **View** los presenta y **Controller** coordina la petición.
