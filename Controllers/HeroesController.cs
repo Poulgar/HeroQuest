@@ -10,7 +10,7 @@ public class HeroesController(ApplicationDbContext context) : Controller
 {
     public async Task<IActionResult> Index(int? id)
     {
-        var heroes = await context.Heroes.AsNoTracking().Where(hero => !hero.IsArchived).OrderBy(hero => hero.Id).ToListAsync();
+        var heroes = await context.Heroes.AsNoTracking().Where(hero => !hero.IsArchived).Include(hero => hero.PlayerProfile).OrderBy(hero => hero.Id).ToListAsync();
 
         var selected = heroes.FirstOrDefault(hero => hero.Id == id) ?? heroes.FirstOrDefault();
         ViewData["Title"] = "Héroes";

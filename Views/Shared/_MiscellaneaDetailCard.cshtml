@@ -9,6 +9,7 @@
         <h2>@Model.Name</h2>
         @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Edit" asp-route-type="miscellanea" asp-route-id="@Model.Id">Editar en Biblioteca</a> }
         <p class="detail-subtitle">@(Model.Price > 0 ? $"Precio: {Model.Price} monedas de oro" : "Precio no especificado")</p>
+        <p class="detail-subtitle"><strong>Procedencia:</strong> @Model.Category.DisplayName()</p>
         <p class="detail-description">@Model.Description</p>
         <div class="stat-grid">
         </div>

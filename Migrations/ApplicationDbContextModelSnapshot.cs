@@ -105,6 +105,9 @@ namespace HeroQuest.Migrations
                     b.Property<int>("Appears")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Category")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");

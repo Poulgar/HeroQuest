@@ -8,5 +8,6 @@ public class MiscellaneaItem(int id, string name, string description, int price,
     public string Description { get; set; } = description;
     public int Price { get; set; } = price;
     public TypeAppears Appears { get; set; } = appears;
+    public MiscellaneaCategory Category { get; set; } = MiscellaneaCategory.NormalShop;
     public bool IsArchived { get; set; }
 }

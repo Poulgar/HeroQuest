@@ -29,7 +29,7 @@
 
     <section class="library-archive-section" aria-labelledby="archive-heading">
         <div class="library-section-heading">
-            <div><p class="eyebrow">AL PIE DE LA BIBLIOTECA</p><h2 id="archive-heading">Archivo · elementos desactivados <span>(@Model.ArchivedItems.Count)</span></h2></div>
+            <div><p class="eyebrow">SÓTANO</p><h2 id="archive-heading">Archivo · elementos inactivos <span>(@Model.ArchivedItems.Count)</span></h2></div>
         </div>
         <p class="library-section-intro">Los elementos de esta lista no aparecen en los catálogos de los Aventureros. Puedes reactivarlos cuando quieras.</p>
         @await Html.PartialAsync("_LibraryCatalogList", new HeroQuest.Models.LibraryListSectionViewModel { Items = Model.ArchivedItems, Section = "archived", Library = Model })

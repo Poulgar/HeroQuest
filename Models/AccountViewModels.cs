@@ -36,6 +36,7 @@ public sealed class CatalogEditViewModel
     public int DicesRedMovement { get; set; }
     public int MaxMovement { get; set; }
     public int Price { get; set; }
+    public string[] MiscellaneaCategoryOptions { get; set; } = [MiscellaneaCategory.NormalShop.DisplayName()];
     public int Gold { get; set; }
     public bool IsArchived { get; set; }
     public string Player { get; set; } = string.Empty;
@@ -58,6 +59,7 @@ public sealed class CatalogListViewModel
     public List<CatalogListItem> ArchivedItems { get; set; } = [];
     public List<string> ExpansionOptions { get; set; } = [];
     public List<string> ClassificationOptions { get; set; } = [];
+    public string ClassificationLabel { get; set; } = "Categoría / clase";
 }
 
 public sealed class LibraryListSectionViewModel

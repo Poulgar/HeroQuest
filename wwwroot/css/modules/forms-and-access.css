@@ -133,9 +133,21 @@ html[data-theme="moonlit"] .theme-moon { opacity: 1; filter: drop-shadow(0 0 6px
 .admin-row strong, .admin-row small { display: block; overflow-wrap: anywhere; }
 .admin-row small { color: var(--muted-ink); }
 .admin-row.is-archived { opacity: .85; background: #cbbd9d; }
+.admin-row[hidden] { display: none !important; }
 .admin-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
 .admin-actions form { margin: 0; }
-.admin-edit-form { max-width: 760px; }
+.admin-edit-form { width: 100%; max-width: 980px; }
+.admin-edit-form .editable-field:not(.picker-edit-field) { grid-template-columns: minmax(0, 1fr) auto auto auto; }
+.admin-edit-form .editable-field:not(.picker-edit-field) > label { width: 100%; min-width: 0; }
+.admin-edit-form .editable-field input, .admin-edit-form .editable-field textarea { width: 100%; min-width: 0; box-sizing: border-box; }
+.admin-edit-form .editable-field[data-update-field="Description"] { grid-template-columns: minmax(0, 1fr) auto auto auto; }
+.admin-edit-form .editable-field[data-update-field="Description"] > label { grid-column: 1 / -1; }
+.admin-edit-form .editable-field[data-update-field="Description"] textarea { min-height: 120px; resize: vertical; }
+.login-test-accounts { display: grid; gap: 5px; margin: 16px 0; padding: 14px; border: 1px dashed #a98b57; border-radius: 10px; background: color-mix(in srgb, var(--paper-light) 75%, transparent); }
+.archived-skill { display: inline-grid; justify-items: center; gap: 4px; max-width: 150px; padding: 8px; border: 1px dashed var(--muted-ink); border-radius: 8px; color: var(--muted-ink); text-align: center; }
+.archived-skill small { font-size: .72rem; }
+.miscellanea-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 14px; }
+.miscellanea-tabs .fantasy-button { min-height: 36px; }
 .edit-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .edit-stats label { display: grid; gap: 5px; }
 .archive-toggle { display: flex; align-items: center; gap: 8px; }
@@ -163,6 +175,7 @@ html[data-theme="moonlit"] .theme-moon { opacity: 1; filter: drop-shadow(0 0 6px
     .admin-actions .fantasy-button { min-height: 42px; padding-inline: 8px; font-size: 11px; }
     .edit-stats { grid-template-columns: 1fr; }
     .editable-field { grid-template-columns: 1fr 1fr; align-items: stretch; }
+    .admin-edit-form .editable-field:not(.picker-edit-field), .admin-edit-form .editable-field[data-update-field="Description"] { grid-template-columns: 1fr 1fr; }
     .editable-field label, .editable-field .search-picker { grid-column: 1 / -1; }
     .search-picker { grid-template-columns: 1fr; }
     .search-picker-label, .search-picker-entry, .search-picker-suggestions, .search-picker-selected { grid-column: 1; }
@@ -175,6 +188,8 @@ html[data-theme="moonlit"] .theme-moon { opacity: 1; filter: drop-shadow(0 0 6px
     .library-shelves .fantasy-button, .library-tabs .fantasy-button { width: 100%; min-height: 44px; padding-inline: 7px; font-size: 11px; }
     .library-tabs .fantasy-button-primary:last-child { grid-column: 1 / -1; }
     .library-filter-tools { grid-template-columns: 1fr 1fr; }
+    .miscellanea-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .miscellanea-tabs .fantasy-button { width: 100%; padding-inline: 5px; font-size: 10px; }
     .library-filter-tools label:first-child { grid-column: 1 / -1; }
     .library-section-heading { align-items: flex-start; flex-direction: column; }
     .library-section-heading > .fantasy-button { width: 100%; }

@@ -39,6 +39,12 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             "abilities" => "Añadir habilidad", "spells" => "Añadir hechizo", "poems" => "Añadir verso",
             _ => "Añadir ficha"
         };
+        var classifications = allRows.Select(row => row.Classification);
+        if (type.Equals("heroes", StringComparison.OrdinalIgnoreCase))
+        {
+            // El filtro ofrece todos los jugadores creados, aunque alguno todavía no tenga héroe asignado.
+            classifications = classifications.Concat(await db.PlayerProfiles.AsNoTracking().Select(player => player.Name).ToListAsync());
+        }
 
         return View("Index", new CatalogListViewModel
         {
@@ -46,7 +52,8 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             Items = active, ArchivedItems = archived,
             ExpansionOptions = allRows.SelectMany(row => row.Expansion.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
                 .Distinct(comparer).OrderBy(value => value, comparer).ToList(),
-            ClassificationOptions = allRows.Select(row => row.Classification).Where(value => !string.IsNullOrWhiteSpace(value))
+            ClassificationLabel = type.Equals("heroes", StringComparison.OrdinalIgnoreCase) ? "Jugador" : "Categoría / clase",
+            ClassificationOptions = classifications.Where(value => !string.IsNullOrWhiteSpace(value))
                 .Distinct(comparer).OrderBy(value => value, comparer).ToList()
         });
     }
@@ -57,10 +64,10 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         switch (type)
         {
             case "heroes":
-                return (await db.Heroes.AsNoTracking().ToListAsync()).Select(hero =>
+                return (await db.Heroes.AsNoTracking().Include(hero => hero.PlayerProfile).ToListAsync()).Select(hero =>
                     new CatalogListItem(hero.Id, hero.Name, $"{hero.Hp} HP · {hero.CharacterTypeClass}", hero.IsArchived,
-                        $"{hero.Name} {hero.CharacterTypeClass} {hero.Description} {hero.Spells} {hero.Appears.DisplayName()}",
-                        hero.Appears.DisplayName(), hero.CharacterTypeClass)).ToList();
+                        $"{hero.Name} {hero.CharacterTypeClass} {hero.PlayerProfile?.Name} {hero.PlayerProfile?.Nickname} {hero.Description} {hero.Spells} {hero.Appears.DisplayName()}",
+                        hero.Appears.DisplayName(), hero.PlayerProfile?.Name ?? "")).ToList();
             case "monsters":
                 return (await db.Monsters.AsNoTracking().ToListAsync()).Select(monster =>
                     new CatalogListItem(monster.Id, monster.Name, $"{monster.Hp} HP · {monster.Faction}", monster.IsArchived,
@@ -74,7 +81,7 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             case "miscellanea":
                 return (await db.Miscellanea.AsNoTracking().ToListAsync()).Select(item =>
                     new CatalogListItem(item.Id, item.Name, $"{item.Price} monedas", item.IsArchived,
-                        $"{item.Name} {item.Description} {item.Appears.DisplayName()}", item.Appears.DisplayName(), "Objeto")).ToList();
+                        $"{item.Name} {item.Description} {item.Appears.DisplayName()} {item.Category.DisplayName()}", item.Appears.DisplayName(), item.Category.DisplayName())).ToList();
             case "abilities":
                 return (await db.MonsterAbilities.AsNoTracking().ToListAsync()).Select(item =>
                     new CatalogListItem(item.Id, item.Name, item.Appears.DisplayName(), item.IsArchived,
@@ -113,7 +120,8 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             return await ReturnEditorAsync(model);
         }
         if (!await ValidateSelectionsAsync(model.Type, "AppearsOptions", model.AppearsOptions)
-            || (model.AbilityOptions.Length > 0 && !await ValidateSelectionsAsync(model.Type, "AbilityOptions", model.AbilityOptions)))
+            || (model.AbilityOptions.Length > 0 && !await ValidateSelectionsAsync(model.Type, "AbilityOptions", model.AbilityOptions))
+            || (model.Type == "miscellanea" && model.MiscellaneaCategoryOptions.Length > 0 && !await ValidateSelectionsAsync(model.Type, "MiscellaneaCategoryOptions", model.MiscellaneaCategoryOptions)))
         {
             ModelState.AddModelError(string.Empty, "Elige los valores desde las sugerencias del catálogo.");
             return await ReturnEditorAsync(model);
@@ -155,7 +163,7 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             case "miscellanea":
                 var entry = model.Id is null ? new MiscellaneaItem(0, "", "", 0, TypeAppears.None) : await db.Miscellanea.FindAsync(model.Id.Value) ?? new MiscellaneaItem(0, "", "", 0, TypeAppears.None);
                 if (model.Id is null) { entry.Id = await db.Miscellanea.Select(x => (int?)x.Id).MaxAsync() + 1 ?? 1; db.Miscellanea.Add(entry); }
-                entry.Name = model.Name.Trim(); entry.Description = model.Description; entry.Price = model.Price; entry.Appears = appearance; entry.IsArchived = model.IsArchived; break;
+                entry.Name = model.Name.Trim(); entry.Description = model.Description; entry.Price = model.Price; entry.Appears = appearance; entry.Category = ParseMiscellaneaCategory(model.MiscellaneaCategoryOptions); entry.IsArchived = model.IsArchived; break;
             case "abilities":
                 var ability = model.Id is null ? new MonsterAbility(0, "", "", TypeAppears.None) : await db.MonsterAbilities.FindAsync(model.Id.Value) ?? new MonsterAbility(0, "", "", TypeAppears.None);
                 if (model.Id is null) { ability.Id = await db.MonsterAbilities.Select(x => (int?)x.Id).MaxAsync() + 1 ?? 1; db.MonsterAbilities.Add(ability); }
@@ -186,7 +194,7 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         // Cada solicitud solo puede actualizar un campo incluido en esta lista explícita.
         var allowed = GetEditableFields(type);
         if (allowed is null || !allowed.TryGetValue(field, out var propertyName)) return BadRequest();
-        var submittedChoices = field is "AppearsOptions" or "AbilityOptions" ? values ?? [] : [value ?? string.Empty];
+        var submittedChoices = field is "AppearsOptions" or "AbilityOptions" or "MiscellaneaCategoryOptions" ? values ?? [] : [value ?? string.Empty];
         if (!await ValidateSelectionsAsync(type, field, submittedChoices)) return BadRequest("Selecciona un valor de la lista sugerida.");
 
         object? entity = type.ToLowerInvariant() switch
@@ -206,10 +214,15 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         if (property is null || !property.CanWrite) return BadRequest();
         if (propertyName == "Appears") property.SetValue(entity, TypeAppearsParser.Parse(string.Join(", ", values ?? [])));
         else if (field == "AbilityOptions") property.SetValue(entity, string.Join(", ", values ?? []));
+        else if (field == "MiscellaneaCategoryOptions" && entity is MiscellaneaItem miscellanea) miscellanea.Category = ParseMiscellaneaCategory(values ?? []);
         else if (property.PropertyType == typeof(int))
         {
             if (!int.TryParse(value, out var number) || number < 0) return BadRequest("El valor debe ser un número positivo.");
             property.SetValue(entity, number);
+        }
+        else if (property.PropertyType == typeof(MiscellaneaCategory))
+        {
+            property.SetValue(entity, ParseMiscellaneaCategory(values ?? []));
         }
         else if (property.PropertyType == typeof(string))
         {
@@ -288,7 +301,7 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             "heroes" => new() { ["Name"] = "Name", ["Description"] = "Description", ["CharacterTypeClass"] = "CharacterTypeClass", ["Hp"] = "Hp", ["DicesMind"] = "DicesMind", ["DicesAttack"] = "DicesAttack", ["DicesDefend"] = "DicesDefend", ["DicesRedMovement"] = "DicesRedMovement", ["Player"] = "Player", ["Weapon"] = "Weapon", ["Armor"] = "Armor", ["AbilityOptions"] = "Spells", ["Items"] = "Items", ["Gold"] = "Gold", ["QuestsCompleted"] = "QuestsCompleted", ["AppearsOptions"] = "Appears" },
         "monsters" => new() { ["Name"] = "Name", ["Description"] = "Description", ["Faction"] = "Faction", ["AbilityOptions"] = "Ability", ["Hp"] = "Hp", ["DicesMind"] = "DicesMind", ["DicesAttack"] = "DicesAttack", ["DicesDefend"] = "DicesDefend", ["MaxMovement"] = "MaxMovement", ["AppearsOptions"] = "Appears" },
         "equipment" => new() { ["Name"] = "Name", ["Description"] = "Description", ["Price"] = "Price", ["ItemType"] = "Type", ["Weight"] = "Weight", ["Category"] = "Category", ["AppearsOptions"] = "Appears" },
-        "miscellanea" => new() { ["Name"] = "Name", ["Description"] = "Description", ["Price"] = "Price", ["AppearsOptions"] = "Appears" },
+        "miscellanea" => new() { ["Name"] = "Name", ["Description"] = "Description", ["Price"] = "Price", ["AppearsOptions"] = "Appears", ["MiscellaneaCategoryOptions"] = "Category" },
         "abilities" => new() { ["Name"] = "Name", ["Description"] = "Description", ["AppearsOptions"] = "Appears" },
         "spells" => new() { ["Name"] = "Name", ["Description"] = "Description", ["SpellType"] = "Type", ["AppearsOptions"] = "Appears" },
         "poems" => new() { ["Name"] = "Title", ["Description"] = "Text", ["Key"] = "Key" },
@@ -302,10 +315,19 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         _ => string.Empty
     };
 
+    private static MiscellaneaCategory ParseMiscellaneaCategory(IEnumerable<string> names)
+    {
+        // La ficha admite varias etiquetas y usa tienda normal sólo cuando no se ha marcado otra procedencia.
+        var selected = names.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var category = Enum.GetValues<MiscellaneaCategory>().Where(flag => flag != 0 && selected.Contains(flag.DisplayName())).Aggregate((MiscellaneaCategory)0, (result, flag) => result | flag);
+        return category == 0 ? MiscellaneaCategory.NormalShop : category;
+    }
+
     private async Task<bool> ValidateSelectionsAsync(string type, string field, string[] values)
     {
         IEnumerable<string>? choices = field switch
         {
+            "MiscellaneaCategoryOptions" => Enum.GetValues<MiscellaneaCategory>().Where(flag => flag != 0).Select(flag => flag.DisplayName()),
             "AppearsOptions" => Enum.GetValues<TypeAppears>().Where(value => value != TypeAppears.None).Select(value => value.DisplayName()),
             "AbilityOptions" => await db.MonsterAbilities.AsNoTracking().Select(item => item.Name)
                 .Concat(db.SpellsOfTerror.AsNoTracking().Select(item => item.Name)).ToListAsync(),
@@ -399,6 +421,7 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
     // Los desplegables se construyen con enums, catálogos del juego y valores ya guardados para no perder opciones existentes.
     private async Task PopulateEditorOptionsAsync(CatalogEditViewModel model)
     {
+        ViewBag.MiscellaneaCategoryOptions = Enum.GetValues<MiscellaneaCategory>().Where(flag => flag != 0).Select(flag => flag.DisplayName()).ToArray();
         ViewBag.AppearanceOptions = Enum.GetValues<TypeAppears>()
             .Where(value => value != TypeAppears.None).Select(value => value.DisplayName()).ToArray();
         ViewBag.HeroClassOptions = await db.Heroes.AsNoTracking().Select(hero => hero.CharacterTypeClass).Distinct().ToListAsync();
@@ -434,7 +457,7 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             case "heroes": if (await db.Heroes.FindAsync(id) is { } h) { model.Name=h.Name; model.SourceName=h.SourceName; model.CharacterTypeClass=h.CharacterTypeClass; model.Hp=h.Hp; model.DicesMind=h.DicesMind; model.DicesAttack=h.DicesAttack; model.DicesDefend=h.DicesDefend; model.DicesRedMovement=h.DicesRedMovement; model.Description=h.Description??""; model.AppearsOptions=SelectedAppearances(h.Appears); model.AbilityOptions=SplitOptions(h.Spells); model.Player=h.Player; model.Weapon=h.Weapon; model.Armor=h.Armor??""; model.Spells=h.Spells??""; model.Items=h.Items??""; model.Gold=h.Gold; model.QuestsCompleted=h.QuestsCompleted; model.IsArchived=h.IsArchived; } else return null; break;
             case "monsters": if (await db.Monsters.FindAsync(id) is { } m) { model.Name=m.Name; model.SourceName=m.SourceName; model.Hp=m.Hp; model.DicesMind=m.DicesMind; model.DicesAttack=m.DicesAttack; model.DicesDefend=m.DicesDefend; model.MaxMovement=m.MaxMovement; model.Faction=m.Faction; model.Ability=m.Ability; model.AbilityOptions=SplitOptions(m.Ability); model.Description=m.Description??""; model.AppearsOptions=SelectedAppearances(m.Appears); model.IsArchived=m.IsArchived; } else return null; break;
             case "equipment": if (await db.EquipmentsAndArtifacts.FindAsync(id) is { } e) { model.Name=e.Name; model.Description=e.Description; model.Price=e.Price; model.ItemType=e.Type; model.Weight=e.Weight; model.Category=e.Category; model.AppearsOptions=SelectedAppearances(e.Appears); model.IsArchived=e.IsArchived; } else return null; break;
-            case "miscellanea": if (await db.Miscellanea.FindAsync(id) is { } i) { model.Name=i.Name; model.Description=i.Description; model.Price=i.Price; model.AppearsOptions=SelectedAppearances(i.Appears); model.IsArchived=i.IsArchived; } else return null; break;
+            case "miscellanea": if (await db.Miscellanea.FindAsync(id) is { } i) { model.Name=i.Name; model.Description=i.Description; model.Price=i.Price; model.AppearsOptions=SelectedAppearances(i.Appears); model.MiscellaneaCategoryOptions=Enum.GetValues<MiscellaneaCategory>().Where(flag => flag != 0 && i.Category.HasFlag(flag)).Select(flag => flag.DisplayName()).ToArray(); model.IsArchived=i.IsArchived; } else return null; break;
             case "abilities": if (await db.MonsterAbilities.FindAsync(id) is { } a) { model.Name=a.Name; model.Description=a.Description; model.AppearsOptions=SelectedAppearances(a.Appears); model.IsArchived=a.IsArchived; } else return null; break;
             case "spells": if (await db.SpellsOfTerror.FindAsync(id) is { } s) { model.Name=s.Name; model.Description=s.Description; model.SpellType=s.Type; model.AppearsOptions=SelectedAppearances(s.Appears); model.IsArchived=s.IsArchived; } else return null; break;
             case "poems": if (await db.WorldPoems.FindAsync(id) is { } p) { model.Key=p.Key; model.Name=p.Title; model.Description=p.Text; model.IsArchived=p.IsArchived; } else return null; break;
@@ -442,5 +465,3 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         return model;
     }
 }
-
-

@@ -26,7 +26,15 @@
             @foreach (var abilityName in abilityNames)
             {
                 var spellLink = monster.SpellLinks.FirstOrDefault(link => string.Equals(link.SpellOfTerror.Name, abilityName, StringComparison.OrdinalIgnoreCase));
-                if (spellLink is not null)
+                if (spellLink is not null && spellLink.SpellOfTerror.IsArchived)
+                {
+                    <div class="archived-skill" title="Esta información está archivada y no está disponible.">
+                        <span class="ability-icon spell-icon" aria-label="Hechizo archivado: @abilityName">@abilityName.SpellSymbol()</span>
+                        <strong>@abilityName</strong><small>Información archivada</small>
+                        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Edit" asp-route-type="spells" asp-route-id="@spellLink.SpellOfTerrorId">Abrir en el archivo</a> }
+                    </div>
+                }
+                else if (spellLink is not null)
                 {
                     var tooltipText = $"{abilityName}: {spellLink.SpellOfTerror.Description.ShortEffect(abilityName)}";
                     <button type="button" class="ability-icon spell-icon skill-trigger hover-tooltip" style="--ability-color: @abilityName.SpellColor()" data-tooltip="@tooltipText" data-full-description="@spellLink.SpellOfTerror.Description" data-skill-name="@abilityName" aria-label="Hechizo: @abilityName">@abilityName.SpellSymbol()</button>
@@ -34,9 +42,20 @@
                 else
                 {
                     var ability = Model.Abilities.FirstOrDefault(entry => string.Equals(entry.Name, abilityName, StringComparison.OrdinalIgnoreCase));
-                    var description = ability?.Description ?? abilityName;
-                    var tooltipText = $"{abilityName}: {description.ShortEffect(abilityName)}";
-                    <button type="button" class="ability-icon ability-square skill-trigger hover-tooltip" style="--ability-color: @abilityName.AbilityColor()" data-tooltip="@tooltipText" data-full-description="@description" data-skill-name="@abilityName" aria-label="Habilidad: @abilityName">@abilityName.AbilitySymbol()</button>
+                    if (ability is null || ability.IsArchived)
+                    {
+                        <div class="archived-skill" title="Esta información está archivada y no está disponible.">
+                            <span class="ability-icon ability-square" aria-label="Habilidad archivada: @abilityName">@abilityName.AbilitySymbol()</span>
+                            <strong>@abilityName</strong><small>Información archivada</small>
+                            @if (User.IsInRole("Admin") && ability is not null) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Edit" asp-route-type="abilities" asp-route-id="@ability.Id">Abrir en el archivo</a> }
+                        </div>
+                    }
+                    else
+                    {
+                        var description = ability.Description;
+                        var tooltipText = $"{abilityName}: {description.ShortEffect(abilityName)}";
+                        <button type="button" class="ability-icon ability-square skill-trigger hover-tooltip" style="--ability-color: @abilityName.AbilityColor()" data-tooltip="@tooltipText" data-full-description="@description" data-skill-name="@abilityName" aria-label="Habilidad: @abilityName">@abilityName.AbilitySymbol()</button>
+                    }
                 }
             }
         </div>

@@ -17,9 +17,9 @@
                 <select data-library-expansion><option value="">Todas</option>@foreach (var option in library.ExpansionOptions) { <option value="@option">@option</option> }</select>
             </label>
         }
-        @if (library.ClassificationOptions.Count > 1)
+        @if (library.Type == "heroes" ? library.ClassificationOptions.Count > 0 : library.ClassificationOptions.Count > 1)
         {
-            <label>Categoría / clase
+            <label>@library.ClassificationLabel
                 <select data-library-classification><option value="">Todas</option>@foreach (var option in library.ClassificationOptions) { <option value="@option">@option</option> }</select>
             </label>
         }
@@ -27,7 +27,7 @@
 
     @if (Model.Items.Count == 0)
     {
-        <p class="library-empty">@(archived ? "No hay elementos desactivados en este estante." : "Todavía no hay elementos en este estante.")</p>
+        <p class="library-empty">@(archived ? "No hay elementos inactivos en este estante." : "Todavía no hay elementos en este estante.")</p>
     }
     else
     {
@@ -43,13 +43,13 @@
                             <input type="hidden" name="type" value="@library.Type" />
                             <input type="hidden" name="id" value="@item.Id" />
                             <input type="hidden" name="inArchive" value="@archived" />
-                            <button class="fantasy-button small library-action-archive" type="submit">@(archived ? "Reactivar" : "Desactivar")</button>
+                            <button class="fantasy-button small library-action-archive" type="submit">@(archived ? "Reactivar" : "Archivar")</button>
                         </form>
                         <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar definitivamente este elemento? Esta acción no se puede deshacer.');">
                             <input type="hidden" name="type" value="@library.Type" />
                             <input type="hidden" name="id" value="@item.Id" />
                             <input type="hidden" name="archived" value="@archived" />
-                            <button class="fantasy-button small library-action-delete" type="submit">Eliminar definitivamente</button>
+                            <button class="fantasy-button small library-action-delete" type="submit">Destruir</button>
                         </form>
                     </div>
                 </article>

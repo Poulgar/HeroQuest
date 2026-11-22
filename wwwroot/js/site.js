@@ -4,7 +4,9 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
     const factionFilter = panel.querySelector('.faction-filter');
     const list = panel.querySelector('[data-index-list]');
     const categoryButtons = [...panel.querySelectorAll('[data-equipment-category]')];
+    const miscellaneaButtons = [...panel.querySelectorAll('[data-miscellanea-category]')];
     let selectedCategory = categoryButtons[0]?.dataset.equipmentCategory ?? null;
+    let selectedMiscellaneaCategory = null;
     if (!list) return;
 
     const collator = new Intl.Collator('es', { sensitivity: 'accent', numeric: true });
@@ -32,8 +34,10 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
         const rows = [...list.querySelectorAll('.catalog-row')];
         for (const row of rows) {
             const matchesCategory = !selectedCategory || row.dataset.category === selectedCategory;
+            const miscMask = Number(selectedMiscellaneaCategory ?? 0);
+            const matchesMiscellanea = miscMask === 0 || (Number(row.dataset.miscellaneaCategory ?? 0) & miscMask) !== 0;
             const matchesFaction = !factionFilter?.value || row.dataset.faction === factionFilter.value;
-            row.hidden = !matchesCategory || !matchesFaction || !normalize(row.dataset.search ?? row.dataset.name ?? '').includes(query);
+            row.hidden = !matchesCategory || !matchesMiscellanea || !matchesFaction || !normalize(row.dataset.search ?? row.dataset.name ?? '').includes(query);
         }
 
         const mode = sort?.value ?? 'name-asc';
@@ -77,6 +81,15 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
             const isSelected = candidate === button;
             candidate.classList.toggle('active', isSelected);
             candidate.setAttribute('aria-pressed', String(isSelected));
+        });
+        update();
+    }));
+    miscellaneaButtons.forEach((button) => button.addEventListener('click', () => {
+        selectedMiscellaneaCategory = button.dataset.miscellaneaCategory;
+        miscellaneaButtons.forEach((candidate) => {
+            const active = candidate === button;
+            candidate.classList.toggle('active', active);
+            candidate.setAttribute('aria-pressed', String(active));
         });
         update();
     }));
@@ -140,7 +153,7 @@ document.querySelectorAll('[data-search-picker]').forEach((picker) => {
         let visibleCount = 0;
         options.forEach((option) => {
             const alreadySelected = selectedValues().some((value) => normalizePicker(value) === normalizePicker(option.dataset.pickerOption));
-            const matches = query && normalizePicker(option.dataset.pickerOption).includes(query) && !alreadySelected && visibleCount < 8;
+            const matches = normalizePicker(option.dataset.pickerOption).includes(query) && !alreadySelected;
             option.hidden = !matches;
             if (matches) visibleCount += 1;
         });
@@ -173,6 +186,7 @@ document.querySelectorAll('[data-search-picker]').forEach((picker) => {
     };
 
     input.addEventListener('input', refreshSuggestions);
+    input.addEventListener('focus', refreshSuggestions);
     add.addEventListener('click', () => {
         const query = normalizePicker(input.value.trim());
         const match = options.find((option) => normalizePicker(option.dataset.pickerOption) === query);

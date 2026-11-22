@@ -78,7 +78,13 @@
                 <div class="editable-field" data-edit-field data-update-field="Weight"><label>Peso<input name="Weight" value="@Model.Weight" readonly="@locked"/></label>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div></div>
         }
         else if (Model.Type == "miscellanea")
-        { <div class="editable-field" data-edit-field data-update-field="Price"><label>Precio en monedas de oro<input name="Price" value="@Model.Price" type="number" min="0" readonly="@locked"/></label>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div> }
+        {
+            <div class="editable-field picker-edit-field" data-edit-field data-update-field="MiscellaneaCategoryOptions">
+                @await Html.PartialAsync("_SearchPicker", new HeroQuest.Models.SearchPickerViewModel("MiscellaneaCategoryOptions", "Categoría del objeto", (string[])ViewBag.MiscellaneaCategoryOptions, Model.MiscellaneaCategoryOptions, true, locked))
+                @if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }
+            </div>
+            <div class="editable-field" data-edit-field data-update-field="Price"><label>Precio en monedas de oro<input name="Price" value="@Model.Price" type="number" min="0" readonly="@locked"/></label>@if (existing) { <button type="button" data-field-edit>Editar</button><button type="button" data-field-save hidden>Guardar</button><button type="button" data-field-cancel hidden>Cancelar</button> }</div>
+        }
         else if (Model.Type == "spells")
         {
             <div class="editable-field picker-edit-field" data-edit-field data-update-field="SpellType">
@@ -95,6 +101,13 @@
         <form asp-action="ResetCharacterDefaults" method="post" class="reset-defaults-form" onsubmit="return confirm('Atención: vas a restaurar los valores de referencia de @Model.Name. Si los habíais equilibrado o personalizado, esos cambios se reemplazarán. ¿Continuar?');">
             <input type="hidden" name="type" value="@Model.Type"/><input type="hidden" name="id" value="@Model.Id"/>
             <button class="fantasy-button small library-action-archive" type="submit">Restablecer valores originales</button>
+        </form>
+    }
+    @if (existing && Model.IsArchived && Model.Type is "abilities" or "spells")
+    {
+        <form asp-action="Archive" method="post" class="reset-defaults-form">
+            <input type="hidden" name="type" value="@Model.Type"/><input type="hidden" name="id" value="@Model.Id"/><input type="hidden" name="inArchive" value="true"/>
+            <button class="fantasy-button small library-action-save" type="submit">Restaurar desde el archivo</button>
         </form>
     }
 </section>

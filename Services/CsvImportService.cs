@@ -249,9 +249,20 @@ public class CsvImportService
                 price: CsvRecordReader.GetInteger(datos, "Precio (Monedas de Oro)"),
                 appears: TypeAppearsParser.Parse(CsvRecordReader.GetText(datos, "Apariciones"))
             );
+            entry.Category = ParseMiscellaneaCategory(CsvRecordReader.GetText(datos, "Categoría"));
             _context.Miscellanea.Add(entry);
         }
         await _context.SaveChangesAsync();
+    }
+
+    private static MiscellaneaCategory ParseMiscellaneaCategory(string value)
+    {
+        // El CSV almacena la máscara numérica del enum para representar varias etiquetas en un solo objeto.
+        return int.TryParse(value, out var flags) && flags > 0 && (flags & ~127) == 0
+            ? (MiscellaneaCategory)flags
+            : Enum.TryParse<MiscellaneaCategory>(value, ignoreCase: true, out var category) && category != 0
+                ? category
+                : MiscellaneaCategory.NormalShop;
     }
 
     private async Task ImportEquipmentsAndArtifactsAsync(string equipmentPath, string artifactPath)

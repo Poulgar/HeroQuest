@@ -24,11 +24,21 @@
                     <label>Buscar <input class="index-search" type="search" placeholder="Nombre…" /></label>
                     <label>Ordenar <select class="index-sort"><option value="name-asc">A-Z</option><option value="name-desc">Z-A</option><option value="price-asc">Precio: menor</option><option value="price-desc">Precio: mayor</option><option value="appears">Expansión</option></select></label>
                 </div>
+                <div class="library-tabs miscellanea-tabs" aria-label="Secciones de objetos">
+                    <button class="fantasy-button small active" type="button" data-miscellanea-category="0" aria-pressed="true">Todos</button>
+                    <button class="fantasy-button small" type="button" data-miscellanea-category="1" aria-pressed="false">Tienda normal</button>
+                    <button class="fantasy-button small" type="button" data-miscellanea-category="2" aria-pressed="false">Mercado negro</button>
+                    <button class="fantasy-button small" type="button" data-miscellanea-category="4" aria-pressed="false">Tesoros</button>
+                    <button class="fantasy-button small" type="button" data-miscellanea-category="8" aria-pressed="false">Alquimia</button>
+                    <button class="fantasy-button small" type="button" data-miscellanea-category="16" aria-pressed="false">Alquimia elaborada</button>
+                    <button class="fantasy-button small" type="button" data-miscellanea-category="32" aria-pressed="false">Solo Elfo</button>
+                    <button class="fantasy-button small" type="button" data-miscellanea-category="64" aria-pressed="false">Solo Bárbaro</button>
+                </div>
                 <div class="catalog-scroll" data-index-list>
                 @foreach (var entry in Model.Entries)
                 {
                     <a class="catalog-row @(Model.SelectedEntry?.Id == entry.Id ? "selected" : "")"
-                       data-select-record="@entry.Id" data-name="@entry.Name" data-search="@entry.Name" data-price="@entry.Price" data-appears="@entry.Appears.DisplayName()" data-original="@(entry.Appears.HasFlag(HeroQuest.Models.TypeAppears.Original).ToString().ToLowerInvariant())" data-id="@entry.Id"
+                       data-select-record="@entry.Id" data-name="@entry.Name" data-search="@entry.Name @entry.Category.DisplayName()" data-price="@entry.Price" data-appears="@entry.Appears.DisplayName()" data-original="@(entry.Appears.HasFlag(HeroQuest.Models.TypeAppears.Original).ToString().ToLowerInvariant())" data-id="@entry.Id" data-miscellanea-category="@((int)entry.Category)"
                        asp-controller="Storehouse" asp-action="Miscellanea" asp-route-id="@entry.Id" aria-current="@(Model.SelectedEntry?.Id == entry.Id ? "page" : null)">
                         <span class="index-symbol" aria-hidden="true">
                             <svg viewBox="0 0 32 32"><path d="M11 3h10M13 3v7l-6 13c-1 3 1 5 4 5h10c3 0 5-2 4-5l-6-13V3M10 20h12M12 16h8" /></svg>

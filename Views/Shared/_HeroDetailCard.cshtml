@@ -6,7 +6,7 @@
     </div>
     <div class="detail-content">
         <p class="eyebrow">@Model.CharacterTypeClass • N.º @Model.Id</p>
-        <h2>@Model.Name</h2>
+        <h2>@(Model.PlayerProfile?.Nickname ?? Model.Name)</h2>
         @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Edit" asp-route-type="heroes" asp-route-id="@Model.Id">Editar en Biblioteca</a> }
         @if (!string.IsNullOrWhiteSpace(Model.Description))
         {
@@ -20,6 +20,17 @@
             <div><span>Defensa</span><strong>@Model.DicesDefend dados</strong></div>
             <div><span>Oro</span><strong>@Model.Gold</strong></div>
         </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <p class="hero-player-assignment"><strong>Jugador asignado:</strong>
+                @if (Model.PlayerProfile is { } player)
+                { <span>@player.Name · personaje «@player.Nickname»</span> }
+                else if (!string.IsNullOrWhiteSpace(Model.Player))
+                { <span>@Model.Player</span> }
+                else
+                { <span>Sin asignar</span> }
+            </p>
+        }
         <div class="detail-divider"><span>PERTENENCIAS Y HAZAÑAS</span></div>
         <dl class="detail-facts">
             <div><dt>Arma</dt><dd>@(string.IsNullOrWhiteSpace(Model.Weapon) ? "-" : Model.Weapon)</dd></div>

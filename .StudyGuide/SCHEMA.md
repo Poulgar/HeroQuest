@@ -207,3 +207,26 @@ Así puedes ver separadas las responsabilidades: **Model** representa los datos,
 - Las fichas de Héroes y Monstruos importadas conservan `SourceName`. El botón **Restablecer valores originales** recupera clases, atributos y equipo inicial desde los CSV de referencia y avisa antes de reemplazar cambios de balance.
 - `PlayerProfile` guarda nombre, apodo y una relación opcional uno a uno con `Heroe`. El apartado de Jugadores de la portada solo se muestra al Maestro de Juego. El enlace está sobre la tabla `Heroes` porque la herencia TPC no ofrece una tabla común de personajes a la que SQLite pueda apuntar con una clave foránea.
 
+# Cambios de Biblioteca, categorías y equipo
+
+## Miscelánea: nombre y procedencia
+
+`Models/MiscellaneaCategory.cs` define etiquetas `[Flags]`: un objeto puede ser a la vez de **Alquimia** y **Mercado negro**, o exclusivo de una clase. Si no lleva etiqueta, se interpreta como objeto de la **Tienda normal**. `MiscellaneaItem.Category` guarda esa combinación como una máscara numérica; en `HeroQuest_Miscellanea.csv`, la nueva columna `Categoría` conserva el mismo valor.
+
+Al iniciar, la migración `AddMiscellaneaCategories` añade la columna, asigna categorías a los objetos existentes y limpia del nombre etiquetas finales como `(Mercado Negro)`, `(Tesoro)`, `(Alquimia)` y `(Elfo)`. La vista `Views/Storehouse/MiscellaneaIndex.cshtml` permite filtrar el mismo catálogo por secciones; las etiquetas pueden solaparse intencionadamente.
+
+## Biblioteca y fichas archivadas
+
+`Views/Admin/_LibraryCatalogList.cshtml` contiene búsqueda, orden y filtros por expansión y clasificación. En Héroes la clasificación es el jugador vinculado, cargado en `AdminController` desde `PlayerProfile`; las otras tablas conservan su filtro por tipo/facción. `site.js` aplica filtros en el navegador, y la regla `[hidden]` de `forms-and-access.css` mantiene ocultas las filas filtradas aunque el estilo de fila use `display:flex`.
+
+Las habilidades y hechizos archivados mantienen su relación con los monstruos. `MonstersController` los carga junto con los activos para conservar el nombre; `_MonsterDetailCard.cshtml` muestra que la información está archivada sin incluir la descripción. El Maestro de Juego ve el enlace para abrir esa ficha en Biblioteca y puede restaurarla desde su formulario.
+
+## Jugador y nombre del héroe de campaña
+
+`Heroe.PlayerProfile` enlaza el héroe de biblioteca con el perfil de jugador. En el registro público se conserva la clase del héroe; la ficha muestra al Aventurero su apodo como nombre de personaje, y el Maestro de Juego puede consultar también el nombre real del perfil y el apodo.
+
+## Armas, armaduras y dados
+
+Las descripciones de `HeroQuest_Equipment.csv` indican efectos en texto (por ejemplo, Espada Ancha: 3 dados de ataque; Hacha de Batalla: 4; Cota de Malla: +1 dado de defensa; Coraza: +2 y limita movimiento). No son todavía propiedades numéricas que el programa pueda calcular. Por eso los dados de Héroe siguen siendo valores informativos y esta actualización no altera sus estadísticas.
+
+Para una partida en tiempo real, el equipo deberá tener campos estructurados como `AttackDice`, `DefenseDice`, restricciones de clase y reglas de movimiento; la ficha de campaña deberá guardar las armas/armaduras que lleva ese héroe. El ataque activo se calculará tomando el arma elegida en ese turno, no sumando todas sus armas; defensa y movimiento se calcularán con su armadura actual. Esto preserva la posibilidad de llevar varias armas sin combinar sus ataques.

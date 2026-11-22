@@ -16,8 +16,9 @@ public class MonstersController(ApplicationDbContext context) : Controller
                 .ThenInclude(link => link.SpellOfTerror)
             .OrderBy(monster => monster.Id)
             .ToListAsync();
-        var abilities = await context.MonsterAbilities.AsNoTracking().Where(ability => !ability.IsArchived).OrderBy(ability => ability.Id).ToListAsync();
-        var spells = await context.SpellsOfTerror.AsNoTracking().Where(spell => !spell.IsArchived).OrderBy(spell => spell.Id).ToListAsync();
+        // Se incluyen fichas archivadas para conservar los nombres en el bestiario; la vista oculta su descripción al público.
+        var abilities = await context.MonsterAbilities.AsNoTracking().OrderBy(ability => ability.Id).ToListAsync();
+        var spells = await context.SpellsOfTerror.AsNoTracking().OrderBy(spell => spell.Id).ToListAsync();
 
         var selected = monsters.FirstOrDefault(monster => monster.Id == id) ?? monsters.FirstOrDefault();
         ViewData["Title"] = "Monstruos";
