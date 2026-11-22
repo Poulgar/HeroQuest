@@ -5,9 +5,18 @@
     <form asp-action="Save" method="post" class="study-form admin-edit-form">
         <div asp-validation-summary="ModelOnly" class="form-error"></div>
         <input asp-for="Type" type="hidden"/><input asp-for="Id" type="hidden"/>
-        <label asp-for="Name">Nombre</label><input asp-for="Name"/><span asp-validation-for="Name" class="form-error"></span>
-        <label asp-for="Description">Descripción / lore</label><textarea asp-for="Description" rows="4"></textarea>
-        <label asp-for="Appears">Expansiones (separadas por coma)</label><input asp-for="Appears" placeholder="Juego Base, Original"/>
+        @if (Model.Type == "poems")
+        {
+            <label asp-for="Key">Clave breve (por ejemplo: saludo-del-rey)</label><input asp-for="Key"/><span asp-validation-for="Key" class="form-error"></span>
+            <label asp-for="Name">Título del verso</label><input asp-for="Name"/><span asp-validation-for="Name" class="form-error"></span>
+            <label asp-for="Description">Texto del poema o leyenda</label><textarea asp-for="Description" rows="6"></textarea>
+        }
+        else
+        {
+            <label asp-for="Name">Nombre</label><input asp-for="Name"/><span asp-validation-for="Name" class="form-error"></span>
+            <label asp-for="Description">Descripción / lore</label><textarea asp-for="Description" rows="4"></textarea>
+            <label asp-for="Appears">Expansiones (separadas por coma)</label><input asp-for="Appears" placeholder="Juego Base, Original"/>
+        }
         @if (Model.Type == "heroes")
         {
             <label asp-for="CharacterTypeClass">Clase</label><input asp-for="CharacterTypeClass"/>

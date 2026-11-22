@@ -1,26 +1,60 @@
 @model HeroQuest.Models.CatalogListViewModel
-@{ ViewData["Title"] = "Biblioteca · " + Model.Title; }
-<section class="admin-page page-shell">
-    <p class="eyebrow">BIBLIOTECA DEL REINO</p>
+@{
+    var isArchive = (bool)(ViewData["IsArchive"] ?? false);
+    var shelves = new[]
+    {
+        ("heroes", "Héroes"), ("monsters", "Monstruos"), ("equipment", "Equipos y Artefactos"),
+        ("miscellanea", "Miscelánea"), ("abilities", "Habilidades"), ("spells", "Hechizos del Terror"),
+        ("poems", "Versos y Leyendas")
+    };
+    ViewData["Title"] = "Biblioteca · " + Model.Title;
+}
+<section class="admin-page page-shell library-page">
+    <p class="eyebrow">BIBLIOTECA DEL REINO · SOLO PARA EL MAESTRO DE JUEGO</p>
     <h1>Biblioteca de <em>@Model.Title</em></h1>
-    <p>Consulta las fichas que aún viajan con el Compendio y añade aquí nuevos relatos.</p>
-    <div class="library-actions">
-        <a class="fantasy-button fantasy-button-primary" asp-action="Edit" asp-route-type="@Model.Type">Inscribir una nueva ficha</a>
-        <a class="fantasy-button" asp-action="Archive" asp-route-type="@Model.Type">Consultar en el Archivo</a>
+    <p>Abre cualquier estante para consultar, corregir, inscribir o archivar sus fichas.</p>
+
+    <nav class="library-shelves" aria-label="Estantes de la Biblioteca">
+        @foreach (var shelf in shelves)
+        {
+            <a class="fantasy-button small @(Model.Type == shelf.Item1 ? "active" : "")"
+               asp-action="Index" asp-route-type="@shelf.Item1" asp-route-archived="@isArchive">@shelf.Item2</a>
+        }
+    </nav>
+
+    <div class="library-tabs" aria-label="Sección de la Biblioteca">
+        <a class="fantasy-button @(isArchive ? "" : "fantasy-button-primary")" asp-action="Index" asp-route-type="@Model.Type" asp-route-archived="false">Estantes activos</a>
+        <a class="fantasy-button @(isArchive ? "fantasy-button-primary" : "")" asp-action="Index" asp-route-type="@Model.Type" asp-route-archived="true">Archivo <span class="library-tab-note">(fichas ocultas)</span></a>
+        @if (!isArchive)
+        {
+            <a class="fantasy-button fantasy-button-primary" asp-action="Edit" asp-route-type="@Model.Type">Inscribir una ficha</a>
+        }
     </div>
+
+    <p class="library-section-intro">@(isArchive ? "Estas fichas están selladas y solo el Maestro de Juego puede consultarlas. Restáuralas para devolverlas a su estante." : "Estas son las fichas que aparecen en el Compendio de los Aventureros.")</p>
     <div class="admin-list" role="list">
         @if (Model.Items.Count == 0)
         {
-            <p class="library-empty">Aún no hay fichas en este estante.</p>
+            <p class="library-empty">@(isArchive ? "Este apartado del Archivo está vacío." : "Aún no hay fichas en este estante.")</p>
         }
         @foreach (var item in Model.Items)
         {
-            <article class="admin-row">
-                <div><strong>@item.Name</strong><small>#@item.Id · @item.Details</small></div>
+            <article class="admin-row @(isArchive ? "is-archived" : "")">
+                <div><strong>@item.Name</strong><small>#@item.Id · @item.Details @(isArchive ? "· Sellada" : "")</small></div>
                 <div class="admin-actions">
-                    <a class="fantasy-button small" asp-action="Edit" asp-route-type="@Model.Type" asp-route-id="@item.Id">Consultar ficha</a>
-                    <form asp-action="Archive" method="post"><input type="hidden" name="type" value="@Model.Type"/><input type="hidden" name="id" value="@item.Id"/><button class="fantasy-button small" type="submit">Guardar en el Archivo</button></form>
-                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Borrar definitivamente esta ficha? Esta acción no se puede deshacer.');"><input type="hidden" name="type" value="@Model.Type"/><input type="hidden" name="id" value="@item.Id"/><button class="fantasy-button small danger" type="submit">Destruir ficha</button></form>
+                    <a class="fantasy-button small" asp-action="Edit" asp-route-type="@Model.Type" asp-route-id="@item.Id">Editar ficha</a>
+                    <form asp-action="Archive" method="post">
+                        <input type="hidden" name="type" value="@Model.Type" />
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <input type="hidden" name="inArchive" value="@isArchive" />
+                        <button class="fantasy-button small" type="submit">@(isArchive ? "Restaurar al estante" : "Guardar en el Archivo")</button>
+                    </form>
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Borrar definitivamente esta ficha? Esta acción no se puede deshacer.');">
+                        <input type="hidden" name="type" value="@Model.Type" />
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <input type="hidden" name="archived" value="@isArchive" />
+                        <button class="fantasy-button small danger" type="submit">Destruir ficha</button>
+                    </form>
                 </div>
             </article>
         }

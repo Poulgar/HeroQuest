@@ -66,6 +66,11 @@ html[data-theme="moonlit"] .theme-moon { opacity: 1; filter: drop-shadow(0 0 6px
 .form-error { color: #8b2f27; font-size: 14px; }
 .admin-page { max-width: 1000px; }
 .library-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+.library-shelves, .library-tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin: 18px 0; }
+.library-shelves { padding-bottom: 15px; border-bottom: 1px solid #aa8a5466; }
+.library-shelves .fantasy-button.active { color: #fff1d0; background: linear-gradient(145deg, #9b4937, #6d2c25); }
+.library-tab-note { font-size: 11px; font-weight: 400; }
+.library-section-intro { margin: 18px 0; color: var(--muted-ink); font-style: italic; }
 .library-empty { padding: 17px; border: 1px dashed #aa8a54; color: var(--muted-ink); text-align: center; }
 .admin-list { display: grid; gap: 10px; margin-top: 22px; }
 .admin-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 14px; border: 1px solid #a98b57; border-radius: 12px 3px 12px 3px; background: var(--paper-light); box-shadow: 0 4px 12px #24170f20; }
@@ -104,5 +109,8 @@ html[data-theme="moonlit"] .theme-moon { opacity: 1; filter: drop-shadow(0 0 6px
     .edit-stats { grid-template-columns: 1fr; }
     .library-actions { display: grid; grid-template-columns: 1fr; }
     .library-actions .fantasy-button { width: 100%; }
+    .library-shelves, .library-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .library-shelves .fantasy-button, .library-tabs .fantasy-button { width: 100%; min-height: 44px; padding-inline: 7px; font-size: 11px; }
+    .library-tabs .fantasy-button-primary:last-child { grid-column: 1 / -1; }
     .poem-toast { right: 12px; bottom: 12px; width: calc(100vw - 24px); }
 }

@@ -44,3 +44,8 @@ La barra superior usa un emblema para abrir el portal: gris si no hay sesión, v
 **Pergamino** mantiene la lectura de libro antiguo. **Luz de luna** cambia la escena a un grimorio: fondos azul violeta, tinta clara y destellos. Los botones usan bordes tallados y colores de cuero o magia; `responsive.css` conserva los ajustes para móvil.
 
 La Biblioteca y el Archivo requieren la cuenta `admin`; la cuenta `user` se muestra como Aventurero y solo consulta los catálogos.
+
+## Biblioteca y Archivo
+
+El Maestro de Juego abre la Biblioteca desde el menú de su emblema. En la página puede cambiar de estante y alternar entre fichas activas y el Archivo; ambos apartados usan la misma vista y se adaptan a móvil. Los versos de WorldPoems también se editan en su estante.
+

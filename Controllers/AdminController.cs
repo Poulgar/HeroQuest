@@ -14,14 +14,15 @@ public class AdminController(ApplicationDbContext db) : Controller
     private static readonly Dictionary<string, string> Titles = new(StringComparer.OrdinalIgnoreCase)
     {
         ["heroes"] = "Héroes", ["monsters"] = "Monstruos", ["equipment"] = "Equipos y Artefactos",
-        ["miscellanea"] = "Miscelánea", ["abilities"] = "Habilidades", ["spells"] = "Hechizos del Terror"
+        ["miscellanea"] = "Miscelánea", ["abilities"] = "Habilidades", ["spells"] = "Hechizos del Terror",
+        ["poems"] = "Versos y Leyendas"
     };
 
     [HttpGet]
-    public Task<IActionResult> Index(string type) => BuildCatalogPage(type, archived: false, viewName: "Index");
+    public Task<IActionResult> Index(string type, bool archived = false) => BuildCatalogPage(type, archived, viewName: "Index");
 
     [HttpGet]
-    public Task<IActionResult> Archive(string type) => BuildCatalogPage(type, archived: true, viewName: "Archive");
+    public IActionResult Archive(string type) => RedirectToAction(nameof(Index), new { type, archived = true });
 
     private async Task<IActionResult> BuildCatalogPage(string type, bool archived, string viewName)
     {
@@ -34,6 +35,7 @@ public class AdminController(ApplicationDbContext db) : Controller
             "miscellanea" => await db.Miscellanea.Where(x => x.IsArchived == archived).Select(x => new CatalogListItem(x.Id, x.Name, $"{x.Price} mo", x.IsArchived)).ToListAsync(),
             "abilities" => await db.MonsterAbilities.Where(x => x.IsArchived == archived).Select(x => new CatalogListItem(x.Id, x.Name, x.Appears.ToString(), x.IsArchived)).ToListAsync(),
             "spells" => await db.SpellsOfTerror.Where(x => x.IsArchived == archived).Select(x => new CatalogListItem(x.Id, x.Name, x.Type, x.IsArchived)).ToListAsync(),
+            "poems" => await db.WorldPoems.Where(x => x.IsArchived == archived).Select(x => new CatalogListItem(x.Id, x.Title, x.Key, x.IsArchived)).ToListAsync(),
             _ => []
         };
         ViewData["IsArchive"] = archived;
@@ -55,6 +57,14 @@ public class AdminController(ApplicationDbContext db) : Controller
         if (!ModelState.IsValid) return View("Edit", model);
         // El texto de expansiones se convierte aquí a banderas del enum antes de guardar la entidad.
         var appearance = TypeAppearsParser.Parse(model.Appears);
+
+        if (model.Type.Equals("poems", StringComparison.OrdinalIgnoreCase)
+            && (string.IsNullOrWhiteSpace(model.Key) || model.Key.Length > 64
+                || !System.Text.RegularExpressions.Regex.IsMatch(model.Key, "^[a-z0-9-]+$")))
+        {
+            ModelState.AddModelError(nameof(model.Key), "Usa una clave breve con letras minúsculas, números y guiones.");
+            return View("Edit", model);
+        }
 
         switch (model.Type)
         {
@@ -91,6 +101,16 @@ public class AdminController(ApplicationDbContext db) : Controller
                 var spell = model.Id is null ? new SpellOfTerror(0, "", "", "", TypeAppears.None) : await db.SpellsOfTerror.FindAsync(model.Id.Value) ?? new SpellOfTerror(0, "", "", "", TypeAppears.None);
                 if (model.Id is null) { spell.Id = await db.SpellsOfTerror.Select(x => (int?)x.Id).MaxAsync() + 1 ?? 1; db.SpellsOfTerror.Add(spell); }
                 spell.Name = model.Name.Trim(); spell.Description = model.Description; spell.Type = model.SpellType; spell.Appears = appearance; spell.IsArchived = model.IsArchived; break;
+            case "poems":
+                var poem = model.Id is null ? new WorldPoem() : await db.WorldPoems.FindAsync(model.Id.Value) ?? new WorldPoem();
+                var poemKey = model.Key.Trim().ToLowerInvariant();
+                if (await db.WorldPoems.AnyAsync(x => x.Key == poemKey && x.Id != (model.Id ?? 0)))
+                {
+                    ModelState.AddModelError(nameof(model.Key), "Ya existe un verso con esa clave.");
+                    return View("Edit", model);
+                }
+                if (model.Id is null) db.WorldPoems.Add(poem);
+                poem.Key = poemKey; poem.Title = model.Name.Trim(); poem.Text = model.Description; poem.IsArchived = model.IsArchived; break;
         }
 
         await db.SaveChangesAsync();
@@ -98,33 +118,35 @@ public class AdminController(ApplicationDbContext db) : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Archive(string type, int id)
+    public async Task<IActionResult> Archive(string type, int id, bool inArchive = false)
     {
         if (!Titles.ContainsKey(type)) return BadRequest();
         var archived = type.ToLowerInvariant() switch
         {
             "heroes" => await SetArchive(db.Heroes, id), "monsters" => await SetArchive(db.Monsters, id),
             "equipment" => await SetArchive(db.EquipmentsAndArtifacts, id), "miscellanea" => await SetArchive(db.Miscellanea, id),
-            "abilities" => await SetArchive(db.MonsterAbilities, id), "spells" => await SetArchive(db.SpellsOfTerror, id), _ => false
+            "abilities" => await SetArchive(db.MonsterAbilities, id), "spells" => await SetArchive(db.SpellsOfTerror, id),
+            "poems" => await SetArchive(db.WorldPoems, id), _ => false
         };
         if (!archived) return NotFound();
         await db.SaveChangesAsync();
-        return RedirectToAction(nameof(Index), new { type });
+        return RedirectToAction(nameof(Index), new { type, archived = !inArchive });
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(string type, int id)
+    public async Task<IActionResult> Delete(string type, int id, bool archived = false)
     {
         if (!Titles.ContainsKey(type)) return BadRequest();
         var deleted = type.ToLowerInvariant() switch
         {
             "heroes" => await Remove(db.Heroes, id), "monsters" => await Remove(db.Monsters, id),
             "equipment" => await Remove(db.EquipmentsAndArtifacts, id), "miscellanea" => await Remove(db.Miscellanea, id),
-            "abilities" => await Remove(db.MonsterAbilities, id), "spells" => await Remove(db.SpellsOfTerror, id), _ => false
+            "abilities" => await Remove(db.MonsterAbilities, id), "spells" => await Remove(db.SpellsOfTerror, id),
+            "poems" => await Remove(db.WorldPoems, id), _ => false
         };
         if (!deleted) return NotFound();
         await db.SaveChangesAsync();
-        return RedirectToAction(nameof(Index), new { type });
+        return RedirectToAction(nameof(Index), new { type, archived });
     }
 
     private async Task<int> NextCharacterId(bool isHero)
@@ -166,6 +188,7 @@ public class AdminController(ApplicationDbContext db) : Controller
             case "miscellanea": if (await db.Miscellanea.FindAsync(id) is { } i) { model.Name=i.Name; model.Description=i.Description; model.Price=i.Price; model.Appears=i.Appears.ToString(); model.IsArchived=i.IsArchived; } else return null; break;
             case "abilities": if (await db.MonsterAbilities.FindAsync(id) is { } a) { model.Name=a.Name; model.Description=a.Description; model.Appears=a.Appears.ToString(); model.IsArchived=a.IsArchived; } else return null; break;
             case "spells": if (await db.SpellsOfTerror.FindAsync(id) is { } s) { model.Name=s.Name; model.Description=s.Description; model.SpellType=s.Type; model.Appears=s.Appears.ToString(); model.IsArchived=s.IsArchived; } else return null; break;
+            case "poems": if (await db.WorldPoems.FindAsync(id) is { } p) { model.Key=p.Key; model.Name=p.Title; model.Description=p.Text; model.IsArchived=p.IsArchived; } else return null; break;
         }
         return model;
     }

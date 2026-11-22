@@ -43,7 +43,6 @@
                                 {
                                     <strong>Maestro de Juego</strong>
                                     <a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Consultar en biblioteca</a>
-                                    <a asp-controller="Admin" asp-action="Archive" asp-route-type="heroes">Archivo de la Biblioteca</a>
                                 }
                                 else { <strong>Aventurero</strong> }
                                 <form asp-controller="Account" asp-action="Logout" method="post"><button class="fantasy-button small" type="submit">Cerrar el portal</button></form>
@@ -51,7 +50,7 @@
                         </details>
                         @if (User.IsInRole("Admin"))
                         {
-                            <details class="nav-library"><summary>Consultar en biblioteca</summary><div><a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Héroes</a><a asp-controller="Admin" asp-action="Index" asp-route-type="monsters">Monstruos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="equipment">Equipos y Artefactos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="miscellanea">Miscelánea</a><a asp-controller="Admin" asp-action="Index" asp-route-type="abilities">Habilidades</a><a asp-controller="Admin" asp-action="Index" asp-route-type="spells">Hechizos del Terror</a></div></details>
+                            <details class="nav-library"><summary>Consultar en biblioteca</summary><div><a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Héroes</a><a asp-controller="Admin" asp-action="Index" asp-route-type="monsters">Monstruos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="equipment">Equipos y Artefactos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="miscellanea">Miscelánea</a><a asp-controller="Admin" asp-action="Index" asp-route-type="abilities">Habilidades</a><a asp-controller="Admin" asp-action="Index" asp-route-type="spells">Hechizos del Terror</a><a asp-controller="Admin" asp-action="Index" asp-route-type="poems">Versos y Leyendas</a></div></details>
                         }
                     }
                     else

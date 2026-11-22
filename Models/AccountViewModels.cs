@@ -16,6 +16,7 @@ public sealed class CatalogEditViewModel
 {
     public string Type { get; set; } = string.Empty;
     public int? Id { get; set; }
+    public string Key { get; set; } = string.Empty;
     [Required, StringLength(120)] public string Name { get; set; } = string.Empty;
     [StringLength(2000)] public string Description { get; set; } = string.Empty;
     public string CharacterTypeClass { get; set; } = string.Empty;

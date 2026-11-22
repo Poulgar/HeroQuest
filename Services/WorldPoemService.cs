@@ -23,5 +23,5 @@ public sealed class WorldPoemService(ApplicationDbContext context)
     }
 
     public Task<WorldPoem?> FindAsync(string key)
-        => context.WorldPoems.AsNoTracking().FirstOrDefaultAsync(poem => poem.Key == key);
+        => context.WorldPoems.AsNoTracking().FirstOrDefaultAsync(poem => poem.Key == key && !poem.IsArchived);
 }

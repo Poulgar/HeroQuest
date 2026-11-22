@@ -67,7 +67,7 @@ Al ejecutar o compilar pueden aparecer `DataBase/`, `bin/` y `obj/`. `DataBase/H
 
 ### `Data/ApplicationDbContext.cs`
 
-Es el puente entre el código C# y SQLite. Sus `DbSet` representan las colecciones/tablas principales: `Heroes`, `Monsters`, `Miscellanea`, `EquipmentsAndArtifacts`, `MonsterAbilities`, `SpellsOfTerror` y `WorldPoems`.
+Es el puente entre el código C# y SQLite. Sus `DbSet` representan las colecciones/tablas principales: `Heroes`, `Monsters`, `Miscellanea`, `EquipmentsAndArtifacts`, `MonsterAbilities`, `SpellsOfTerror` y `WorldPoems` (versos, que también se administran desde la Biblioteca).
 
 En `OnModelCreating` se configura la herencia `Character` mediante **TPC** (*Table per Concrete Class*): héroes y monstruos se guardan en tablas concretas separadas. También se configura la relación entre monstruos y hechizos del Terror mediante la tabla puente `MonsterSpellOfTerror`.
 
@@ -192,7 +192,10 @@ Así puedes ver separadas las responsabilidades: **Model** representa los datos,
 
 - Las credenciales de demo se mantienen como `user / user123` y `admin / admin123`; dentro de la interfaz aparecen como **Aventurero** y **Maestro de Juego**.
 - La **Biblioteca** es el espacio del Maestro de Juego para crear y editar fichas. Archivar las oculta a los Aventureros y las mueve a **Archivo**, que también es exclusivo del Maestro de Juego.
-- `Models/WorldPoem.cs` define versos con una clave, título y texto. La tabla `WorldPoems` se crea mediante la migración `AddWorldPoems`; `WorldPoemService` conserva los versos iniciales y permite recuperarlos por clave. `PoemsController` sirve esos versos a los mensajes del portal y del cambio de tema.
+- `Models/WorldPoem.cs` define versos con una clave, título, texto y estado de archivo. `AddWorldPoems` crea la tabla y `AddArchiveToWorldPoems` añade el archivado; `WorldPoemService` conserva los versos iniciales y `PoemsController` sirve los que están activos.
 - `AlphabeticalIdService` ordena las fichas de personaje por nombre y asigna IDs impares a Héroes y pares a Monstruos. Al crear manualmente una ficha también se respeta esa paridad.
 
+
+
+- La Biblioteca tiene estantes para Héroes, Monstruos, Equipo y Artefactos, Miscelánea, Habilidades, Hechizos del Terror y Versos y Leyendas. El Archivo es una pestaña dentro de Views/Admin/Index.cshtml, con la misma ruta y el filtro de fichas archivadas.
 
