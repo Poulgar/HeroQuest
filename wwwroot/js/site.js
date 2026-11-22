@@ -148,22 +148,60 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+// Cada verso se carga por su clave desde SQLite; se conserva un texto inicial si la petición no responde.
+const poemCache = new Map();
+const getPoem = async (key) => {
+    if (!poemCache.has(key)) {
+        const request = fetch(`/Poems/${encodeURIComponent(key)}`)
+            .then((response) => response.ok ? response.json() : null)
+            .catch(() => null);
+        poemCache.set(key, request);
+    }
+    return poemCache.get(key);
+};
+
+const loginVerse = document.querySelector('[data-poem-key="gate"]');
+if (loginVerse) {
+    getPoem('gate').then((poem) => {
+        if (!poem) return;
+        loginVerse.querySelector('[data-login-poem-title]').textContent = poem.title;
+        loginVerse.querySelector('[data-login-poem-text]').textContent = `«${poem.text}»`;
+    });
+}
+
 // El tema elegido vive en el navegador de cada persona y no cambia los colores guardados en la base de datos.
 const themeButton = document.querySelector('[data-theme-toggle]');
 if (themeButton) {
     const themes = ['parchment', 'moonlit'];
-    const applyTheme = (theme) => {
+    const applyTheme = (theme, showVerse = false) => {
         document.documentElement.dataset.theme = theme;
-        const label = document.querySelector('[data-theme-label]');
-        if (label) label.textContent = theme === 'moonlit' ? 'Luz de luna' : 'Pergamino';
-        themeButton.querySelector('[aria-hidden="true"]').textContent = theme === 'moonlit' ? '☀' : '☾';
+        themeButton.setAttribute('aria-pressed', String(theme === 'moonlit'));
+        themeButton.setAttribute('aria-label', theme === 'moonlit' ? 'Tema Luz de luna activo; cambiar a Pergamino' : 'Tema Pergamino activo; cambiar a Luz de luna');
     };
-    applyTheme(localStorage.getItem('heroquest-theme') || themes[0]);
+    const savedTheme = localStorage.getItem('heroquest-theme');
+    applyTheme(themes.includes(savedTheme) ? savedTheme : themes[0]);
     themeButton.addEventListener('click', () => {
         const next = document.documentElement.dataset.theme === themes[0] ? themes[1] : themes[0];
         localStorage.setItem('heroquest-theme', next);
-        applyTheme(next);
+        applyTheme(next, true);
     });
+
+    const toast = document.querySelector('[data-poem-toast]');
+    let toastTimer;
+    const showThemePoem = async (key) => {
+        const poem = await getPoem(key);
+        if (!toast || !poem) return;
+        toast.querySelector('[data-poem-toast-title]').textContent = poem.title;
+        toast.querySelector('[data-poem-toast-text]').textContent = poem.text;
+        toast.hidden = false;
+        requestAnimationFrame(() => toast.classList.add('is-visible'));
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => {
+            toast.classList.remove('is-visible');
+            window.setTimeout(() => { toast.hidden = true; }, 850);
+        }, 3300);
+    };
+    themeButton.addEventListener('click', () => showThemePoem(document.documentElement.dataset.theme === 'moonlit' ? 'night' : 'day'));
 }
 
 // Este tooltip flotante se coloca en <body> para que no lo recorte el área desplazable de la ficha.

@@ -9,7 +9,7 @@
         <p class="eyebrow">EL COMPENDIO</p>
         <h1>La <em>miscelánea</em></h1>
         <p>Objetos, tesoros y consumibles del compendio de aventuras.</p>
-        @if (User.IsInRole("Admin")) { <a class="catalog-admin-link" asp-controller="Admin" asp-action="Index" asp-route-type="miscellanea">Administrar miscelánea</a> }
+        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Index" asp-route-type="miscellanea">Consultar en Biblioteca</a> }
     </div>
 
     @if (Model.Entries.Count == 0)

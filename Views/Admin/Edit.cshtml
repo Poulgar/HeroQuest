@@ -1,7 +1,7 @@
 @model HeroQuest.Models.CatalogEditViewModel
-@{ ViewData["Title"] = Model.Id is null ? "Crear ficha" : "Editar ficha"; }
+@{ ViewData["Title"] = Model.Id is null ? "Nueva ficha · Biblioteca" : "Consultar ficha · Biblioteca"; }
 <section class="admin-page page-shell">
-    <p class="eyebrow">@(Model.Id is null ? "NUEVA FICHA" : $"FICHA N.º {Model.Id}")</p><h1>@(Model.Id is null ? "Crear" : "Editar") <em>@Model.Type</em></h1>
+    <p class="eyebrow">BIBLIOTECA DEL REINO · @(Model.Id is null ? "NUEVA FICHA" : $"FICHA N.º {Model.Id}")</p><h1>@(Model.Id is null ? "Añadir al" : "Consultar en la") <em>Biblioteca</em></h1>
     <form asp-action="Save" method="post" class="study-form admin-edit-form">
         <div asp-validation-summary="ModelOnly" class="form-error"></div>
         <input asp-for="Type" type="hidden"/><input asp-for="Id" type="hidden"/>
@@ -32,6 +32,6 @@
             <label asp-for="SpellType">Tipo de hechizo</label><input asp-for="SpellType"/>
         }
         @if (Model.Id is not null) { <label class="archive-toggle"><input asp-for="IsArchived"/> Archivado (desmarcar para restaurarlo)</label> }
-        <div class="admin-actions"><button class="button button-primary" type="submit">Guardar cambios</button><a class="button" asp-action="Index" asp-route-type="@Model.Type">Cancelar</a></div>
+        <div class="admin-actions"><button class="fantasy-button fantasy-button-primary" type="submit">Guardar en la Biblioteca</button><a class="fantasy-button" asp-action="Index" asp-route-type="@Model.Type">Volver al estante</a></div>
     </form>
 </section>

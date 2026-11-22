@@ -9,7 +9,7 @@
         <p class="eyebrow">EL BESTIARIO</p>
         <h1>Criaturas de la <em>mazmorra</em></h1>
         <p>Selecciona una criatura para consultar sus atributos y habilidades.</p>
-        @if (User.IsInRole("Admin")) { <a class="catalog-admin-link" asp-controller="Admin" asp-action="Index" asp-route-type="monsters">Administrar monstruos</a> }
+        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Index" asp-route-type="monsters">Consultar en Biblioteca</a> }
     </div>
 
     @if (Model.Monsters.Count == 0)
@@ -71,7 +71,7 @@
         <p class="eyebrow">SABER DEL BESTIARIO</p>
         <h2>Habilidades y hechizos del bestiario</h2>
         <p>Capacidades y conjuros registrados en el compendio, junto con las criaturas que los poseen.</p>
-        @if (User.IsInRole("Admin")) { <a class="catalog-admin-link" asp-controller="Admin" asp-action="Index" asp-route-type="abilities">Administrar habilidades</a><a class="catalog-admin-link" asp-controller="Admin" asp-action="Index" asp-route-type="spells">Administrar hechizos</a> }
+        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Index" asp-route-type="abilities">Consultar habilidades en Biblioteca</a><a class="fantasy-button small" asp-controller="Admin" asp-action="Index" asp-route-type="spells">Consultar hechizos en Biblioteca</a> }
     </div>
     @if (Model.Abilities.Count == 0 && Model.SpellsOfTerror.Count == 0)
     {
@@ -126,7 +126,7 @@
                     </div>
                     @if (User.IsInRole("Admin"))
                     {
-                        <a class="card-admin-edit" asp-controller="Admin" asp-action="Edit" asp-route-type="@(card.Category == "spell" ? "spells" : "abilities")" asp-route-id="@card.Id">Editar registro</a>
+                        <a class="fantasy-button small" asp-controller="Admin" asp-action="Edit" asp-route-type="@(card.Category == "spell" ? "spells" : "abilities")" asp-route-id="@card.Id">Consultar en Biblioteca</a>
                     }
                     <p class="ability-card-description">@card.Description</p>
                     <p class="ability-card-owners"><strong>Monstruos que poseen @(card.Category == "spell" ? "este hechizo" : "esta habilidad"):</strong> @(card.Owners.Count > 0 ? string.Join(" · ", card.Owners) : "Sin monstruos vinculados")</p>

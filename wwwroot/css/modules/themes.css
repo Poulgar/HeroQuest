@@ -1,6 +1,6 @@
 /* Tema inicial Pergamino: colores originales definidos en base.css. */
 /* Tema Luz de luna: conserva el aspecto de grimorio, con papel oscuro y tinta clara. */
-html[data-theme="moonlit"] { color-scheme: dark; --ink: #e8ddc4; --muted-ink: #c0b496; --paper: #332f2b; --paper-light: #403a33; --paper-deep: #655b4b; --line: #99825b; --red: #bd7563; --red-dark: #7d443c; --gold: #d0ae6c; --shadow: 0 22px 52px #0008; }
+html[data-theme="moonlit"] { color-scheme: dark; --ink: #e8ddc4; --muted-ink: #c0b496; --paper: #332f2b; --paper-light: #403a33; --paper-deep: #655b4b; --line: #99825b; --red: #e39c86; --red-dark: #a65a4b; --button-red: #94493c; --gold: #d0ae6c; --shadow: 0 22px 52px #0008; }
 html[data-theme="moonlit"] body { color: var(--ink); background: radial-gradient(ellipse at 50% 0, #4a4034 0, #28231f 68%, #1d1916 100%); }
 html[data-theme="moonlit"] .site-header, html[data-theme="moonlit"] .site-footer { background: #1c1917; }
 html[data-theme="moonlit"] .home-hero, html[data-theme="moonlit"] .detail-card, html[data-theme="moonlit"] .ability-card, html[data-theme="moonlit"] .skill-description-dialog, html[data-theme="moonlit"] .account-panel, html[data-theme="moonlit"] .admin-page { color: var(--ink); background-color: var(--paper); }
@@ -16,3 +16,135 @@ html[data-theme="moonlit"] .index-tools input, html[data-theme="moonlit"] .index
 html[data-theme="moonlit"] .shelf-card, html[data-theme="moonlit"] .admin-row { color: var(--ink); background: #403a33; }
 html[data-theme="moonlit"] .world-map-heading { color: #2b1d12; background: #e7d8b4; }
 html[data-theme="moonlit"] .page-heading { color: #f1e3c2; }
+/* Contraste Luz de luna: textos que en Pergamino usan --paper-light o tintas oscuras fijas y aquí quedaban sobre fondos oscuros. */
+html[data-theme="moonlit"] .site-header, html[data-theme="moonlit"] .ability-heading { color: #f1e6cf; }
+html[data-theme="moonlit"] .ability-heading p:not(.eyebrow) { color: #d6c6a5; }
+html[data-theme="moonlit"] .catalog-admin-link { border-color: #b08a52; color: #f1e3c2; background: #4a3828; }
+html[data-theme="moonlit"] .catalog-admin-link:hover { background: #5e4732; }
+html[data-theme="moonlit"] .card-admin-edit { border-color: var(--line); color: #f1e3c2; background: #2a2622; }
+html[data-theme="moonlit"] .text-link { color: var(--red); text-decoration-color: var(--red-dark); }
+html[data-theme="moonlit"] .shelf-number { color: var(--gold); }
+html[data-theme="moonlit"] .shelf-card:hover { background: #4d453b; }
+html[data-theme="moonlit"] .shelf-card-muted { background: #37322c; }
+/* Fichas de detalle: las casillas de estadísticas tenían fondo claro con tinta clara. */
+html[data-theme="moonlit"] .stat-grid div { border-color: #6d5d45; background: #2a2622; }
+html[data-theme="moonlit"] .stat-grid span, html[data-theme="moonlit"] .detail-expansion-footer, html[data-theme="moonlit"] .ability-card-expansion { color: var(--muted-ink); }
+html[data-theme="moonlit"] .stat-grid strong { color: #f3e8d0; }
+html[data-theme="moonlit"] .row-main .row-stats { color: #d8c7a3; }
+html[data-theme="moonlit"] .row-chevron { color: var(--gold); }
+html[data-theme="moonlit"] .index-search-clear { color: var(--red); }
+html[data-theme="moonlit"] .ability-card-owners strong { color: var(--gold); }
+/* Botones: el rojo de acento se aclara para texto, así que los botones rellenos usan un rojo más profundo. */
+html[data-theme="moonlit"] .button-primary, html[data-theme="moonlit"] .equipment-category-button:hover, html[data-theme="moonlit"] .equipment-category-button.active, html[data-theme="moonlit"] .ability-filter-button:hover, html[data-theme="moonlit"] .ability-filter-button.active { color: #fff6df; background: var(--button-red); }
+html[data-theme="moonlit"] .button-primary:hover { background: #7d3a30; }
+html[data-theme="moonlit"] .button:not(.button-primary) { border-color: var(--red-dark); color: var(--ink); background: #2a2622; }
+html[data-theme="moonlit"] .button:not(.button-primary):hover { background: #4a3f33; }
+html[data-theme="moonlit"] .equipment-category-button { border-color: #84683f; color: var(--ink); background: #2a2622; }
+/* Formularios y administración. */
+html[data-theme="moonlit"] .study-form label { color: #ddc99f; }
+html[data-theme="moonlit"] .form-error { color: #f09a8a; }
+html[data-theme="moonlit"] .admin-row.is-archived { opacity: .8; background: #2b2723; }
+/* El encabezado del mapa conserva fondo de pergamino, por eso recupera el rojo oscuro original. */
+html[data-theme="moonlit"] .world-map-heading .eyebrow, html[data-theme="moonlit"] .world-map-heading h2 em { color: #812f27; }
+/* Barras de desplazamiento acordes al fondo oscuro. */
+html[data-theme="moonlit"] .catalog-scroll { scrollbar-color: var(--line) #2a2622; }
+html[data-theme="moonlit"] .detail-content, html[data-theme="moonlit"] .ability-card-description { scrollbar-color: var(--line) var(--paper); }
+
+/* Luz de luna se convierte en un grimorio: tinta violeta, velas y destellos arcanos. */
+html[data-theme="moonlit"] {
+    color-scheme: dark;
+    --ink: #e9e0ff;
+    --muted-ink: #c0b5df;
+    --paper: #211d38;
+    --paper-light: #2b2547;
+    --paper-deep: #40375e;
+    --line: #8875b7;
+    --red: #f0a6d3;
+    --red-dark: #a65387;
+    --button-red: #6f3d78;
+    --gold: #d7c0ff;
+    --shadow: 0 22px 52px #080613bb;
+}
+html[data-theme="moonlit"] body {
+    background: radial-gradient(ellipse at 50% -12%, #5b477f 0, #28213f 39%, #141326 100%);
+}
+html[data-theme="moonlit"] body::before {
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+    opacity: .48;
+    background-image: radial-gradient(1px 1px at 12% 18%, #f4e9ff 99%, transparent),
+        radial-gradient(2px 2px at 74% 24%, #d9c3ff 99%, transparent),
+        radial-gradient(1px 1px at 43% 67%, #fff 99%, transparent),
+        radial-gradient(1px 1px at 88% 78%, #e5d6ff 99%, transparent);
+    background-size: 190px 170px, 260px 230px, 220px 200px, 310px 280px;
+}
+html[data-theme="moonlit"] .site-header, html[data-theme="moonlit"] .site-footer {
+    color: #eee6ff;
+    background: linear-gradient(110deg, #17142b, #302344 55%, #17142b);
+    border-color: #75639c;
+}
+html[data-theme="moonlit"] .home-hero,
+html[data-theme="moonlit"] .detail-card,
+html[data-theme="moonlit"] .ability-card,
+html[data-theme="moonlit"] .skill-description-dialog,
+html[data-theme="moonlit"] .account-panel,
+html[data-theme="moonlit"] .admin-page,
+html[data-theme="moonlit"] .shelf-card {
+    color: var(--ink);
+    border-color: #806ca9;
+    background: linear-gradient(145deg, #302849, #1d1a32 76%);
+    box-shadow: inset 0 0 28px #a588e018, 0 14px 36px #08061399;
+}
+html[data-theme="moonlit"] .catalog-list,
+html[data-theme="moonlit"] .catalog-row,
+html[data-theme="moonlit"] .stat-grid div,
+html[data-theme="moonlit"] .admin-row {
+    color: var(--ink);
+    border-color: #61527f;
+    background-color: #25203d;
+}
+html[data-theme="moonlit"] .catalog-row:hover,
+html[data-theme="moonlit"] .catalog-row.selected,
+html[data-theme="moonlit"] .admin-row:hover { background-color: #393052; }
+html[data-theme="moonlit"] .study-form input,
+html[data-theme="moonlit"] .study-form textarea,
+html[data-theme="moonlit"] .study-form select,
+html[data-theme="moonlit"] .index-tools input,
+html[data-theme="moonlit"] .index-tools select {
+    color: #f3ecff;
+    border-color: #8170a5;
+    background: #19162c;
+}
+html[data-theme="moonlit"] .fantasy-button,
+html[data-theme="moonlit"] .button,
+html[data-theme="moonlit"] .ability-filter-button,
+html[data-theme="moonlit"] .equipment-category-button {
+    color: #f2eaff;
+    border-color: #a58bcf;
+    background: linear-gradient(145deg, #695389, #3b2d58 62%, #261f3c);
+    box-shadow: inset 0 1px 0 #fff3, 0 3px 0 #171329, 0 5px 12px #09071388;
+}
+html[data-theme="moonlit"] .fantasy-button-primary,
+html[data-theme="moonlit"] .button-primary,
+html[data-theme="moonlit"] .ability-filter-button.active,
+html[data-theme="moonlit"] .equipment-category-button.active {
+    color: #fff4ff;
+    border-color: #e0a9dc;
+    background: linear-gradient(145deg, #9a527e, #59345f 70%, #392646);
+}
+html[data-theme="moonlit"] .world-map-heading { color: #2a1a34; }
+html[data-theme="moonlit"] .poem-toast,
+html[data-theme="moonlit"] .account-popover,
+html[data-theme="moonlit"] .nav-library > div {
+    color: #f2eaff;
+    border-color: #a58bcf;
+    background: linear-gradient(145deg, #33284b, #17152b);
+}
+html[data-theme="moonlit"] .page-heading,
+html[data-theme="moonlit"] .detail-content h2,
+html[data-theme="moonlit"] .ability-card-heading h3 { color: #eadbff; }
+html[data-theme="moonlit"] .text-link { color: #f0a6d3; }
+html[data-theme="moonlit"] .catalog-row[data-original="true"] { background-color: #1c1930; }

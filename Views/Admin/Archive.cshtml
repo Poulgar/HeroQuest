@@ -1,0 +1,25 @@
+@model HeroQuest.Models.CatalogListViewModel
+@{ ViewData["Title"] = "Archivo de la Biblioteca · " + Model.Title; }
+<section class="admin-page page-shell library-archive">
+    <p class="eyebrow">SOLO PARA EL MAESTRO DE JUEGO</p>
+    <h1>Archivo de la <em>Biblioteca</em></h1>
+    <p>Estas fichas están ocultas a los Aventureros. Puedes devolverlas a sus estantes o borrarlas para siempre.</p>
+    <a class="fantasy-button" asp-action="Index" asp-route-type="@Model.Type">Volver a la Biblioteca</a>
+    <div class="admin-list" role="list">
+        @if (Model.Items.Count == 0)
+        {
+            <p class="library-empty">Este estante no guarda ninguna ficha.</p>
+        }
+        @foreach (var item in Model.Items)
+        {
+            <article class="admin-row is-archived">
+                <div><strong>@item.Name</strong><small>#@item.Id · @item.Details · Sellada</small></div>
+                <div class="admin-actions">
+                    <a class="fantasy-button small" asp-action="Edit" asp-route-type="@Model.Type" asp-route-id="@item.Id">Consultar ficha</a>
+                    <form asp-action="Archive" method="post"><input type="hidden" name="type" value="@Model.Type"/><input type="hidden" name="id" value="@item.Id"/><button class="fantasy-button small" type="submit">Devolver al estante</button></form>
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Borrar definitivamente esta ficha? Esta acción no se puede deshacer.');"><input type="hidden" name="type" value="@Model.Type"/><input type="hidden" name="id" value="@item.Id"/><button class="fantasy-button small danger" type="submit">Destruir ficha</button></form>
+                </div>
+            </article>
+        }
+    </div>
+</section>

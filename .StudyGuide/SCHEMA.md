@@ -4,7 +4,7 @@ Este documento explica cómo está organizado el proyecto y cómo viajan los dat
 
 > **Regla de mantenimiento:** cuando se añadan, eliminen o cambien carpetas o archivos importantes, actualiza esta guía para que siga describiendo el proyecto real.
 
-Los documentos de estudio están agrupados aquí: este mapa MVC y `VISUALIZACION.md`, que explica el CSS modular y los temas.
+Los documentos de estudio están agrupados aquí: este mapa MVC y `.StudyGuide/VISUALIZACION.md`, que explica el CSS modular y los temas.
 
 ## 1. Vista general
 
@@ -37,8 +37,8 @@ Program.cs
 
 | Carpeta | Para qué sirve |
 | --- | --- |
-| `Controllers/` | Recibe las rutas web, consulta datos y elige qué vista mostrar. |
-| `StudyGuide/` | Guías para estudiar el mapa MVC, la autenticación y la organización visual del CSS. |
+| `Controllers/` | Recibe las rutas web, consulta datos y elige qué vista mostrar. `PoemsController` ofrece versos guardados en SQLite. |
+| `.StudyGuide/` | Guías para estudiar el mapa MVC, la autenticación y la organización visual del CSS. |
 | `Data/` | Configura Entity Framework Core y guarda los CSV fuente. |
 | `Migrations/` | Historial de cambios del esquema de SQLite. |
 | `Models/` | Entidades que representan personajes y registros de la base de datos. |
@@ -67,7 +67,7 @@ Al ejecutar o compilar pueden aparecer `DataBase/`, `bin/` y `obj/`. `DataBase/H
 
 ### `Data/ApplicationDbContext.cs`
 
-Es el puente entre el código C# y SQLite. Sus `DbSet` representan las colecciones/tablas principales: `Heroes`, `Monsters`, `Miscellanea`, `EquipmentsAndArtifacts`, `MonsterAbilities` y `SpellsOfTerror`.
+Es el puente entre el código C# y SQLite. Sus `DbSet` representan las colecciones/tablas principales: `Heroes`, `Monsters`, `Miscellanea`, `EquipmentsAndArtifacts`, `MonsterAbilities`, `SpellsOfTerror` y `WorldPoems`.
 
 En `OnModelCreating` se configura la herencia `Character` mediante **TPC** (*Table per Concrete Class*): héroes y monstruos se guardan en tablas concretas separadas. También se configura la relación entre monstruos y hechizos del Terror mediante la tabla puente `MonsterSpellOfTerror`.
 
@@ -184,6 +184,15 @@ Al iniciar, `Program.cs` ejecuta `Database.MigrateAsync()`, que aplica las migra
 - Las acciones de `AdminController` exigen el rol Admin también en el servidor. No basta con ocultar los botones en Razor.
 - `IsArchived` se guarda en SQLite y una migración lo añade a las tablas. Archivar oculta; eliminar borra definitivamente.
 - La elección del tema se guarda en `localStorage` del navegador; es independiente para cada dispositivo.
-- Al añadir o quitar archivos de estudio, vistas o módulos CSS, actualiza este mapa y `StudyGuide/VISUALIZACION.md` cuando corresponda.
+- Al añadir o quitar archivos de estudio, vistas o módulos CSS, actualiza este mapa y `.StudyGuide/VISUALIZACION.md` cuando corresponda.
 
 Así puedes ver separadas las responsabilidades: **Model** representa los datos, **View** los presenta y **Controller** coordina la petición.
+
+## Roles, Biblioteca y versos
+
+- Las credenciales de demo se mantienen como `user / user123` y `admin / admin123`; dentro de la interfaz aparecen como **Aventurero** y **Maestro de Juego**.
+- La **Biblioteca** es el espacio del Maestro de Juego para crear y editar fichas. Archivar las oculta a los Aventureros y las mueve a **Archivo**, que también es exclusivo del Maestro de Juego.
+- `Models/WorldPoem.cs` define versos con una clave, título y texto. La tabla `WorldPoems` se crea mediante la migración `AddWorldPoems`; `WorldPoemService` conserva los versos iniciales y permite recuperarlos por clave. `PoemsController` sirve esos versos a los mensajes del portal y del cambio de tema.
+- `AlphabeticalIdService` ordena las fichas de personaje por nombre y asigna IDs impares a Héroes y pares a Monstruos. Al crear manualmente una ficha también se respeta esa paridad.
+
+

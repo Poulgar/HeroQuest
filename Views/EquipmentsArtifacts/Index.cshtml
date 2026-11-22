@@ -9,7 +9,7 @@
         <p class="eyebrow">EL COMPENDIO</p>
         <h1>Equipo y <em>artefactos</em></h1>
         <p>Armas, armaduras, artefactos mágicos y reliquias del mundo de HeroQuest.</p>
-        @if (User.IsInRole("Admin")) { <a class="catalog-admin-link" asp-controller="Admin" asp-action="Index" asp-route-type="equipment">Administrar equipo y artefactos</a> }
+        @if (User.IsInRole("Admin")) { <a class="fantasy-button small" asp-controller="Admin" asp-action="Index" asp-route-type="equipment">Consultar en Biblioteca</a> }
     </div>
 
     @if (Model.Items.Count == 0)

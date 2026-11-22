@@ -22,16 +22,54 @@
                 <div class="nav-account">
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <span class="nav-user">@User.Identity.Name (@(User.IsInRole("Admin") ? "admin" : "user"))</span>
+                        var isGameMaster = User.IsInRole("Admin");
+                        <details class="account-menu">
+                            <summary class="account-emblem @(isGameMaster ? "game-master" : "adventurer")" aria-label="Sesión de @(isGameMaster ? "Maestro de Juego" : "Aventurero")">
+                                <svg viewBox="0 0 48 48" aria-hidden="true">
+                                    <path class="emblem-shape" d="M24 3 42 10v13c0 11-7 18-18 22C13 41 6 34 6 23V10L24 3z" />
+                                    @if (isGameMaster)
+                                    {
+                                        <path class="emblem-mark" d="M16 31c3-9 13-16 17-14-1 5-4 9-9 12l7 1-1 3-9-1-6 3M16 13l2 2m12-4 1 3" />
+                                    }
+                                    else
+                                    {
+                                        <path class="emblem-mark" d="m24 12 9 4v7c0 6-4 10-9 13-5-3-9-7-9-13v-7l9-4zm-4 11 3 3 6-7" />
+                                    }
+                                </svg>
+                                <span>@(isGameMaster ? "Maestro de Juego" : "Aventurero")</span>
+                            </summary>
+                            <div class="account-popover">
+                                @if (isGameMaster)
+                                {
+                                    <strong>Maestro de Juego</strong>
+                                    <a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Consultar en biblioteca</a>
+                                    <a asp-controller="Admin" asp-action="Archive" asp-route-type="heroes">Archivo de la Biblioteca</a>
+                                }
+                                else { <strong>Aventurero</strong> }
+                                <form asp-controller="Account" asp-action="Logout" method="post"><button class="fantasy-button small" type="submit">Cerrar el portal</button></form>
+                            </div>
+                        </details>
                         @if (User.IsInRole("Admin"))
                         {
-                            <details class="nav-admin-menu"><summary>Administrar</summary><div><a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Héroes</a><a asp-controller="Admin" asp-action="Index" asp-route-type="monsters">Monstruos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="equipment">Equipo y artefactos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="miscellanea">Miscelánea</a><a asp-controller="Admin" asp-action="Index" asp-route-type="abilities">Habilidades</a><a asp-controller="Admin" asp-action="Index" asp-route-type="spells">Hechizos</a></div></details>
+                            <details class="nav-library"><summary>Consultar en biblioteca</summary><div><a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Héroes</a><a asp-controller="Admin" asp-action="Index" asp-route-type="monsters">Monstruos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="equipment">Equipos y Artefactos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="miscellanea">Miscelánea</a><a asp-controller="Admin" asp-action="Index" asp-route-type="abilities">Habilidades</a><a asp-controller="Admin" asp-action="Index" asp-route-type="spells">Hechizos del Terror</a></div></details>
                         }
-                        <form asp-controller="Account" asp-action="Logout" method="post"><button class="nav-login-button" type="submit">Salir</button></form>
                     }
-                    else { <a class="nav-login-link" asp-controller="Account" asp-action="Login">Iniciar sesión</a> }
+                    else
+                    {
+                        <a class="account-emblem locked" asp-controller="Account" asp-action="Login" aria-label="Abrir el portal del Compendio">
+                            <svg viewBox="0 0 48 48" aria-hidden="true"><path class="emblem-shape" d="M24 3 42 10v13c0 11-7 18-18 22C13 41 6 34 6 23V10L24 3z"/><path class="emblem-mark" d="M17 22v-4a7 7 0 0 1 14 0v4m-17 0h20v14H14zm10 5v4"/></svg>
+                            <span class="visually-hidden">Sin huésped</span>
+                        </a>
+                    }
                 </div>
-                <button type="button" class="theme-toggle" data-theme-toggle aria-label="Cambiar tema" title="Cambiar tema"><span aria-hidden="true">☾</span><span data-theme-label>Pergamino</span></button>
+                <button type="button" class="theme-toggle" data-theme-toggle aria-label="Cambiar a Luz de luna" title="Cambiar el tiempo del Compendio" aria-pressed="false">
+                    <svg viewBox="0 0 48 48" aria-hidden="true" class="day-night-seal">
+                        <g class="theme-sun"><circle cx="18" cy="24" r="7"/><path d="M18 6v5m0 26v5M0 24h5m26 0h5M5.3 11.3l3.5 3.5m18.4 18.4 3.5 3.5m0-25.4-3.5 3.5M8.8 33.2l-3.5 3.5"/></g>
+                        <path class="theme-moon" d="M35 11a15 15 0 1 0 2 25A16 16 0 0 1 35 11z"/>
+                        <path class="theme-divider" d="M24 8v32"/>
+                    </svg>
+                    <span class="visually-hidden" data-theme-label>Tema Pergamino activo</span>
+                </button>
             </nav>
         </div>
     </header>
@@ -46,6 +84,11 @@
         <h2 id="skill-dialog-title" data-skill-dialog-title></h2>
         <p data-skill-dialog-description></p>
     </dialog>
+
+    <aside class="poem-toast" data-poem-toast aria-live="polite" aria-atomic="true" hidden>
+        <span class="eyebrow" data-poem-toast-title></span>
+        <p data-poem-toast-text></p>
+    </aside>
 
     <footer class="site-footer">
         <div class="footer-inner">
