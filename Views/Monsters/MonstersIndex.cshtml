@@ -1,9 +1,6 @@
 @model HeroQuest.ViewModels.MonsterCatalogViewModel
 @{
     ViewData["Title"] = "Monstruos";
-    // Función local: acorta el nombre a «limit» caracteres usando un operador de rango [..(limit-1)]
-    // (que copia los primeros limit-1 caracteres) y añade puntos suspensivos. Así las filas del
-    // índice no rompen el diseño con nombres largos.
     string ShortIndexName(string name, int limit = 25) => name.Length <= limit ? name : name[..(limit - 1)] + "…";
 }
 
@@ -12,6 +9,7 @@
         <p class="eyebrow">EL BESTIARIO</p>
         <h1>Criaturas de la <em>mazmorra</em></h1>
         <p>Selecciona una criatura para consultar sus atributos y habilidades.</p>
+        @if (User.IsInRole("Admin")) { <a class="catalog-admin-link" asp-controller="Admin" asp-action="Index" asp-route-type="monsters">Administrar monstruos</a> }
     </div>
 
     @if (Model.Monsters.Count == 0)
@@ -26,12 +24,8 @@
                 <div class="index-tools">
                     <label>Buscar <input class="index-search" type="search" placeholder="Nombre o habilidad…" /></label>
                     <label>Facción
-                        <!--Select que solo listará las facciones realmente existentes.-->
                         <select class="faction-filter">
                             <option value="">Todas las facciones</option>
-                            @* Proyección LINQ sobre los monsters: Select(trae cada facción) → Where(desecha vacías)
-                               → Distinct(elimina repetidas) → OrderBy(las ordena con orden alfabético español,
-                               creado por el comparador StringComparer.Create a partir de la cultura es-ES). *@
                             @foreach (var faction in Model.Monsters.Select(monster => monster.Faction).Where(faction => !string.IsNullOrWhiteSpace(faction)).Distinct().OrderBy(faction => faction, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true)))
                             {
                             <option value="@faction">@faction</option>
@@ -77,6 +71,7 @@
         <p class="eyebrow">SABER DEL BESTIARIO</p>
         <h2>Habilidades y hechizos del bestiario</h2>
         <p>Capacidades y conjuros registrados en el compendio, junto con las criaturas que los poseen.</p>
+        @if (User.IsInRole("Admin")) { <a class="catalog-admin-link" asp-controller="Admin" asp-action="Index" asp-route-type="abilities">Administrar habilidades</a><a class="catalog-admin-link" asp-controller="Admin" asp-action="Index" asp-route-type="spells">Administrar hechizos</a> }
     </div>
     @if (Model.Abilities.Count == 0 && Model.SpellsOfTerror.Count == 0)
     {
@@ -85,32 +80,24 @@
     else
     {
         var spanishComparer = StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), true);
-        // Optimización: el CSV guarda las habilidades de cada monstruo como un único texto separado por
-        // comas. Al convertirlos una sola vez en HashSet (colección de búsqueda instantánea al comparar)
-        // por clave Id, evitamos repetir el Split por cada tarjeta de habilidad del archivo.
-        var abilitiesByMonsterId = Model.Monsters.ToDictionary(
-            monster => monster.Id,
-            monster => new HashSet<string>(
-                monster.Ability.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
-                StringComparer.OrdinalIgnoreCase));
-        // abilityCards y spellCards son listas anónimas: recordemos que "modelos anónimos" agrupan propiedades
-        // sin necesidad de crear una clase nueva para cada representación visual.
         var abilityCards = Model.Abilities.Select(ability => new
             {
+                Id = ability.Id,
                 Name = ability.Name,
                 Description = ability.Description,
                 Category = "ability",
                 Appears = ability.Appears,
                 Symbol = ability.Name.AbilitySymbol(),
                 Color = ability.Name.AbilityColor(),
-                // Para saber quién posee cada habilidad consultamos el HashSet ya calculado arriba.
                 Owners = Model.Monsters
-                    .Where(monster => abilitiesByMonsterId[monster.Id].Contains(ability.Name))
+                    .Where(monster => monster.Ability.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        .Contains(ability.Name, StringComparer.OrdinalIgnoreCase))
                     .Select(monster => monster.Name)
                     .ToList()
             });
         var spellCards = Model.SpellsOfTerror.Select(spell => new
             {
+                Id = spell.Id,
                 Name = spell.Name,
                 Description = spell.Description,
                 Category = "spell",
@@ -137,6 +124,10 @@
                         <h3><span class="ability-icon @(card.Category == "spell" ? "spell-icon" : "")" style="--ability-color: @card.Color" aria-hidden="true">@card.Symbol</span>@card.Name</h3>
                         <span class="ability-kind">@(card.Category == "spell" ? "Hechizo" : "Habilidad")</span>
                     </div>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="card-admin-edit" asp-controller="Admin" asp-action="Edit" asp-route-type="@(card.Category == "spell" ? "spells" : "abilities")" asp-route-id="@card.Id">Editar registro</a>
+                    }
                     <p class="ability-card-description">@card.Description</p>
                     <p class="ability-card-owners"><strong>Monstruos que poseen @(card.Category == "spell" ? "este hechizo" : "esta habilidad"):</strong> @(card.Owners.Count > 0 ? string.Join(" · ", card.Owners) : "Sin monstruos vinculados")</p>
                     <footer class="ability-card-expansion"><span>Expansión</span><strong>@card.Appears.DisplayName()</strong></footer>

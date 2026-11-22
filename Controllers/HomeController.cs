@@ -9,30 +9,29 @@ namespace HeroQuest.Controllers;
 
 public class HomeController(ApplicationDbContext context) : Controller
 {
-    public async Task<IActionResult> Index() // Se define como async para poder ejecutar todas las instrucciones en simultaneo optimizando el programa.
+    public async Task<IActionResult> Index()
     {
         // La portada solo necesita recuentos; evitamos cargar todas las entidades en memoria.
-        var equipment = context.EquipmentsAndArtifacts.AsNoTracking(); // <<.AsNoTracking()>> lo único que hace es evitar que EF Core guarde una copia interna de los datos y ralentice el programa. <<Task>> es una promesa, indica que el método asincrono se terminará más adelante y enviará los resultados en cuanto esté listo.
+        var equipment = context.EquipmentsAndArtifacts.AsNoTracking();
         var model = new HeroQuestIndexViewModel
         {
-            HeroesCount = await context.Heroes.CountAsync(),
-            MonstersCount = await context.Monsters.CountAsync(),
-            EquipmentCount = await equipment.CountAsync(item => item.Category == "Equipment"),
-            ArtifactCount = await equipment.CountAsync(item => item.Category == "Artifact"),
-            MiscellaneaCount = await context.Miscellanea.CountAsync(),
-            MonsterAbilityCount = await context.MonsterAbilities.CountAsync(),
-            SpellCount = await context.SpellsOfTerror.CountAsync()
+            HeroesCount = await context.Heroes.CountAsync(item => !item.IsArchived),
+            MonstersCount = await context.Monsters.CountAsync(item => !item.IsArchived),
+            EquipmentCount = await equipment.CountAsync(item => !item.IsArchived && item.Category == "Equipment"),
+            ArtifactCount = await equipment.CountAsync(item => !item.IsArchived && item.Category == "Artifact"),
+            MiscellaneaCount = await context.Miscellanea.CountAsync(item => !item.IsArchived),
+            MonsterAbilityCount = await context.MonsterAbilities.CountAsync(item => !item.IsArchived),
+            SpellCount = await context.SpellsOfTerror.CountAsync(item => !item.IsArchived)
         };
 
-        return View("HomeIndex", model); // Busca el archivo HomeIndex.cshtml y envia model.
+        return View("HomeIndex", model);
     }
 
     public IActionResult Privacy() => View();
 
-    // Muestra la página de error cuando falla la aplicación.
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)] // Indica que no debe de almacenarla en cache ni en ningún otro lugar.
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() => View(new ErrorViewModel
     {
-        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier // Si Activity.Current es nulo, se usa HttpContext.TraceIdentifier. Esto es útil para depuración y seguimiento de errores.
+        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
     });
 }

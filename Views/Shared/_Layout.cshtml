@@ -19,6 +19,19 @@
                 <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Monsters" ? "active" : "")" asp-controller="Monsters" asp-action="Index">Monstruos</a>
                 <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Equipment" ? "active" : "")" asp-controller="Archive" asp-action="Equipment">Equipos y Artefactos</a>
                 <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Miscellanea" ? "active" : "")" asp-controller="Archive" asp-action="Miscellanea">Miscelánea</a>
+                <div class="nav-account">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <span class="nav-user">@User.Identity.Name (@(User.IsInRole("Admin") ? "admin" : "user"))</span>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <details class="nav-admin-menu"><summary>Administrar</summary><div><a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Héroes</a><a asp-controller="Admin" asp-action="Index" asp-route-type="monsters">Monstruos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="equipment">Equipo y artefactos</a><a asp-controller="Admin" asp-action="Index" asp-route-type="miscellanea">Miscelánea</a><a asp-controller="Admin" asp-action="Index" asp-route-type="abilities">Habilidades</a><a asp-controller="Admin" asp-action="Index" asp-route-type="spells">Hechizos</a></div></details>
+                        }
+                        <form asp-controller="Account" asp-action="Logout" method="post"><button class="nav-login-button" type="submit">Salir</button></form>
+                    }
+                    else { <a class="nav-login-link" asp-controller="Account" asp-action="Login">Iniciar sesión</a> }
+                </div>
+                <button type="button" class="theme-toggle" data-theme-toggle aria-label="Cambiar tema" title="Cambiar tema"><span aria-hidden="true">☾</span><span data-theme-label>Pergamino</span></button>
             </nav>
         </div>
     </header>

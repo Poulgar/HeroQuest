@@ -1,0 +1,37 @@
+@model HeroQuest.Models.CatalogEditViewModel
+@{ ViewData["Title"] = Model.Id is null ? "Crear ficha" : "Editar ficha"; }
+<section class="admin-page page-shell">
+    <p class="eyebrow">@(Model.Id is null ? "NUEVA FICHA" : $"FICHA N.º {Model.Id}")</p><h1>@(Model.Id is null ? "Crear" : "Editar") <em>@Model.Type</em></h1>
+    <form asp-action="Save" method="post" class="study-form admin-edit-form">
+        <div asp-validation-summary="ModelOnly" class="form-error"></div>
+        <input asp-for="Type" type="hidden"/><input asp-for="Id" type="hidden"/>
+        <label asp-for="Name">Nombre</label><input asp-for="Name"/><span asp-validation-for="Name" class="form-error"></span>
+        <label asp-for="Description">Descripción / lore</label><textarea asp-for="Description" rows="4"></textarea>
+        <label asp-for="Appears">Expansiones (separadas por coma)</label><input asp-for="Appears" placeholder="Juego Base, Original"/>
+        @if (Model.Type == "heroes")
+        {
+            <label asp-for="CharacterTypeClass">Clase</label><input asp-for="CharacterTypeClass"/>
+            <div class="edit-stats"><label>Vida<input asp-for="Hp" type="number" min="0"/></label><label>Dados de mente<input asp-for="DicesMind" type="number" min="0"/></label><label>Dados de ataque<input asp-for="DicesAttack" type="number" min="0"/></label><label>Dados de defensa<input asp-for="DicesDefend" type="number" min="0"/></label><label>Movimiento (dados rojos)<input asp-for="DicesRedMovement" type="number" min="0"/></label></div>
+            <label asp-for="Player">Jugador</label><input asp-for="Player"/><label asp-for="Weapon">Arma</label><input asp-for="Weapon"/><label asp-for="Armor">Armadura</label><input asp-for="Armor"/><label asp-for="Spells">Hechizos</label><input asp-for="Spells"/><label asp-for="Items">Objetos</label><input asp-for="Items"/><label asp-for="Gold">Oro</label><input asp-for="Gold" type="number"/><label asp-for="QuestsCompleted">Misiones completadas</label><input asp-for="QuestsCompleted" type="number"/>
+        }
+        else if (Model.Type == "monsters")
+        {
+            <label asp-for="Faction">Facción</label><input asp-for="Faction"/><label asp-for="Ability">Habilidades (separadas por comas)</label><input asp-for="Ability"/>
+            <div class="edit-stats"><label>Vida<input asp-for="Hp" type="number" min="0"/></label><label>Dados de mente<input asp-for="DicesMind" type="number" min="0"/></label><label>Dados de ataque<input asp-for="DicesAttack" type="number" min="0"/></label><label>Dados de defensa<input asp-for="DicesDefend" type="number" min="0"/></label><label>Movimiento máximo<input asp-for="MaxMovement" type="number" min="0"/></label></div>
+        }
+        else if (Model.Type == "equipment")
+        {
+            <label asp-for="Category">Categoría</label><select asp-for="Category"><option value="Equipment">Equipo</option><option value="Artifact">Artefacto</option></select><label asp-for="ItemType">Tipo</label><input asp-for="ItemType"/><label asp-for="Price">Precio en monedas de oro</label><input asp-for="Price" type="number" min="0"/><label asp-for="Weight">Peso</label><input asp-for="Weight"/>
+        }
+        else if (Model.Type == "miscellanea")
+        {
+            <label asp-for="Price">Precio en monedas de oro</label><input asp-for="Price" type="number" min="0"/>
+        }
+        else if (Model.Type == "spells")
+        {
+            <label asp-for="SpellType">Tipo de hechizo</label><input asp-for="SpellType"/>
+        }
+        @if (Model.Id is not null) { <label class="archive-toggle"><input asp-for="IsArchived"/> Archivado (desmarcar para restaurarlo)</label> }
+        <div class="admin-actions"><button class="button button-primary" type="submit">Guardar cambios</button><a class="button" asp-action="Index" asp-route-type="@Model.Type">Cancelar</a></div>
+    </form>
+</section>

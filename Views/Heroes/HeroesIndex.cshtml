@@ -1,8 +1,6 @@
 @model HeroQuest.ViewModels.HeroCatalogViewModel
 @{
     ViewData["Title"] = "Héroes";
-    // Función local: acorta el nombre a «limit» caracteres con un operador de rango [..(limit-1)]
-    // (copia los primeros limit-1 caracteres) y añade puntos suspensivos para que el índice no se rompa.
     string ShortIndexName(string name, int limit = 25) => name.Length <= limit ? name : name[..(limit - 1)] + "…";
 }
 
@@ -11,6 +9,7 @@
         <p class="eyebrow">EL GRUPO DE AVENTUREROS</p>
         <h1>Registro de <em>héroes</em></h1>
         <p>Selecciona un nombre para consultar su ficha.</p>
+        @if (User.IsInRole("Admin")) { <a class="catalog-admin-link" asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Administrar héroes</a> }
     </div>
 
     @if (Model.Heroes.Count == 0)
@@ -46,7 +45,6 @@
             </aside>
 
             <div class="detail-host" data-detail-host>
-                @* «is { }» comprueba que SelectedHero no sea null Y lo copia en heroDetail (pattern matching). *@
                 @if (Model.SelectedHero is { } heroDetail)
                 {
                     @await Html.PartialAsync("~/Views/Shared/_HeroDetailCard.cshtml", heroDetail)

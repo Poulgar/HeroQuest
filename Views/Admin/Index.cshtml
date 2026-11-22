@@ -1,0 +1,20 @@
+@model HeroQuest.Models.CatalogListViewModel
+@{ ViewData["Title"] = "Administrar " + Model.Title; }
+<section class="admin-page page-shell">
+    <p class="eyebrow">ARCHIVO DEL ADMINISTRADOR</p><h1>Administrar <em>@Model.Title</em></h1>
+    <p>Los registros archivados siguen guardados y pueden restaurarse desde su ficha.</p>
+    <a class="button button-primary" asp-action="Edit" asp-route-type="@Model.Type">Crear nuevo</a>
+    <div class="admin-list" role="list">
+        @foreach (var item in Model.Items)
+        {
+            <article class="admin-row @(item.IsArchived ? "is-archived" : "")">
+                <div><strong>@item.Name</strong><small>#@item.Id · @item.Details @(item.IsArchived ? "· Archivado" : "")</small></div>
+                <div class="admin-actions">
+                    <a class="button" asp-action="Edit" asp-route-type="@Model.Type" asp-route-id="@item.Id">Editar</a>
+                    <form asp-action="Archive" method="post"><input type="hidden" name="type" value="@Model.Type"/><input type="hidden" name="id" value="@item.Id"/><button class="button" type="submit">@(item.IsArchived ? "Restaurar" : "Archivar")</button></form>
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Eliminar definitivamente este elemento? Esta acción no se puede deshacer.');"><input type="hidden" name="type" value="@Model.Type"/><input type="hidden" name="id" value="@item.Id"/><button class="button button-danger" type="submit">Eliminar</button></form>
+                </div>
+            </article>
+        }
+    </div>
+</section>

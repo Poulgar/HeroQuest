@@ -1,0 +1,18 @@
+@model HeroQuest.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+<section class="account-panel page-shell">
+    <p class="eyebrow">ACCESO AL COMPENDIO</p>
+    <h1>Iniciar <em>sesión</em></h1>
+    <p>La cuenta de usuario puede consultar el archivo. La cuenta de administrador también puede mantener sus fichas.</p>
+    <form asp-action="Login" method="post" class="study-form">
+        <div asp-validation-summary="ModelOnly" class="form-error"></div>
+        <label asp-for="Username"></label><input asp-for="Username" autocomplete="username" />
+        <span asp-validation-for="Username" class="form-error"></span>
+        <label asp-for="Password"></label><input asp-for="Password" autocomplete="current-password" />
+        <span asp-validation-for="Password" class="form-error"></span>
+        <button class="button button-primary" type="submit">Entrar</button>
+    </form>
+    <p class="login-demo-note">Cuentas de prueba: <code>user / user123</code> y <code>admin / admin123</code>.</p>
+</section>

@@ -1,8 +1,7 @@
 namespace HeroQuest.Models;
 
-public class Character
+public class Character : IArchivable
 {
-    // Constructor con parametros para crear un Character a partir de su estructura.
     public Character(int id, string characterTypeClass, int hp, int dicesMind, int dicesAttack, int dicesDefend, string description)
     {
         Id = id;
@@ -14,12 +13,10 @@ public class Character
         Description = description;
     }
 
-    // Constructor sin parametros para crear un Character sin seguir un orden especifico.
     public Character()
     {
     }
 
-    // Campos de la clase Character.
     public int Id { get; set; }
     public string CharacterTypeClass { get; set; } = string.Empty;
     public int Hp { get; set; }
@@ -28,4 +25,7 @@ public class Character
     public int DicesDefend { get; set; }
     public string? Description { get; set; }
     public TypeAppears Appears { get; set; }
+
+    // Archivar oculta una ficha en el catálogo sin borrarla ni romper referencias de la base de datos.
+    public bool IsArchived { get; set; }
 }

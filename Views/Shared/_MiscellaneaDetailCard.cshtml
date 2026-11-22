@@ -1,6 +1,5 @@
 @model HeroQuest.Models.MiscellaneaItem
 <article class="detail-card">
-    <button type="button" class="detail-back" data-back-to-index>&#8249; Volver al índice</button>
     <div class="detail-art hero-art">
         <img src="~/images/heroquest/modifier-scroll.svg" alt="Ilustración de @Model.Name" />
         <span class="portrait-ribbon">TOMO DEL COMPENDIO</span>
@@ -8,6 +7,7 @@
     <div class="detail-content">
         <p class="eyebrow">OBJETO • MISCELÁNEA</p>
         <h2>@Model.Name</h2>
+        @if (User.IsInRole("Admin")) { <a class="card-admin-edit" asp-controller="Admin" asp-action="Edit" asp-route-type="miscellanea" asp-route-id="@Model.Id">Editar ficha</a> }
         <p class="detail-subtitle">@(Model.Price > 0 ? $"Precio: {Model.Price} monedas de oro" : "Precio no especificado")</p>
         <p class="detail-description">@Model.Description</p>
         <div class="stat-grid">

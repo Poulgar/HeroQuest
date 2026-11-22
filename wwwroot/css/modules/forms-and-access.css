@@ -1,0 +1,51 @@
+/* Componentes de acceso y edición. Se mantienen aquí separados del diseño de los catálogos. */
+.nav-account { display: flex; align-items: center; gap: 9px; color: #e1d1ad; font-size: 13px; }
+.nav-user { white-space: nowrap; }
+.nav-login-link, .nav-login-button, .theme-toggle, .nav-admin-menu summary { padding: 7px 9px; border: 1px solid #987b4c; color: #f1e3c2; background: #49382b; font: 700 12px Georgia, serif; text-decoration: none; cursor: pointer; }
+.nav-account form { margin: 0; }
+.nav-admin-menu { position: relative; }
+.nav-admin-menu summary { list-style: none; }
+.nav-admin-menu summary::-webkit-details-marker { display: none; }
+.nav-admin-menu > div { position: absolute; z-index: 10; top: calc(100% + 5px); right: 0; display: grid; min-width: 190px; padding: 7px; border: 1px solid var(--gold); background: #33271d; box-shadow: var(--shadow); }
+.nav-admin-menu > div a { padding: 8px; color: #f1e3c2; text-decoration: none; }
+.nav-admin-menu > div a:hover { background: #5e4732; }
+.theme-toggle { display: inline-flex; align-items: center; gap: 6px; }
+.catalog-admin-link, .card-admin-edit { display: inline-flex; align-items: center; width: fit-content; margin: 7px 8px 0 0; padding: 8px 11px; border: 1px solid #9d7a45; color: var(--paper-light); background: #513a26; font-size: 14px; text-decoration: none; }
+.card-admin-edit { color: var(--red-dark); background: #efdfbb; }
+.account-panel, .admin-page { max-width: 900px; padding: clamp(22px, 5vw, 48px); border: 1px solid #9b7b49; color: var(--ink); background: var(--paper); box-shadow: var(--shadow); }
+.account-panel h1, .admin-page h1 { color: var(--ink); }
+.account-panel > p:not(.eyebrow), .admin-page > p:not(.eyebrow) { color: var(--muted-ink); }
+.study-form { display: grid; gap: 9px; max-width: 620px; margin-top: 24px; }
+.study-form label { margin-top: 6px; color: #5b4630; font: 700 13px Georgia, serif; }
+.study-form input, .study-form textarea, .study-form select { width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #a88d5b; border-radius: 0; color: #352519; background: #f4e9cc; font: 16px 'Palatino Linotype', Georgia, serif; }
+.study-form textarea { resize: vertical; }
+.study-form input[type="checkbox"] { width: 20px; min-height: 20px; accent-color: var(--red); }
+.study-form .button, .admin-actions .button { width: fit-content; cursor: pointer; }
+.form-error { color: #8b2f27; font-size: 14px; }
+.login-demo-note { margin-top: 20px; font-size: 14px; }
+.admin-list { display: grid; gap: 8px; margin-top: 22px; }
+.admin-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 12px; border: 1px solid #a98b57; background: var(--paper-light); }
+.admin-row > div:first-child { min-width: 0; }
+.admin-row strong, .admin-row small { display: block; overflow-wrap: anywhere; }
+.admin-row small { color: var(--muted-ink); }
+.admin-row.is-archived { opacity: .7; background: #cbbd9d; }
+.admin-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.admin-actions form { margin: 0; }
+.admin-actions .button { padding: 8px 11px; font-size: 14px; }
+.admin-edit-form { max-width: 760px; }
+.edit-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.edit-stats label { display: grid; gap: 5px; }
+.archive-toggle { display: flex; align-items: center; gap: 8px; }
+
+@media (max-width: 900px) {
+    .nav-account { flex-wrap: wrap; }
+}
+@media (max-width: 680px) {
+    .nav-account { display: flex; grid-column: 1 / -1; justify-content: flex-start; padding: 5px 0; }
+    .nav-admin-menu > div { right: auto; left: 0; }
+    .theme-toggle { grid-column: 1 / -1; justify-self: start; }
+    .admin-row { align-items: stretch; flex-direction: column; }
+    .admin-actions { width: 100%; }
+    .admin-actions .button { min-height: 40px; }
+    .edit-stats { grid-template-columns: 1fr; }
+}
