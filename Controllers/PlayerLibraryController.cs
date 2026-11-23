@@ -44,7 +44,14 @@ public class PlayerLibraryController(ApplicationDbContext db, HeroConfigurationS
         // El servicio valida los nombres y restricciones de equipo; ningún dato de la ficha maestra se acepta aquí.
         var error = await service.UpdateAsync(configuration, field, value, values ?? []);
         if (error is not null) return BadRequest(error);
-        return Json(new { success = true, message = await poems.MessageAsync("library-edited", configuration.CharacterName) });
+        var editor = await service.BuildEditorAsync(configuration.Hero, configuration, personal: true);
+        return Json(new
+        {
+            success = true,
+            message = await poems.MessageAsync("library-edited", configuration.CharacterName),
+            stats = new { hp = editor.DisplayHp, mind = editor.DisplayMind, attack = editor.DisplayAttack, defense = editor.DisplayDefense, movement = editor.DicesRedMovement },
+            marks = editor.ComparisonMarks
+        });
     }
 
     private async Task PopulateOptionsAsync(Heroe hero, CatalogEditViewModel model)

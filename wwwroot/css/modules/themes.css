@@ -251,3 +251,28 @@ html[data-theme="moonlit"] .reset-defaults-form { border-color: #a88955; backgro
 html[data-theme="moonlit"] .player-roster { border-top-color: #796b9b; }
 html[data-theme="moonlit"] .player-roster-list li { border-color: #796b9b; background: #29243f; }
 html[data-theme="moonlit"] .player-form-message { border-color: #8da77d; color: #e5f0df; background: #41583f; }
+
+/* El grimorio combina ciruela, bronce, jade y granate para distinguir sus zonas. */
+html[data-theme="moonlit"] body { background: radial-gradient(ellipse at 15% 0, #4b354c 0, #282137 47%, #1b1928 100%); }
+html[data-theme="moonlit"] .site-header, html[data-theme="moonlit"] .site-footer { background: linear-gradient(100deg, #241c2e, #342334 58%, #222838); border-color: #92734e; }
+html[data-theme="moonlit"] .home-hero { background: linear-gradient(135deg, #342b40, #283a39 55%, #493039); border-color: #9c8053; }
+html[data-theme="moonlit"] .admin-page, html[data-theme="moonlit"] .account-panel { background: linear-gradient(145deg, #30283c, #282b36 60%, #342b33); }
+html[data-theme="moonlit"] .catalog-list { background: linear-gradient(160deg, #2d2937, #2c3937); }
+html[data-theme="moonlit"] .catalog-row { background-color: #2d2937; border-color: #665b67; }
+html[data-theme="moonlit"] .catalog-row:nth-child(even) { background-color: #2d3836; }
+html[data-theme="moonlit"] .catalog-row:hover, html[data-theme="moonlit"] .catalog-row.selected { background: #51403d; }
+html[data-theme="moonlit"] .editable-field, html[data-theme="moonlit"] .player-hero-choices { background: linear-gradient(120deg, #332d40, #2e3837); border-color: #86734f; }
+html[data-theme="moonlit"] .editable-field input, html[data-theme="moonlit"] .editable-field textarea,
+html[data-theme="moonlit"] .search-picker-entry input, html[data-theme="moonlit"] .player-create-form input { border-color: #78684f; background: #242932; }
+html[data-theme="moonlit"] .player-hero-picker > summary { border-color: #97804f; background: linear-gradient(100deg, #3e3343, #2d3a36); }
+html[data-theme="moonlit"] .player-hero-choices label { background: #58684955; }
+html[data-theme="moonlit"] .miscellanea-tabs .fantasy-button.active { color: #fff7e4; border-color: #c59b61; background: linear-gradient(145deg, #a34d47, #703d55 55%, #514478); box-shadow: inset 0 0 0 2px #e3c58077, 0 3px 10px #09071199; }
+html[data-theme="moonlit"] .miscellanea-tabs .fantasy-button:not(.active) { color: #e5dfeb; border-color: #756b70; background: linear-gradient(145deg, #3b3444, #34413c); }
+html[data-theme="moonlit"] .admin-row.library-book { background: linear-gradient(90deg, color-mix(in srgb, var(--book-spine) 28%, #25212d) 0 12px, #32303a); border-color: #78684f; }
+html[data-theme="moonlit"] .library-book-heroes { --book-spine: #77935d; }
+html[data-theme="moonlit"] .library-book-monsters { --book-spine: #ba655b; }
+html[data-theme="moonlit"] .library-book-equipment { --book-spine: #6395a1; }
+html[data-theme="moonlit"] .library-book-miscellanea { --book-spine: #c38c49; }
+html[data-theme="moonlit"] .library-book-abilities { --book-spine: #a07ab8; }
+html[data-theme="moonlit"] .library-book-spells { --book-spine: #8583c8; }
+html[data-theme="moonlit"] .library-book-poems { --book-spine: #c4a158; }

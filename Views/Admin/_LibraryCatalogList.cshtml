@@ -34,9 +34,9 @@
         <div class="admin-list" data-library-list>
             @foreach (var item in Model.Items)
             {
-                <article class="admin-row @(archived ? "is-archived" : "")" data-library-row data-name="@item.Name"
+                <article class="admin-row library-book library-book-@library.Type @(archived ? "is-archived" : "")" data-library-row data-name="@item.Name"
                          data-search="@item.SearchText" data-expansion="@item.Expansion" data-classification="@item.Classification">
-                    <div class="library-item-copy"><strong>@item.Name</strong><small>@(library.Type == "poems" ? item.Details : $"#{item.Id} · {item.Details}")</small></div>
+                    <div class="library-item-copy"><strong>@item.Name</strong><small>@item.Details</small></div>
                     <div class="admin-actions">
                         <a class="fantasy-button small library-action-edit" asp-action="Edit" asp-route-type="@library.Type" asp-route-id="@item.Id">Editar</a>
                         <form asp-action="Archive" method="post">

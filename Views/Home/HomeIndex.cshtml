@@ -27,23 +27,25 @@
     </div>
 </section>
 
-@if (User.IsInRole("Admin"))
+@if (User.IsInRole(role: "Admin"))
 {
     <section class="player-roster page-shell" aria-labelledby="player-roster-title">
         <div class="world-map-heading">
-            <p class="eyebrow">SOLO PARA EL MAESTRO DE JUEGO</p>
+            <p class="eyebrow">AUTORIZADO AL MAESTRO DE JUEGO</p>
             <h2 id="player-roster-title">Jugadores de la <em>campaña</em></h2>
             <p>Registra a cada persona y elige qué héroes tiene activos en la campaña.</p>
         </div>
         @if (TempData["PlayerFormError"] is string error) { <p class="form-error">@error</p> }
         @if (TempData["PlayerFormMessage"] is string message) { <p class="player-form-message">@message</p> }
-        @if (TempData["PlayerLoginDetails"] is string loginDetails) { <p class="player-form-message">@loginDetails</p> }
         <form asp-controller="Players" asp-action="Create" method="post" class="player-create-form">
             <label>Nombre del jugador<input name="Name" maxlength="80" required autocomplete="name" /></label>
             <label>Apodo (opcional)<input name="Nickname" maxlength="60" /></label>
-            <fieldset class="player-hero-choices"><legend>Héroes activos (puedes elegir varios)</legend>
-                @foreach (var hero in Model.AvailableHeroes) { <label><input type="checkbox" name="HeroIds" value="@hero.Id" /> @hero.CharacterTypeClass</label> }
-            </fieldset>
+            <details class="player-hero-picker">
+                <summary>Elegir héroes activos <span data-player-hero-count>0 seleccionados</span></summary>
+                <fieldset class="player-hero-choices"><legend>Un jugador puede tener varios héroes</legend>
+                    @foreach (var hero in Model.AvailableHeroes) { <label><input type="checkbox" name="HeroIds" value="@hero.Id" /> <span>@hero.CharacterTypeClass</span></label> }
+                </fieldset>
+            </details>
             <button class="fantasy-button fantasy-button-primary" type="submit">Añadir jugador</button>
         </form>
         @if (Model.Players.Count > 0)
@@ -52,7 +54,7 @@
                 @foreach (var player in Model.Players)
                 {
                     var activeClasses = string.Join(", ", player.HeroConfigurations.Select(configuration => configuration.Hero.CharacterTypeClass).Distinct());
-                    <li><strong>@player.Name</strong><span>@(string.IsNullOrWhiteSpace(player.Nickname) ? "Sin apodo" : $"«{player.Nickname}»")</span><small>Usuario: @player.Username</small><small>Clases activas: @(string.IsNullOrWhiteSpace(activeClasses) ? "ninguna" : activeClasses)</small><a class="fantasy-button small" asp-controller="Players" asp-action="Edit" asp-route-id="@player.Id">Editar jugador</a></li>
+                    <li><strong>@player.Name</strong><span>@(string.IsNullOrWhiteSpace(player.Nickname) ? "Sin apodo" : $"«{player.Nickname}»")</span><small>Clases activas: @(string.IsNullOrWhiteSpace(activeClasses) ? "ninguna" : activeClasses)</small><a class="fantasy-button small" asp-controller="Players" asp-action="Edit" asp-route-id="@player.Id">Editar jugador</a></li>
                 }
             </ul>
         }

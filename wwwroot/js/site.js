@@ -1,3 +1,14 @@
+// Al cambiar de ficha de héroe, el navegador mantiene la altura de lectura del marcador activo.
+const heroBookmarkScrollKey = 'heroquest-hero-bookmark-scroll';
+const savedHeroBookmarkScroll = sessionStorage.getItem(heroBookmarkScrollKey);
+if (savedHeroBookmarkScroll !== null) {
+    sessionStorage.removeItem(heroBookmarkScrollKey);
+    requestAnimationFrame(() => window.scrollTo(0, Number(savedHeroBookmarkScroll)));
+}
+document.querySelectorAll('.hero-bookmark[href], .hero-bookmark-menu a[href]').forEach((link) => {
+    link.addEventListener('click', () => sessionStorage.setItem(heroBookmarkScrollKey, String(window.scrollY)));
+});
+
 document.querySelectorAll('.catalog-list').forEach((panel) => {
     const search = panel.querySelector('.index-search');
     const sort = panel.querySelector('.index-sort');
@@ -94,6 +105,16 @@ document.querySelectorAll('.catalog-list').forEach((panel) => {
         update();
     }));
     update();
+});
+
+document.querySelectorAll('.player-hero-picker').forEach((picker) => {
+    const updateCount = () => {
+        const count = picker.querySelectorAll('input[name="HeroIds"]:checked').length;
+        const label = picker.querySelector('[data-player-hero-count]');
+        if (label) label.textContent = `${count} seleccionado${count === 1 ? '' : 's'}`;
+    };
+    picker.addEventListener('change', updateCount);
+    updateCount();
 });
 
 // Cada estante filtra su lista activa o desactivada en el navegador, sin recargar la página.
@@ -227,8 +248,21 @@ document.querySelectorAll('[data-field-editor][data-update-url]').forEach((edito
             field.querySelector('[data-search-picker]')?.setAttribute('data-locked', String(!editing));
         };
 
-        if (editButton) { setEditing(true); field.querySelector('input:not([type="hidden"]), textarea, [data-picker-input]')?.focus(); return; }
-        if (cancelButton) { window.location.reload(); return; }
+        if (editButton) {
+            const picker = field.querySelector('[data-picker-selected]');
+            field._savedFieldValues = controls.map((control) => control.value);
+            field._savedPickerItems = picker ? [...picker.children].map((item) => item.cloneNode(true)) : null;
+            setEditing(true);
+            field.querySelector('input:not([type="hidden"]), textarea, [data-picker-input]')?.focus();
+            return;
+        }
+        if (cancelButton) {
+            controls.forEach((control, index) => { control.value = field._savedFieldValues?.[index] ?? control.value; });
+            const picker = field.querySelector('[data-picker-selected]');
+            if (picker && field._savedPickerItems) picker.replaceChildren(...field._savedPickerItems.map((item) => item.cloneNode(true)));
+            setEditing(false);
+            return;
+        }
         if (!saveButton) return;
 
         const form = editor.closest('form');
@@ -252,6 +286,25 @@ document.querySelectorAll('[data-field-editor][data-update-url]').forEach((edito
             if (!response.ok) throw new Error('El dato no se pudo guardar. Revisa el valor e inténtalo de nuevo.');
             const result = await response.json();
             setEditing(false);
+            if (result.stats) {
+                const statNames = { Hp: 'hp', DicesMind: 'mind', DicesAttack: 'attack', DicesDefend: 'defense', DicesRedMovement: 'movement' };
+                field.closest('form').querySelectorAll('[data-stat-value]').forEach((input) => {
+                    const value = result.stats[statNames[input.dataset.statValue]];
+                    if (value !== undefined) input.value = value;
+                });
+                field.closest('form').querySelectorAll('[data-stat-mark]').forEach((mark) => {
+                    const value = result.marks?.[mark.dataset.statMark] ?? '';
+                    mark.classList.remove('up', 'down', 'changed');
+                    if (value) mark.classList.add(value);
+                    mark.textContent = value === 'up' ? '↑' : value === 'down' ? '↓' : value === 'changed' ? '⇄' : '=';
+                });
+                field.closest('form').querySelectorAll('[data-comparison-field]').forEach((mark) => {
+                    const value = result.marks?.[mark.dataset.comparisonField] ?? '';
+                    mark.classList.remove('up', 'down', 'changed');
+                    if (value) mark.classList.add(value);
+                    mark.textContent = value === 'up' ? '↑' : value === 'down' ? '↓' : value === 'changed' ? '⇄' : '=';
+                });
+            }
             if (result.message) {
                 let notice = document.querySelector('[data-guardian-toast]');
                 if (!notice) { notice = document.createElement('aside'); notice.dataset.guardianToast = ''; notice.className = 'guardian-library-notice guardian-toast'; notice.setAttribute('role', 'status'); document.body.append(notice); }

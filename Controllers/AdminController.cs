@@ -70,22 +70,22 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
                 var groupedPlayers = playerNamesByHero.GroupBy(item => item.HeroId)
                     .ToDictionary(group => group.Key, group => string.Join('|', group.Select(item => item.Name).Distinct(StringComparer.OrdinalIgnoreCase)));
                 return (await db.Heroes.AsNoTracking().ToListAsync()).Select(hero =>
-                    new CatalogListItem(hero.Id, hero.Name, $"{hero.Hp} HP · {hero.CharacterTypeClass}", hero.IsArchived,
+                    new CatalogListItem(hero.Id, hero.Name, $"{hero.Hp} HP · D{hero.DicesMind} MND · D{hero.DicesAttack} ATK · D{hero.DicesDefend} DFC", hero.IsArchived,
                         $"{hero.Name} {hero.CharacterTypeClass} {groupedPlayers.GetValueOrDefault(hero.Id)} {hero.Description} {hero.Spells} {hero.Appears.DisplayName()}",
                         hero.Appears.DisplayName(), groupedPlayers.GetValueOrDefault(hero.Id) ?? "")).ToList();
             case "monsters":
                 return (await db.Monsters.AsNoTracking().ToListAsync()).Select(monster =>
-                    new CatalogListItem(monster.Id, monster.Name, $"{monster.Hp} HP · {monster.Faction}", monster.IsArchived,
+                    new CatalogListItem(monster.Id, monster.Name, $"{monster.Hp} HP · D{monster.DicesMind} MND · D{monster.DicesAttack} ATK · D{monster.DicesDefend} DFC", monster.IsArchived,
                         $"{monster.Name} {monster.Faction} {monster.Ability} {monster.Description} {monster.Appears.DisplayName()}",
                         monster.Appears.DisplayName(), monster.Faction)).ToList();
             case "equipment":
                 return (await db.EquipmentsAndArtifacts.AsNoTracking().ToListAsync()).Select(item =>
-                    new CatalogListItem(item.Id, item.Name, $"{item.Price} monedas · {item.Type}", item.IsArchived,
+                    new CatalogListItem(item.Id, item.Name, EquipmentDetails(item), item.IsArchived,
                         $"{item.Name} {item.Category} {item.Type} {item.Description} {item.Weight} {item.Appears.DisplayName()}",
                         item.Appears.DisplayName(), item.Category.Equals("Artifact", StringComparison.OrdinalIgnoreCase) ? "Artefacto" : "Equipo")).ToList();
             case "miscellanea":
                 return (await db.Miscellanea.AsNoTracking().ToListAsync()).Select(item =>
-                    new CatalogListItem(item.Id, item.Name, $"{item.Price} monedas", item.IsArchived,
+                    new CatalogListItem(item.Id, item.Name, MiscellaneaDetails(item), item.IsArchived,
                         $"{item.Name} {item.Description} {item.Appears.DisplayName()} {item.Category.DisplayName()}", item.Appears.DisplayName(), item.Category.DisplayName())).ToList();
             case "abilities":
                 return (await db.MonsterAbilities.AsNoTracking().ToListAsync()).Select(item =>
@@ -102,6 +102,19 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             default:
                 return [];
         }
+    }
+
+    private static string EquipmentDetails(EquipmentsAndArtifacts item)
+    {
+        var effect = item.WeaponAttackDice is int attack ? $"D{attack} ATK" : item.DefenseBonus != 0 ? $"{(item.DefenseBonus > 0 ? "+" : "")}{item.DefenseBonus} DFC" : item.Type;
+        return item.Price > 0 ? $"{effect} · {item.Price} monedas" : effect;
+    }
+
+    private static string MiscellaneaDetails(MiscellaneaItem item)
+    {
+        var effect = item.WeaponAttackDice is int attack ? $"D{attack} ATK" : item.DefenseBonus != 0 ? $"{(item.DefenseBonus > 0 ? "+" : "")}{item.DefenseBonus} DFC"
+            : item.HealthBonus != 0 ? $"{(item.HealthBonus > 0 ? "+" : "")}{item.HealthBonus} HP" : item.MindBonus != 0 ? $"{(item.MindBonus > 0 ? "+" : "")}{item.MindBonus} MND" : item.Category.DisplayName();
+        return item.Price > 0 ? $"{effect} · {item.Price} monedas" : effect;
     }
 
     [HttpGet]
@@ -228,7 +241,17 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             var configuration = await db.HeroConfigurations.FirstOrDefaultAsync(item => item.Id == id);
             if (configuration is null) return NotFound();
             var error = await heroConfigurations.UpdateAsync(configuration, field, value, values ?? []);
-            return error is null ? Json(new { success = true, message = await poems.MessageAsync("library-edited", configuration.CharacterName) }) : BadRequest(error);
+            if (error is not null) return BadRequest(error);
+            var hero = await db.Heroes.FindAsync(configuration.HeroId);
+            if (hero is null) return NotFound();
+            var editor = await heroConfigurations.BuildEditorAsync(hero, configuration, personal: false);
+            return Json(new
+            {
+                success = true,
+                message = await poems.MessageAsync("library-edited", configuration.CharacterName),
+                stats = new { hp = editor.DisplayHp, mind = editor.DisplayMind, attack = editor.DisplayAttack, defense = editor.DisplayDefense, movement = editor.DicesRedMovement },
+                marks = editor.ComparisonMarks
+            });
         }
         // Cada solicitud solo puede actualizar un campo incluido en esta lista explícita.
         var allowed = GetEditableFields(type);

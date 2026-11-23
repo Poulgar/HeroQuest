@@ -10,7 +10,6 @@
         <input type="hidden" name="Id" value="@Model.Id" />
         <label>Nombre del jugador<input name="Name" value="@Model.Name" required maxlength="80" /></label>
         <label>Apodo (opcional)<input name="Nickname" value="@Model.Nickname" maxlength="60" /></label>
-        <p>Usuario de acceso: <strong>@Model.Username</strong></p>
         <fieldset class="player-hero-choices"><legend>Héroes activos</legend>
             @foreach (var hero in Model.Heroes)
             {

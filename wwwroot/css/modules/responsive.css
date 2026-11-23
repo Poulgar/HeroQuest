@@ -118,3 +118,46 @@
     .stat-grid strong { font-size: 14px; }
 }
 
+/* Mantiene visibles los índices y controles del compendio en teléfonos estrechos. */
+@media (max-width: 700px) {
+    .catalog-layout { display: grid; grid-template-columns: minmax(0, 1fr); height: auto; min-width: 0; gap: 14px; }
+    .catalog-list { display: flex; width: 100%; min-width: 0; height: min(42vh, 340px) !important; min-height: 220px; padding: 10px; overflow: hidden; }
+    .catalog-scroll { display: block; flex: 1 1 auto; width: 100%; min-height: 120px; overflow-x: hidden; overflow-y: auto; }
+    .catalog-row { min-width: 0; }
+    .row-main { min-width: 0; }
+    .row-main strong, .row-main small { overflow-wrap: anywhere; }
+    .detail-host { width: 100%; min-width: 0; }
+    .admin-list, .library-list-section, .admin-page { width: 100%; min-width: 0; }
+    .admin-row.library-book { display: flex; align-items: flex-start; flex-direction: column; gap: 9px; width: 100%; padding: 12px 10px 12px 15px; }
+    .library-item-copy { width: 100%; }
+    .library-item-copy strong, .library-item-copy small { overflow-wrap: anywhere; }
+    .admin-row.library-book .admin-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; width: 100%; }
+    .admin-row.library-book .admin-actions form, .admin-row.library-book .admin-actions .fantasy-button { width: 100%; min-width: 0; }
+    .admin-row.library-book .admin-actions .fantasy-button { padding: 7px 3px; font-size: 10px; white-space: normal; }
+    .player-create-form { grid-template-columns: minmax(0, 1fr); }
+    .player-hero-picker { grid-column: 1; width: 100%; }
+    .player-hero-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .admin-edit-form { width: 100%; min-width: 0; }
+    .hero-identity-fields, .edit-stats { grid-template-columns: minmax(0, 1fr); }
+    .editable-field { min-width: 0; }
+    .picker-edit-field { grid-template-columns: minmax(0, 1fr) auto; }
+    .picker-edit-field > .search-picker { grid-column: 1 / -1; width: 100%; }
+    .picker-edit-field > button { grid-row: auto; }
+    .search-picker { grid-template-columns: minmax(0, 1fr); }
+    .search-picker-selected { grid-column: 1; grid-row: auto; width: 100%; }
+    .search-picker-suggestions { top: 64px; width: 100%; max-width: none; }
+    .library-filter-tools { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .library-filter-tools label { min-width: 0; }
+    .library-filter-tools label:first-child { grid-column: 1 / -1; }
+    .miscellanea-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .miscellanea-tabs .fantasy-button { min-height: 42px; font-size: 12px; }
+}
+
+@media (max-width: 390px) {
+    .admin-row.library-book .admin-actions { grid-template-columns: 1fr; }
+    .admin-row.library-book .admin-actions .fantasy-button { min-height: 40px; font-size: 12px; }
+    .player-hero-choices { grid-template-columns: minmax(0, 1fr); }
+    .library-filter-tools { grid-template-columns: minmax(0, 1fr); }
+    .library-filter-tools label:first-child { grid-column: 1; }
+}
+

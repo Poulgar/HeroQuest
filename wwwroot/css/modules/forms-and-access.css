@@ -151,6 +151,36 @@ html[data-theme="moonlit"] .guardian-library-verse, html[data-theme="moonlit"] .
 .search-picker-selected li { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 8px; border-radius: 999px; color: var(--ink); background: #b8944a25; }
 .search-picker-selected li span { overflow-wrap: anywhere; }
 .search-picker-selected li button { width: 24px; height: 24px; flex: 0 0 24px; border: 0; border-radius: 50%; color: inherit; background: #00000012; cursor: pointer; }
+.miscellanea-tabs .fantasy-button { transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease; }
+.miscellanea-tabs .fantasy-button.active { color: #fff9e9; border-color: #87603c; background: linear-gradient(145deg, #92513b, #653927); box-shadow: inset 0 0 0 2px #e8cf8c66, 0 3px 9px #28180e40; transform: translateY(-1px); }
+.miscellanea-tabs .fantasy-button:not(.active) { opacity: .84; }
+.search-picker { position: relative; }
+.search-picker-suggestions { position: absolute; top: 68px; left: 0; z-index: 20; width: min(100%, 420px); max-height: 220px; overflow-y: auto; }
+.search-picker:has(.search-picker-suggestions:not([hidden])) { z-index: 12; }
+.search-picker-selected { overflow-wrap: anywhere; }
+.player-create-form { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.player-hero-picker { grid-column: 1 / -1; position: relative; min-width: 0; }
+.player-hero-picker > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 46px; padding: 10px 13px; border: 1px solid #a98b57; border-radius: 8px 3px; color: var(--ink); background: var(--paper-light); cursor: pointer; }
+.player-hero-picker > summary span { color: var(--muted-ink); font-size: .85em; }
+.player-hero-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 7px; max-height: 230px; margin: 8px 0 0; padding: 10px; overflow: auto; border: 1px solid #a98b57; border-radius: 9px 3px; background: var(--paper-light); }
+.player-hero-choices legend { padding: 0 5px; color: var(--muted-ink); font-size: .82rem; }
+.player-hero-choices label { display: flex; align-items: center; gap: 7px; min-width: 0; margin: 0; padding: 7px 9px; border-radius: 6px; background: color-mix(in srgb, #79895f 13%, transparent); cursor: pointer; }
+.player-hero-choices input { flex: 0 0 18px; }
+.player-hero-choices label span { overflow-wrap: anywhere; }
+.admin-list { gap: 9px; }
+.admin-row.library-book { position: relative; min-height: 72px; padding: 12px 14px 12px 20px; overflow: visible; border: 1px solid #8c704c; border-left: 9px solid var(--book-spine, #687b50); border-radius: 3px 9px 9px 3px; background: linear-gradient(90deg, color-mix(in srgb, var(--book-spine) 13%, var(--paper-light)) 0 12px, var(--paper-light) 12px); box-shadow: inset 0 1px #fff7, inset 0 -2px #8d765322, 0 3px 7px #2b1e1233; }
+.admin-row.library-book::before { position: absolute; top: 7px; bottom: 7px; left: 3px; width: 2px; content: ""; background: #f4deb477; }
+.library-book-heroes { --book-spine: #617c4f; }
+.library-book-monsters { --book-spine: #984d44; }
+.library-book-equipment { --book-spine: #55738a; }
+.library-book-miscellanea { --book-spine: #a26c36; }
+.library-book-abilities { --book-spine: #795891; }
+.library-book-spells { --book-spine: #574c8a; }
+.library-book-poems { --book-spine: #9a7839; }
+.library-item-copy { flex: 1 1 auto; min-width: 0; }
+.library-item-copy strong { font: 700 1.05rem Georgia, serif; }
+.library-item-copy small { margin-top: 4px; font-size: .86rem; }
+.admin-row.library-book.is-archived { --book-spine: #736b5d; filter: saturate(.55); }
 .reset-defaults-form { margin: 18px 0; padding: 14px; border: 1px solid #a17d43; border-radius: 12px 3px; background: #a17d4314; }
 .player-roster { margin-block: 34px; padding-block: 20px; border-top: 1px solid #a98b5777; }
 .player-create-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; align-items: end; gap: 12px; }

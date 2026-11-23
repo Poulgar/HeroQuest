@@ -40,8 +40,6 @@ public class PlayersController(ApplicationDbContext db, HeroConfigurationService
         foreach (var hero in heroes) await configurations.CreateAsync(profile, hero);
         await db.SaveChangesAsync();
 
-        // Sólo el Maestro ve la contraseña generada en esta respuesta; SQLite conserva únicamente su hash.
-        TempData["PlayerLoginDetails"] = $"Acceso creado: {username} · contraseña inicial: {username}123. El jugador puede cambiarla desde su perfil en una futura actualización.";
         TempData["PlayerFormMessage"] = "El jugador y sus configuraciones de héroe ya están registrados.";
         return RedirectToAction("Index", "Home");
     }
