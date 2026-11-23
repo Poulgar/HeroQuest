@@ -1,0 +1,22 @@
+@model HeroQuest.Models.PlayerProfileEditViewModel
+@{
+    ViewData["Title"] = "Editar jugador";
+}
+<section class="admin-page page-shell player-profile-edit">
+    <p class="eyebrow">REGISTRO DE CAMPAÑA · SOLO MAESTRO DE JUEGO</p>
+    <h1>Editar a <em>@Model.Name</em></h1>
+    @if (TempData["PlayerFormError"] is string error) { <p class="form-error">@error</p> }
+    <form asp-action="Edit" method="post" class="study-form player-profile-form">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <label>Nombre del jugador<input name="Name" value="@Model.Name" required maxlength="80" /></label>
+        <label>Apodo (opcional)<input name="Nickname" value="@Model.Nickname" maxlength="60" /></label>
+        <p>Usuario de acceso: <strong>@Model.Username</strong></p>
+        <fieldset class="player-hero-choices"><legend>Héroes activos</legend>
+            @foreach (var hero in Model.Heroes)
+            {
+                <label><input type="checkbox" name="HeroIds" value="@hero.Id" checked="@Model.SelectedHeroIds.Contains(hero.Id)" /> @hero.CharacterTypeClass</label>
+            }
+        </fieldset>
+        <div class="admin-actions"><button class="fantasy-button fantasy-button-primary" type="submit">Guardar jugador</button><a class="fantasy-button small" asp-controller="Home" asp-action="Index">Volver</a></div>
+    </form>
+</section>

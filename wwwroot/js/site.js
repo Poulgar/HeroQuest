@@ -233,13 +233,13 @@ document.querySelectorAll('[data-field-editor][data-update-url]').forEach((edito
 
         const form = editor.closest('form');
         const formData = new FormData();
-        formData.append('type', form.querySelector('[name="Type"]').value);
-        formData.append('id', form.querySelector('[name="Id"]').value);
+        formData.append('type', editor.dataset.updateType || form.querySelector('[name="Type"]').value);
+        formData.append('id', editor.dataset.updateId || form.querySelector('[name="Id"]').value);
         formData.append('field', field.dataset.updateField);
         const picker = field.querySelector('[data-search-picker]');
         if (picker) {
             const values = [...picker.querySelectorAll('[data-picker-item]')].map((item) => item.dataset.value);
-            if (field.dataset.updateField === 'AppearsOptions' || field.dataset.updateField === 'AbilityOptions') values.forEach((value) => formData.append('values', value));
+            if (['AppearsOptions', 'AbilityOptions', 'WeaponOptions', 'ArmorOptions', 'ItemOptions'].includes(field.dataset.updateField)) values.forEach((value) => formData.append('values', value));
             else formData.append('value', values[0] ?? '');
         } else {
             const input = field.querySelector('input:not([type="hidden"]), textarea, select');
@@ -250,7 +250,15 @@ document.querySelectorAll('[data-field-editor][data-update-url]').forEach((edito
         try {
             const response = await fetch(editor.dataset.updateUrl, { method: 'POST', body: formData, headers: { 'X-Requested-With': 'XMLHttpRequest' } });
             if (!response.ok) throw new Error('El dato no se pudo guardar. Revisa el valor e inténtalo de nuevo.');
+            const result = await response.json();
             setEditing(false);
+            if (result.message) {
+                let notice = document.querySelector('[data-guardian-toast]');
+                if (!notice) { notice = document.createElement('aside'); notice.dataset.guardianToast = ''; notice.className = 'guardian-library-notice guardian-toast'; notice.setAttribute('role', 'status'); document.body.append(notice); }
+                notice.textContent = result.message;
+                notice.classList.add('is-visible');
+                window.setTimeout(() => notice.classList.remove('is-visible'), 8000);
+            }
         } catch (error) {
             window.alert(error.message);
         } finally {

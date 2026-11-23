@@ -56,7 +56,6 @@ public class HeroeImportService(ApplicationDbContext context)
                 CharacterTypeClass = characterTypeClass,
                 Name = nombre,
                 SourceName = nombre,
-                Player = CsvRecordReader.GetText(datos, "Player"),
                 Weapon = CsvRecordReader.GetText(datos, "Weapon"),
                 Armor = CsvRecordReader.GetText(datos, "Armor"),
                 Spells = CsvRecordReader.GetText(datos, "Spells"),

@@ -27,7 +27,8 @@ public class HomeController(ApplicationDbContext context) : Controller
         // Los datos privados del grupo solo se cargan para la sesión del Maestro de Juego.
         if (User.IsInRole("Admin"))
         {
-            model.Players = await context.PlayerProfiles.AsNoTracking().Include(player => player.Hero)
+            model.Players = await context.PlayerProfiles.AsNoTracking().Include(player => player.HeroConfigurations.Where(configuration => configuration.IsActive))
+                .ThenInclude(configuration => configuration.Hero)
                 .OrderBy(player => player.Name).ToListAsync();
             model.AvailableHeroes = await context.Heroes.AsNoTracking().Where(hero => !hero.IsArchived)
                 .OrderBy(hero => hero.Name).ToListAsync();

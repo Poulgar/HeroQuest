@@ -2,12 +2,12 @@ namespace HeroQuest.Models;
 
 public static class MonsterVisualExtensions
 {
-    public static string ShortEffect(this string? description, string name, int maxLength = 120) // <<this string?>> es un método de extensión que puede ser nulo.
+    public static string ShortEffect(this string? description, string name, int maxLength = 120)
     {
         // Estos resúmenes describen el efecto en una frase; el texto completo sigue en la ficha emergente al pulsar.
-        var summary = name.Trim() switch // <<.Trim()>> elimina los espacios al inicio y final del string name.
+        var summary = name.Trim() switch
         {
-            "Ágil" => "Ignora los efectos de terrenos peligrosos, muebles y héroes al moverse.", // Lista abreviada de <<case>>.
+            "Ágil" => "Ignora los efectos de terrenos peligrosos, muebles y héroes al moverse.",
             "Ataque a Distancia" => "Puede atacar a objetivos no adyacentes que estén en su línea de visión.",
             "Ataque de Abrazo" => "Atrapa al héroe y le inflige daño cada turno hasta que escape o caiga el monstruo.",
             "Ataque Doble" => "Realiza dos ataques por turno, contra uno o dos oponentes.",
@@ -31,7 +31,7 @@ public static class MonsterVisualExtensions
             "Dormir" => "Impide que un héroe afectado se mueva, ataque o se defienda.",
             "Escalofrío" => "Inflige daño a una víctima adyacente, que no puede defenderse.",
             "Espejo Mágico" => "Devuelve al héroe un hechizo que este acaba de lanzar.",
-            "Estallido Mental" or "Explosión Mental" => "Paraliza a un héroe visible e impide que actúe.", // Permite una opción u otra.
+            "Estallido Mental" or "Explosión Mental" => "Paraliza a un héroe visible e impide que actúe.",
             "Huída Fugaz" => "Permite al lanzador escapar rápidamente del peligro.",
             "Invocar Espectros" => "Llama espectros para que acudan al combate.",
             "Invocar Lobos" => "Convoca lobos que se unen al combate.",
@@ -52,25 +52,25 @@ public static class MonsterVisualExtensions
             "Tempestad" => "Desata una tormenta que entorpece a quienes quedan atrapados.",
             "Tormenta de Fuego" => "Desata fuego mágico sobre sus víctimas.",
             "Tormenta de Hielo" => "Desata una tormenta helada contra sus víctimas.",
-            _ => null // Opción <<default>> por defecto del switch.
+            _ => null
         };
 
-        if (summary is not null) return summary; // Devuelve el valor de summary solo si este no es nulo.
-        if (string.IsNullOrWhiteSpace(description)) return "Sin descripción registrada."; // Si el valor es nulo o solo contiene espacios en blanco devuelve un texto por defecto.
-        var clean = string.Join(' ', description.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)); // <<description.Split(null, RemoveEmptyEntries)>> elimina todos los espacios en blanco entre palabras o saltos de linea. <<string.Join(' ', ...)>> vuelve a unirlos con un ÚNICO espacio en blanco entre palabras. <<((char[]?)>> indica a <<Split(...)>> que use los separadores por defecto, es decir; espacios en blanco, tabulación \t, salto de línea \n y retorno de carro \r.
-        var sentenceEnd = clean.IndexOfAny(['.', '!', '?']); // Busca la primera posición de clean que contiene cualquiera de los simbolos anteriores.
-        if (sentenceEnd > 0 && sentenceEnd < maxLength) clean = clean[..(sentenceEnd + 1)]; // Si sentenceEnd es mayor que 0 y menor que maxLength entonces clean guardará todo el contenido desde el inicio de sentenceEnd hasta el final+1 de este (para guardar también el simbolo previamente localizado). Es equivalente a <<clean.Substring(0, sentenceEnd + 1)>> solo que esta es una versión más primitiva.
-        // "Ataca en diagonal. También puede moverse rápido." solo guardará "Ataca en diagonal.".
-        if (clean.Length <= maxLength) return clean; // Devuelve el texto anterior solo si esta es menor al valor de maxLength.
+        if (summary is not null) return summary;
+        if (string.IsNullOrWhiteSpace(description)) return "Sin descripción registrada.";
+        var clean = string.Join(' ', description.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+        var sentenceEnd = clean.IndexOfAny(['.', '!', '?']);
+        if (sentenceEnd > 0 && sentenceEnd < maxLength) clean = clean[..(sentenceEnd + 1)];
+        if (clean.Length <= maxLength) return clean;
 
-        var cutAt = clean.LastIndexOf(' ', maxLength - 1); // Evita cortar una palabra si esta se encuentra superando los 120 chars. Hace el corte en el último espacio antes de llegar a ella.
-        return clean[..(cutAt > 0 ? cutAt : maxLength)].TrimEnd() + "…"; // Si encontro un espacio realiza el corte ahí y si no hace el corte en maxLength. <<.TrimEnd()>> quita posibles espacios del final y añade "…" para indicar que el texto realmente es más largo.
+        // El fallback también corta al final de una palabra para nombres nuevos de CSV.
+        var cutAt = clean.LastIndexOf(' ', maxLength - 1);
+        return clean[..(cutAt > 0 ? cutAt : maxLength)].TrimEnd() + "…";
     }
 
     public static string FactionSymbol(this string faction) => faction.Trim() switch
     {
-        "Bestias" => "♧", // string trebol = "\u2667";  // ♧
-        "Criaturas Congeladas" => "❄", 
+        "Bestias" => "♧",
+        "Criaturas Congeladas" => "❄",
         "Criaturas del Terror" => "☠",
         "Elfos" => "➶",
         "Muertos Vivientes" => "♰",
@@ -129,10 +129,10 @@ public static class MonsterVisualExtensions
     {
         // El checksum estable da a cada habilidad un color repetible incluso tras reiniciar la aplicación.
         var palette = new[] { "#8b3f35", "#346d82", "#687b39", "#875f29", "#714d83", "#3e7863", "#a04f68" };
-        uint hash = 2166136261; // Es una constante del algoritmo FNV-1a (Fowler-Noll-Vo variante 1a) para convertir un texto en un número de tamaño fijo. Su equivalente hexadecimal es 0x811C9DC5.
-        foreach (var character in ability.Trim().ToUpperInvariant()) // <<.ToUpperInvariant()>> convierte todo el texto en mayusculas respetando el InvariantCulture.
-            hash = unchecked((hash ^ character) * 16777619); // <<(hash ^ character)>> compara a la inversa los bits de ambos: si el primer bit es distinto lo guarda como '1', si es diferente lo guarda como '0' y así con todos los bits. <<* 16777619>> dispersa los resultados para evitar hashes parecidos. <<unchecked>> permite que no explote el programa si el numero resultado es superior al 4.294.967.295, el cual es limite de uint.
-        return palette[(int)(hash % (uint)palette.Length)]; // <<(hash % (uint)palette.Length)>> convierte en palette.Length en uint para poder operar y realiza una operación para obtener el resto de la división (que sera entre 0 y 6, que corresponde a la cantidad de elementos del array). Al terminar devuelve todo como <<(int)>>.
+        uint hash = 2166136261;
+        foreach (var character in ability.Trim().ToUpperInvariant())
+            hash = unchecked((hash ^ character) * 16777619);
+        return palette[(int)(hash % (uint)palette.Length)];
     }
 
     public static string SpellSymbol(this string spell) => spell.Trim() switch

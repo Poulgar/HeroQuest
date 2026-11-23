@@ -11,4 +11,15 @@ public class EquipmentsAndArtifacts(int id, string name, string description, int
     public string Weight { get; set; } = weight;
     public string Category { get; set; } = category; // "Equipment" or "Artifact"
     public bool IsArchived { get; set; }
+    public int? WeaponAttackDice { get; set; }
+    public int DefenseBonus { get; set; }
+    public int HealthBonus { get; set; }
+    public int MindBonus { get; set; }
+    public int? MovementDiceOverride { get; set; }
+    public int MovementSquaresBonus { get; set; }
+    public string AllowedClasses { get; set; } = string.Empty;
+    public string ExcludedClasses { get; set; } = string.Empty;
+    public string EquipmentSlot { get; set; } = string.Empty;
+    public string CannotCombineWith { get; set; } = string.Empty;
+    public bool IsRangedWeapon { get; set; }
 }

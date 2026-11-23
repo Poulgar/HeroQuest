@@ -44,7 +44,12 @@
                                     <strong>Maestro de Juego</strong>
                                     <a asp-controller="Admin" asp-action="Index" asp-route-type="heroes">Abrir la Biblioteca</a>
                                 }
-                                else { <strong>Aventurero</strong> }
+                                else
+                                {
+                                    <strong>Aventurero</strong>
+                                    @if (User.HasClaim(System.Security.Claims.ClaimTypes.NameIdentifier, User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? ""))
+                                    { <a asp-controller="PlayerLibrary" asp-action="Index">Mis héroes en la Biblioteca</a> }
+                                }
                                 <form asp-controller="Account" asp-action="Logout" method="post"><button class="fantasy-button small" type="submit">Cerrar el portal</button></form>
                             </div>
                         </details>

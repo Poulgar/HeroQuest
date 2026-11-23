@@ -28,6 +28,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<WorldPoemService>();
+builder.Services.AddScoped<HeroConfigurationService>();
 
 // Guardamos las claves de sesión junto a los datos locales y fuera de Git; Windows las cifra con DPAPI.
 var protectionKeysPath = Path.Combine(builder.Environment.ContentRootPath, "DataBase", "DataProtectionKeys");
@@ -75,6 +76,11 @@ using (var scope = app.Services.CreateScope())
 
     var csvImporter = new CsvImportService(context);
     await csvImporter.ImportAllAsync(csvFolder);
+
+    // Los efectos estructurados se recalculan desde las descripciones para no depender de ediciones manuales del CSV.
+    await new EquipmentEffectService(context).RefreshAsync();
+
+    await PlayerAccountInitializer.EnsureAccountsAsync(context);
 
 }
 

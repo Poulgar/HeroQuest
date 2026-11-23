@@ -101,6 +101,40 @@ html[data-theme="moonlit"] .theme-moon { opacity: 1; filter: drop-shadow(0 0 6px
 .editable-field.is-editing { border-color: #b18a49; box-shadow: 0 0 0 2px #b18a4922; }
 .editable-field > button { min-height: 38px; padding: 6px 12px; border: 1px solid #9a7c49; border-radius: 999px; color: var(--ink); background: var(--paper-light); cursor: pointer; }
 .editable-field > button[data-field-save] { color: #fff8ec; border-color: transparent; background: linear-gradient(145deg, #718968, #4f704a); }
+
+/* Las configuraciones personales se muestran como pestañas de libro a la derecha del formulario. */
+.hero-bookmarks { display: flex; flex-direction: column; align-items: stretch; float: right; gap: .35rem; width: max-content; max-width: 12rem; margin: 0 0 1rem 1rem; position: sticky; top: 1rem; z-index: 4; }
+.hero-bookmark, .hero-bookmark-more > summary { display: block; padding: .65rem .9rem; color: var(--ink, #332719); background: var(--paper-light, #ead9b5); border: 1px solid var(--border, #8b7048); border-radius: .15rem .7rem .7rem .15rem; box-shadow: 0 2px 6px #0002; text-decoration: none; cursor: pointer; }
+.hero-bookmark.active { color: #fff8e9; background: #7b5837; }
+.hero-bookmark.inactive { opacity: .68; }
+.hero-bookmark-more { position: relative; }
+.hero-bookmark-more > summary { text-align: center; list-style: none; font-weight: 800; }
+.hero-bookmark-menu { position: absolute; right: 100%; top: 0; min-width: 12rem; padding: .35rem; background: var(--paper-light, #ead9b5); border: 1px solid var(--border, #8b7048); box-shadow: 0 5px 15px #0003; }
+.hero-bookmark-menu a { display: block; padding: .5rem; color: var(--ink, #332719); text-decoration: none; }
+.hero-bookmark-menu a:hover { background: #c9b28a; }
+.hero-identity-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.configuration-owner { padding: .7rem 1rem; border-left: 4px solid #bd9144; background: color-mix(in srgb, #bd9144 14%, transparent); }
+.computed-stats .editable-field { display: flex; align-items: center; gap: .5rem; }
+.comparison-mark { font-size: 1.4rem; font-weight: 900; min-width: 1.5rem; text-align: center; }
+.comparison-mark.up, .hero-bookmark-legend .up { color: #39834a; }
+.comparison-mark.down, .hero-bookmark-legend .down { color: #bd4840; }
+.comparison-mark.changed, .hero-bookmark-legend .changed { color: #bd891f; }
+.hero-bookmark-legend { clear: both; display: flex; flex-wrap: wrap; gap: .8rem; padding: .75rem; color: var(--ink, #332719); }
+.hero-bookmark-legend strong { flex-basis: 100%; }
+.guardian-library-verse, .guardian-library-notice { margin: 1rem 0; padding: 1rem 1.2rem; border-left: 4px solid #bd9144; border-radius: .4rem; background: color-mix(in srgb, #bd9144 14%, transparent); }
+.guardian-library-verse p { margin-bottom: 0; white-space: pre-line; font-style: italic; }
+html[data-theme="moonlit"] .hero-bookmark, html[data-theme="moonlit"] .hero-bookmark-more > summary { color: var(--ink, #e5ddfa); background: #292740; border-color: #786ba4; }
+html[data-theme="moonlit"] .hero-bookmark.active { background: #524575; }
+html[data-theme="moonlit"] .hero-bookmark-menu { background: #292740; border-color: #786ba4; }
+html[data-theme="moonlit"] .hero-bookmark-menu a { color: #e5ddfa; }
+html[data-theme="moonlit"] .hero-bookmark-menu a:hover { background: #474063; }
+html[data-theme="moonlit"] .guardian-library-verse, html[data-theme="moonlit"] .guardian-library-notice { background: #28263d; border-color: #a999dc; color: #eee9ff; }
+@media (max-width: 700px) {
+    .hero-bookmarks { float: none; position: static; flex-direction: row; max-width: 100%; width: 100%; overflow-x: auto; margin: 0 0 1rem; }
+    .hero-bookmark { white-space: nowrap; }
+    .hero-bookmark-menu { right: 0; top: 100%; }
+    .hero-identity-fields { grid-template-columns: 1fr; }
+}
 .picker-edit-field { grid-template-columns: minmax(0, 1fr) auto auto auto; }
 .search-picker { display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, .75fr); grid-template-rows: auto auto; align-items: start; gap: 5px 12px; min-width: 0; }
 .search-picker-label { grid-column: 1 / -1; font-weight: 700; }

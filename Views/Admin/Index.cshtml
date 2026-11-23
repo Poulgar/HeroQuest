@@ -9,9 +9,12 @@
     ViewData["Title"] = "Biblioteca · " + Model.Title;
 }
 <section class="admin-page page-shell library-page">
-    <p class="eyebrow">BIBLIOTECA DEL REINO · SOLO PARA EL MAESTRO DE JUEGO</p>
+    <p class="eyebrow">BIBLIOTECA DEL REINO · AUTORIZADO AL MAESTRO DE JUEGO</p>
     <h1>Biblioteca de <em>@Model.Title</em></h1>
     <p>Elige un estante. Busca por nombre o descripción y filtra por expansión o categoría.</p>
+    @if (ViewBag.LibraryGuardian is HeroQuest.Models.WorldPoem guardian)
+    { <aside class="guardian-library-verse"><strong>El Guardián vela por estas páginas</strong><p>@guardian.Text</p></aside> }
+    @if (TempData["GuardianNotice"] is string guardianNotice) { <p class="guardian-library-notice" role="status">@guardianNotice</p> }
 
     <nav class="library-shelves" aria-label="Estantes de la Biblioteca">
         @foreach (var shelf in shelves)
@@ -29,7 +32,7 @@
 
     <section class="library-archive-section" aria-labelledby="archive-heading">
         <div class="library-section-heading">
-            <div><p class="eyebrow">SÓTANO</p><h2 id="archive-heading">Archivo · elementos inactivos <span>(@Model.ArchivedItems.Count)</span></h2></div>
+            <div><p class="eyebrow">ARCHIVO SUBTERRÁNEO</p><h2 id="archive-heading">Archivo · elementos inactivos <span>(@Model.ArchivedItems.Count)</span></h2></div>
         </div>
         <p class="library-section-intro">Los elementos de esta lista no aparecen en los catálogos de los Aventureros. Puedes reactivarlos cuando quieras.</p>
         @await Html.PartialAsync("_LibraryCatalogList", new HeroQuest.Models.LibraryListSectionViewModel { Items = Model.ArchivedItems, Section = "archived", Library = Model })

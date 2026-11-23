@@ -14,12 +14,11 @@ public class Heroe : Character
 
     public int DicesRedMovement { get; set; }
     public string Name { get; set; } = string.Empty;
-    public string Player { get; set; } = string.Empty;
     public string Weapon { get; set; } = string.Empty;
     public string? Armor { get; set; }
     public string? Spells { get; set; }
     public int Gold { get; set; }
     public string? Items { get; set; }
     public int QuestsCompleted { get; set; }
-    public PlayerProfile? PlayerProfile { get; set; }
+    public ICollection<HeroConfiguration> Configurations { get; set; } = [];
 }

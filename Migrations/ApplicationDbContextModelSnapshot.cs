@@ -62,18 +62,52 @@ namespace HeroQuest.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AllowedClasses")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Appears")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("CannotCombineWith")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("DefenseBonus")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("EquipmentSlot")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExcludedClasses")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("HealthBonus")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsArchived")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsRangedWeapon")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MindBonus")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("MovementDiceOverride")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MovementSquaresBonus")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -87,6 +121,9 @@ namespace HeroQuest.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("WeaponAttackDice")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Weight")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -96,23 +133,111 @@ namespace HeroQuest.Migrations
                     b.ToTable("EquipmentsAndArtifacts");
                 });
 
+            modelBuilder.Entity("HeroQuest.Models.HeroConfiguration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Abilities")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Armors")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CharacterName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Gold")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("HeroId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Items")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MovementDice")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PlayerProfileId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("QuestsCompleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Weapons")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HeroId");
+
+                    b.HasIndex("PlayerProfileId", "HeroId")
+                        .IsUnique();
+
+                    b.ToTable("HeroConfigurations");
+                });
+
             modelBuilder.Entity("HeroQuest.Models.MiscellaneaItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AllowedClasses")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Appears")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("CannotCombineWith")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Category")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DefenseBonus")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("EquipmentSlot")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExcludedClasses")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("HealthBonus")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsArchived")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsRangedWeapon")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MindBonus")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("MovementDiceOverride")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MovementSquaresBonus")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -120,6 +245,9 @@ namespace HeroQuest.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Price")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("WeaponAttackDice")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -173,23 +301,29 @@ namespace HeroQuest.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("HeroId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nickname")
+                        .HasMaxLength(60)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HeroId")
-                        .IsUnique();
+                    b.HasIndex("Username")
+                        .IsUnique()
+                        .HasFilter("\"Username\" <> ''");
 
                     b.ToTable("PlayerProfiles");
                 });
@@ -272,10 +406,6 @@ namespace HeroQuest.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Player")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("QuestsCompleted")
                         .HasColumnType("INTEGER");
 
@@ -317,6 +447,25 @@ namespace HeroQuest.Migrations
                     b.ToTable("Monsters");
                 });
 
+            modelBuilder.Entity("HeroQuest.Models.HeroConfiguration", b =>
+                {
+                    b.HasOne("HeroQuest.Models.Heroe", "Hero")
+                        .WithMany("Configurations")
+                        .HasForeignKey("HeroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HeroQuest.Models.PlayerProfile", "PlayerProfile")
+                        .WithMany("HeroConfigurations")
+                        .HasForeignKey("PlayerProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hero");
+
+                    b.Navigation("PlayerProfile");
+                });
+
             modelBuilder.Entity("HeroQuest.Models.MonsterSpellOfTerror", b =>
                 {
                     b.HasOne("HeroQuest.Models.Monster", "Monster")
@@ -338,12 +487,7 @@ namespace HeroQuest.Migrations
 
             modelBuilder.Entity("HeroQuest.Models.PlayerProfile", b =>
                 {
-                    b.HasOne("HeroQuest.Models.Heroe", "Hero")
-                        .WithOne("PlayerProfile")
-                        .HasForeignKey("HeroQuest.Models.PlayerProfile", "HeroId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Hero");
+                    b.Navigation("HeroConfigurations");
                 });
 
             modelBuilder.Entity("HeroQuest.Models.SpellOfTerror", b =>
@@ -353,7 +497,7 @@ namespace HeroQuest.Migrations
 
             modelBuilder.Entity("HeroQuest.Models.Heroe", b =>
                 {
-                    b.Navigation("PlayerProfile");
+                    b.Navigation("Configurations");
                 });
 
             modelBuilder.Entity("HeroQuest.Models.Monster", b =>

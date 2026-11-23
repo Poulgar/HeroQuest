@@ -1,14 +1,15 @@
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
+using HeroQuest.Data;
 using HeroQuest.Models;
+using HeroQuest.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HeroQuest.Controllers;
 
-public class AccountController(IConfiguration configuration) : Controller
+public class AccountController(IConfiguration configuration, ApplicationDbContext db) : Controller
 {
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
@@ -25,34 +26,33 @@ public class AccountController(IConfiguration configuration) : Controller
         // Estas cuentas son únicamente para una demo local; no reutilices estas claves en un sitio público.
         var account = configuration.GetSection("DemoAccounts").GetChildren()
             .FirstOrDefault(candidate => string.Equals(candidate["Username"], model.Username.Trim(), StringComparison.OrdinalIgnoreCase));
-        if (account is null || !VerifyPassword(model.Password, account["PasswordHash"]))
+        if (account is not null && PasswordHashing.Verify(model.Password, account["PasswordHash"]))
+        {
+            var username = account["Username"]!;
+            var role = account["Role"]!;
+            return await SignInAsync(username, role, null, returnUrl);
+        }
+
+        // Los usuarios normales creados por el Maestro de Juego tienen su cuenta guardada en SQLite.
+        var player = await db.PlayerProfiles.AsNoTracking()
+            .FirstOrDefaultAsync(profile => profile.Username.ToLower() == model.Username.Trim().ToLower());
+        if (player is null || !PasswordHashing.Verify(model.Password, player.PasswordHash))
         {
             ModelState.AddModelError(string.Empty, "El usuario o la contraseña no son correctos.");
             return View(model);
         }
 
-        var username = account["Username"]!;
-        var role = account["Role"]!;
-        var claims = new[] { new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.Role, role) };
+        return await SignInAsync(player.Username, "User", player.Id, returnUrl);
+    }
+
+    private async Task<IActionResult> SignInAsync(string username, string role, int? profileId, string? returnUrl)
+    {
+        var claims = new List<Claim> { new(ClaimTypes.Name, username), new(ClaimTypes.Role, role) };
+        if (profileId.HasValue) claims.Add(new Claim(ClaimTypes.NameIdentifier, profileId.Value.ToString()));
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
         return Url.IsLocalUrl(returnUrl) ? Redirect(returnUrl!) : RedirectToAction("Index", "Home");
-    }
-
-    // PBKDF2 mantiene solo el hash en appsettings; FixedTimeEquals evita filtrar si partes coinciden antes.
-    private static bool VerifyPassword(string password, string? storedHash)
-    {
-        var parts = storedHash?.Split('$');
-        if (parts is not { Length: 3 } || !int.TryParse(parts[0], out var iterations)) return false;
-        try
-        {
-            var salt = Convert.FromBase64String(parts[1]);
-            var expected = Convert.FromBase64String(parts[2]);
-            var actual = Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(password), salt, iterations, HashAlgorithmName.SHA256, expected.Length);
-            return CryptographicOperations.FixedTimeEquals(actual, expected);
-        }
-        catch (FormatException) { return false; }
     }
 
     [HttpPost, ValidateAntiForgeryToken]

@@ -37,12 +37,12 @@ Program.cs
 
 | Carpeta | Para qué sirve |
 | --- | --- |
-| `Controllers/` | Recibe las rutas web, consulta datos y elige qué vista mostrar. `PlayersController` guarda los jugadores vinculados a héroes. |
+| `Controllers/` | Recibe las rutas web, consulta datos y aplica permisos. `PlayersController` solo permite al Maestro crear/editar cuentas de jugadores; `PlayerLibraryController` limita a cada Aventurero a sus propias configuraciones. |
 | `.StudyGuide/` | Guías para estudiar el mapa MVC, la autenticación y la organización visual del CSS. |
 | `Data/` | Configura Entity Framework Core y guarda los CSV fuente. |
 | `Migrations/` | Historial de cambios del esquema de SQLite. |
 | `Models/` | Entidades que representan personajes y registros de la base de datos. |
-| `Services/` | Importación, lectura y transformación de datos. |
+| `Services/` | Importación, lectura y transformación de datos. `HeroConfigurationService` calcula equipo y estadísticas personales, valida restricciones y compara con la ficha de referencia; `PasswordHashing` protege contraseñas; `EquipmentEffectParser` extrae efectos claros de las descripciones. |
 | `Views/` | Plantillas Razor que generan cada página HTML. |
 | `wwwroot/` | Archivos estáticos que descarga el navegador: CSS, JavaScript e imágenes. |
 | `Properties/` | Perfiles de ejecución local, incluidos HTTP, HTTPS y red local. |
@@ -71,9 +71,9 @@ Al ejecutar o compilar pueden aparecer `DataBase/`, `bin/` y `obj/`. `DataBase/H
 
 ### `Data/ApplicationDbContext.cs`
 
-Es el puente entre el código C# y SQLite. Sus `DbSet` representan las colecciones/tablas principales: `Heroes`, `Monsters`, `Miscellanea`, `EquipmentsAndArtifacts`, `MonsterAbilities`, `SpellsOfTerror`, `WorldPoems` y `PlayerProfiles`.
+Es el puente entre el código C# y SQLite. Sus `DbSet` representan las colecciones/tablas principales: `Heroes`, `Monsters`, `Miscellanea`, `EquipmentsAndArtifacts`, `MonsterAbilities`, `SpellsOfTerror`, `WorldPoems`, `PlayerProfiles` y `HeroConfigurations`.
 
-En `OnModelCreating` se configura la herencia `Character` mediante **TPC** (*Table per Concrete Class*): héroes y monstruos se guardan en tablas concretas separadas. También se configura la relación entre monstruos y hechizos del Terror mediante la tabla puente `MonsterSpellOfTerror`.
+En `OnModelCreating` se configura la herencia `Character` mediante **TPC** (*Table per Concrete Class*): héroes y monstruos se guardan en tablas concretas separadas. También se configuran la tabla puente `MonsterSpellOfTerror` y las relaciones entre perfiles de jugador y sus configuraciones personales.
 
 ### `Models/`
 
@@ -81,8 +81,9 @@ En `OnModelCreating` se configura la herencia `Character` mediante **TPC** (*Tab
 | --- | --- |
 | `Character.cs` | Propiedades comunes a los personajes, como clase, vida, dados de mente, ataque y defensa. |
 | `IArchivable.cs` | Contrato compartido para ocultar y restaurar fichas sin borrarlas de SQLite. |
-| `CharacterHeroe.cs` | Datos propios de un héroe: movimiento con dados rojos, equipo, oro y otros datos de campaña. |
-| `PlayerProfile.cs` | Nombre y apodo de una persona jugadora y vínculo opcional con un héroe. |
+| `CharacterHeroe.cs` | Datos de referencia de un héroe: clase, estadísticas base, equipo original y expansión. Las posesiones y nombre de campaña viven en configuraciones separadas. |
+| `PlayerProfile.cs` | Nombre, apodo opcional, nombre de acceso y hash de contraseña de una persona jugadora. |
+| `HeroConfiguration.cs` | Estado personal de un héroe para un jugador: nombre elegido, varias armas, armaduras, objetos, habilidades, movimiento y progreso. |
 | `CharacterMonster.cs` | Datos propios de un monstruo: movimiento máximo, facción, habilidad y enlaces a hechizos. |
 | `EquipmentsAndArtifacts.cs` | Registro de equipo o artefacto; ambos se almacenan en una tabla y se distinguen por categoría. |
 | `MiscellaneaItem.cs` | Objeto de la sección Miscelánea. |
@@ -93,7 +94,7 @@ En `OnModelCreating` se configura la herencia `Character` mediante **TPC** (*Tab
 | `EnumDisplayExtensions.cs` | Convierte valores del enum en nombres legibles para las vistas. |
 | `MonsterVisualExtensions.cs` | Símbolos, colores y textos de presentación/lore para facciones, habilidades y hechizos. |
 | `ViewModels.cs` | Agrupa los datos que cada vista necesita, por ejemplo lista de registros y ficha seleccionada. No son tablas de la base. |
-| `AccountViewModels.cs` | Modelos de formulario de acceso y de edición para los catálogos. |
+| `AccountViewModels.cs` | Modelos de formularios de acceso, edición, pestañas de configuraciones y listas de jugadores. |
 | `ErrorViewModel.cs` | Datos mínimos que necesita la página de error. |
 
 ## 5. CSV e importación
@@ -166,7 +167,7 @@ Todo lo que el navegador debe descargar (CSS, JavaScript e imágenes) tiene que 
 
 ## 8. Migraciones y cambios de esquema
 
-`Migrations/` conserva el historial de cambios de tablas y columnas. `AddPlayerProfiles` crea la tabla de jugadores; `AddCharacterSourceNames` guarda el nombre de origen para recuperar los valores de referencia. Cada migración incluye:
+`Migrations/` conserva el historial de cambios de tablas y columnas. `AddPlayerProfiles` crea la tabla de jugadores; `AddPlayerHeroConfigurations` convierte sus asociaciones antiguas en fichas personales y añade efectos numéricos para equipo; `RemoveLegacyHeroPlayerField` retira el campo de jugador que ya no se usa en `Heroes`. `AddCharacterSourceNames` guarda el nombre de origen para recuperar valores de referencia. Cada migración incluye:
 
 - Un archivo principal `.cs` con los pasos `Up` (aplicar) y `Down` (revertir).
 - Un `.Designer.cs` generado con el modelo de esa versión.
@@ -205,7 +206,7 @@ Así puedes ver separadas las responsabilidades: **Model** representa los datos,
 
 - La Biblioteca tiene estantes para Héroes, Monstruos, Equipo y Artefactos, Miscelánea, Habilidades, Hechizos del Terror y Versos y Leyendas. Los campos de catálogo usan buscadores con sugerencias y una lista de selecciones; cada campo existente se modifica por separado con su botón **Editar**.
 - Las fichas de Héroes y Monstruos importadas conservan `SourceName`. El botón **Restablecer valores originales** recupera clases, atributos y equipo inicial desde los CSV de referencia y avisa antes de reemplazar cambios de balance.
-- `PlayerProfile` guarda nombre, apodo y una relación opcional uno a uno con `Heroe`. El apartado de Jugadores de la portada solo se muestra al Maestro de Juego. El enlace está sobre la tabla `Heroes` porque la herencia TPC no ofrece una tabla común de personajes a la que SQLite pueda apuntar con una clave foránea.
+- `PlayerProfile` guarda el nombre, apodo opcional, usuario y hash de contraseña. Cada jugador puede tener una configuración por héroe en `HeroConfigurations`; allí se conserva el nombre personalizado, equipo, habilidades y progreso. La migración inicial traslada la asociación histórica y conserva su héroe y equipo.
 
 # Cambios de Biblioteca, categorías y equipo
 
@@ -217,16 +218,16 @@ Al iniciar, la migración `AddMiscellaneaCategories` añade la columna, asigna c
 
 ## Biblioteca y fichas archivadas
 
-`Views/Admin/_LibraryCatalogList.cshtml` contiene búsqueda, orden y filtros por expansión y clasificación. En Héroes la clasificación es el jugador vinculado, cargado en `AdminController` desde `PlayerProfile`; las otras tablas conservan su filtro por tipo/facción. `site.js` aplica filtros en el navegador, y la regla `[hidden]` de `forms-and-access.css` mantiene ocultas las filas filtradas aunque el estilo de fila use `display:flex`.
+`Views/Admin/_LibraryCatalogList.cshtml` contiene búsqueda, orden y filtros por expansión y clasificación. En Héroes la clasificación es el jugador con configuración activa, cargado en `AdminController`. Al editar un héroe, los marcadores laterales abren la ficha por defecto o la configuración personal elegida; el símbolo `+` agrupa las restantes. `site.js` aplica filtros y guarda cada campo por separado.
 
 Las habilidades y hechizos archivados mantienen su relación con los monstruos. `MonstersController` los carga junto con los activos para conservar el nombre; `_MonsterDetailCard.cshtml` muestra que la información está archivada sin incluir la descripción. El Maestro de Juego ve el enlace para abrir esa ficha en Biblioteca y puede restaurarla desde su formulario.
 
 ## Jugador y nombre del héroe de campaña
 
-`Heroe.PlayerProfile` enlaza el héroe de biblioteca con el perfil de jugador. En el registro público se conserva la clase del héroe; la ficha muestra al Aventurero su apodo como nombre de personaje, y el Maestro de Juego puede consultar también el nombre real del perfil y el apodo.
+El Maestro crea y edita perfiles desde el apartado de jugadores de Inicio. Cada alta crea también una cuenta de rol `User`; el usuario inicial se genera a partir del nombre y la contraseña provisional es `<usuario>123`. Por ejemplo, Pol accede con `pol / pol123`. Si no se indica un nombre propio al crear la primera configuración, se usa el apodo y, si no hay apodo, el nombre del jugador. Los cambios posteriores en el nombre del héroe no alteran los datos del jugador.
 
 ## Armas, armaduras y dados
 
-Las descripciones de `HeroQuest_Equipment.csv` indican efectos en texto (por ejemplo, Espada Ancha: 3 dados de ataque; Hacha de Batalla: 4; Cota de Malla: +1 dado de defensa; Coraza: +2 y limita movimiento). No son todavía propiedades numéricas que el programa pueda calcular. Por eso los dados de Héroe siguen siendo valores informativos y esta actualización no altera sus estadísticas.
+`EquipmentEffectParser` vuelve a leer las descripciones al iniciar y guarda efectos estructurados en SQLite (dados de ataque/defensa, restricciones de clase, movimiento y compatibilidades). En una ficha personal, las armas sustituyen el ataque de referencia y se usa el valor más alto de las armas equipadas; las armaduras usan su mayor valor defensivo. El Aventurero no puede modificar directamente clase ni estadísticas base. Las restricciones se validan también en el servidor, no solo en los controles visuales.
 
 Para una partida en tiempo real, el equipo deberá tener campos estructurados como `AttackDice`, `DefenseDice`, restricciones de clase y reglas de movimiento; la ficha de campaña deberá guardar las armas/armaduras que lleva ese héroe. El ataque activo se calculará tomando el arma elegida en ese turno, no sumando todas sus armas; defensa y movimiento se calcularán con su armadura actual. Esto preserva la posibilidad de llevar varias armas sin combinar sus ataques.

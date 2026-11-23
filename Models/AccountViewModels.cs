@@ -16,6 +16,14 @@ public sealed class CatalogEditViewModel
 {
     public string Type { get; set; } = string.Empty;
     public int? Id { get; set; }
+    public int? ConfigurationId { get; set; }
+    public bool IsPersonalConfiguration { get; set; }
+    public List<HeroConfigurationTab> ConfigurationTabs { get; set; } = [];
+    public Dictionary<string, string> ComparisonMarks { get; set; } = [];
+    public int DisplayHp { get; set; }
+    public int DisplayMind { get; set; }
+    public int DisplayAttack { get; set; }
+    public int DisplayDefense { get; set; }
     public string? SourceName { get; set; }
     public string Key { get; set; } = string.Empty;
     [Required, StringLength(120)] public string Name { get; set; } = string.Empty;
@@ -39,13 +47,17 @@ public sealed class CatalogEditViewModel
     public string[] MiscellaneaCategoryOptions { get; set; } = [MiscellaneaCategory.NormalShop.DisplayName()];
     public int Gold { get; set; }
     public bool IsArchived { get; set; }
-    public string Player { get; set; } = string.Empty;
     public string Weapon { get; set; } = string.Empty;
     public string Armor { get; set; } = string.Empty;
+    public string[] WeaponOptions { get; set; } = [];
+    public string[] ArmorOptions { get; set; } = [];
+    public string[] ItemOptions { get; set; } = [];
     public string Spells { get; set; } = string.Empty;
     public string Items { get; set; } = string.Empty;
     public int QuestsCompleted { get; set; }
 }
+
+public sealed record HeroConfigurationTab(int Id, string PlayerName, string CharacterName, bool IsActive);
 
 public sealed record CatalogListItem(
     int Id, string Name, string Details, bool IsArchived,
@@ -78,8 +90,31 @@ public sealed class PlayerProfileInput
     [System.ComponentModel.DataAnnotations.Required, System.ComponentModel.DataAnnotations.StringLength(80)]
     public string Name { get; set; } = string.Empty;
 
-    [System.ComponentModel.DataAnnotations.Required, System.ComponentModel.DataAnnotations.StringLength(60)]
+    [System.ComponentModel.DataAnnotations.StringLength(60)]
     public string Nickname { get; set; } = string.Empty;
 
-    public int? HeroId { get; set; }
+    public int[] HeroIds { get; set; } = [];
+}
+
+public sealed class PlayerProfileEditInput
+{
+    public int Id { get; set; }
+    [Required, StringLength(80)] public string Name { get; set; } = string.Empty;
+    [StringLength(60)] public string Nickname { get; set; } = string.Empty;
+    public int[] HeroIds { get; set; } = [];
+}
+
+public sealed class PlayerProfileEditViewModel
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Nickname { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
+    public List<int> SelectedHeroIds { get; set; } = [];
+    public List<Heroe> Heroes { get; set; } = [];
+}
+
+public sealed class PlayerHeroListViewModel
+{
+    public List<HeroConfiguration> Configurations { get; set; } = [];
 }

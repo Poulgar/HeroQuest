@@ -9,7 +9,7 @@ namespace HeroQuest.Controllers;
 
 // Toda la administración se protege en el servidor; ocultar botones por sí solo no sería un control de acceso.
 [Authorize(Roles = "Admin")]
-public class AdminController(ApplicationDbContext db, IWebHostEnvironment environment) : Controller
+public class AdminController(ApplicationDbContext db, IWebHostEnvironment environment, HeroConfigurationService heroConfigurations, WorldPoemService poems) : Controller
 {
     private static readonly Dictionary<string, string> Titles = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -46,6 +46,7 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             classifications = classifications.Concat(await db.PlayerProfiles.AsNoTracking().Select(player => player.Name).ToListAsync());
         }
 
+        ViewBag.LibraryGuardian = await poems.FindAsync("library-guardian");
         return View("Index", new CatalogListViewModel
         {
             Type = type.ToLowerInvariant(), Title = title, CreateLabel = createLabel,
@@ -53,7 +54,7 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             ExpansionOptions = allRows.SelectMany(row => row.Expansion.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
                 .Distinct(comparer).OrderBy(value => value, comparer).ToList(),
             ClassificationLabel = type.Equals("heroes", StringComparison.OrdinalIgnoreCase) ? "Jugador" : "Categoría / clase",
-            ClassificationOptions = classifications.Where(value => !string.IsNullOrWhiteSpace(value))
+            ClassificationOptions = classifications.Where(value => !string.IsNullOrWhiteSpace(value)).SelectMany(value => value.Split('|', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
                 .Distinct(comparer).OrderBy(value => value, comparer).ToList()
         });
     }
@@ -64,10 +65,14 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         switch (type)
         {
             case "heroes":
-                return (await db.Heroes.AsNoTracking().Include(hero => hero.PlayerProfile).ToListAsync()).Select(hero =>
+                var playerNamesByHero = await db.HeroConfigurations.AsNoTracking().Where(configuration => configuration.IsActive)
+                    .Select(configuration => new { configuration.HeroId, configuration.PlayerProfile.Name }).ToListAsync();
+                var groupedPlayers = playerNamesByHero.GroupBy(item => item.HeroId)
+                    .ToDictionary(group => group.Key, group => string.Join('|', group.Select(item => item.Name).Distinct(StringComparer.OrdinalIgnoreCase)));
+                return (await db.Heroes.AsNoTracking().ToListAsync()).Select(hero =>
                     new CatalogListItem(hero.Id, hero.Name, $"{hero.Hp} HP · {hero.CharacterTypeClass}", hero.IsArchived,
-                        $"{hero.Name} {hero.CharacterTypeClass} {hero.PlayerProfile?.Name} {hero.PlayerProfile?.Nickname} {hero.Description} {hero.Spells} {hero.Appears.DisplayName()}",
-                        hero.Appears.DisplayName(), hero.PlayerProfile?.Name ?? "")).ToList();
+                        $"{hero.Name} {hero.CharacterTypeClass} {groupedPlayers.GetValueOrDefault(hero.Id)} {hero.Description} {hero.Spells} {hero.Appears.DisplayName()}",
+                        hero.Appears.DisplayName(), groupedPlayers.GetValueOrDefault(hero.Id) ?? "")).ToList();
             case "monsters":
                 return (await db.Monsters.AsNoTracking().ToListAsync()).Select(monster =>
                     new CatalogListItem(monster.Id, monster.Name, $"{monster.Hp} HP · {monster.Faction}", monster.IsArchived,
@@ -100,11 +105,27 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
     }
 
     [HttpGet]
-    public async Task<IActionResult> Edit(string type, int? id)
+    public async Task<IActionResult> Edit(string type, int? id, int? configurationId)
     {
         if (!Titles.ContainsKey(type)) return BadRequest();
-        var model = id is null ? new CatalogEditViewModel { Type = type.ToLowerInvariant() } : await LoadEditModel(type, id.Value);
+        CatalogEditViewModel? model;
+        if (type.Equals("heroes", StringComparison.OrdinalIgnoreCase) && id is not null)
+        {
+            var hero = await db.Heroes.FindAsync(id.Value);
+            if (hero is null) return NotFound();
+            var configuration = configurationId is null ? null : await db.HeroConfigurations.Include(item => item.PlayerProfile)
+                .FirstOrDefaultAsync(item => item.Id == configurationId.Value && item.HeroId == id.Value);
+            if (configurationId is not null && configuration is null) return NotFound();
+            model = await heroConfigurations.BuildEditorAsync(hero, configuration, personal: false);
+        }
+        else model = id is null ? new CatalogEditViewModel { Type = type.ToLowerInvariant() } : await LoadEditModel(type, id.Value);
         if (model is null) return NotFound();
+        if (model.Type == "heroes" && model.Id is int heroId && model.ConfigurationTabs.Count == 0)
+        {
+            model.ConfigurationTabs = await db.HeroConfigurations.AsNoTracking().Where(item => item.HeroId == heroId)
+                .Include(item => item.PlayerProfile).OrderBy(item => item.PlayerProfile.Name)
+                .Select(item => new HeroConfigurationTab(item.Id, item.PlayerProfile.Name, item.CharacterName, item.IsActive)).ToListAsync();
+        }
         await PopulateEditorOptionsAsync(model);
         return View(model);
     }
@@ -126,8 +147,15 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             ModelState.AddModelError(string.Empty, "Elige los valores desde las sugerencias del catálogo.");
             return await ReturnEditorAsync(model);
         }
+        if (model.Type == "heroes")
+        {
+            var ruleHero = new Heroe { CharacterTypeClass = model.CharacterTypeClass, Description = model.Description };
+            var loadoutError = await heroConfigurations.ValidateLoadoutAsync(ruleHero, model.WeaponOptions, model.ArmorOptions, model.ItemOptions);
+            if (loadoutError is not null) { ModelState.AddModelError(string.Empty, loadoutError); return await ReturnEditorAsync(model); }
+        }
         // El texto de expansiones se convierte aquí a banderas del enum antes de guardar la entidad.
         var appearance = TypeAppearsParser.Parse(string.Join(", ", model.AppearsOptions));
+        var isNewRecord = model.Id is null;
 
         if (model.Type.Equals("poems", StringComparison.OrdinalIgnoreCase)
             && (string.IsNullOrWhiteSpace(model.Key) || model.Key.Length > 64
@@ -145,7 +173,10 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
                 hero.Name = model.Name.Trim(); hero.CharacterTypeClass = model.CharacterTypeClass;
                 hero.Hp = model.Hp; hero.DicesMind = model.DicesMind; hero.DicesAttack = model.DicesAttack; hero.DicesDefend = model.DicesDefend;
                 hero.DicesRedMovement = model.DicesRedMovement; hero.Description = model.Description; hero.Appears = appearance;
-                hero.Player = model.Player; hero.Weapon = model.Weapon; hero.Armor = model.Armor; hero.Spells = string.Join(", ", model.AbilityOptions); hero.Items = model.Items;
+                hero.Weapon = HeroConfigurationService.JoinNames(model.WeaponOptions.Length > 0 ? model.WeaponOptions : HeroConfigurationService.SplitNames(model.Weapon));
+                hero.Armor = HeroConfigurationService.JoinNames(model.ArmorOptions.Length > 0 ? model.ArmorOptions : HeroConfigurationService.SplitNames(model.Armor));
+                hero.Spells = HeroConfigurationService.JoinNames(model.AbilityOptions);
+                hero.Items = HeroConfigurationService.JoinNames(model.ItemOptions.Length > 0 ? model.ItemOptions : HeroConfigurationService.SplitNames(model.Items));
                 hero.Gold = model.Gold; hero.QuestsCompleted = model.QuestsCompleted; hero.IsArchived = model.IsArchived; break;
             case "monsters":
                 var monster = model.Id is null ? new Monster() : await db.Monsters.FindAsync(model.Id.Value) ?? new Monster();
@@ -159,11 +190,11 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
                 var item = model.Id is null ? new EquipmentsAndArtifacts(0, "", "", 0, "", TypeAppears.None, "", "Equipment") : await db.EquipmentsAndArtifacts.FindAsync(model.Id.Value) ?? new EquipmentsAndArtifacts(0, "", "", 0, "", TypeAppears.None, "", "Equipment");
                 if (model.Id is null) { item.Id = await db.EquipmentsAndArtifacts.Select(x => (int?)x.Id).MaxAsync() + 1 ?? 1; db.EquipmentsAndArtifacts.Add(item); }
                 item.Name = model.Name.Trim(); item.Description = model.Description; item.Price = model.Price; item.Type = model.ItemType;
-                item.Weight = model.Weight; item.Category = NormalizeCategory(model.Category); item.Appears = appearance; item.IsArchived = model.IsArchived; break;
+                item.Weight = model.Weight; item.Category = NormalizeCategory(model.Category); item.Appears = appearance; item.IsArchived = model.IsArchived; EquipmentEffectParser.Apply(item); break;
             case "miscellanea":
                 var entry = model.Id is null ? new MiscellaneaItem(0, "", "", 0, TypeAppears.None) : await db.Miscellanea.FindAsync(model.Id.Value) ?? new MiscellaneaItem(0, "", "", 0, TypeAppears.None);
                 if (model.Id is null) { entry.Id = await db.Miscellanea.Select(x => (int?)x.Id).MaxAsync() + 1 ?? 1; db.Miscellanea.Add(entry); }
-                entry.Name = model.Name.Trim(); entry.Description = model.Description; entry.Price = model.Price; entry.Appears = appearance; entry.Category = ParseMiscellaneaCategory(model.MiscellaneaCategoryOptions); entry.IsArchived = model.IsArchived; break;
+                entry.Name = model.Name.Trim(); entry.Description = model.Description; entry.Price = model.Price; entry.Appears = appearance; entry.Category = ParseMiscellaneaCategory(model.MiscellaneaCategoryOptions); entry.IsArchived = model.IsArchived; EquipmentEffectParser.Apply(entry); break;
             case "abilities":
                 var ability = model.Id is null ? new MonsterAbility(0, "", "", TypeAppears.None) : await db.MonsterAbilities.FindAsync(model.Id.Value) ?? new MonsterAbility(0, "", "", TypeAppears.None);
                 if (model.Id is null) { ability.Id = await db.MonsterAbilities.Select(x => (int?)x.Id).MaxAsync() + 1 ?? 1; db.MonsterAbilities.Add(ability); }
@@ -185,12 +216,20 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         }
 
         await db.SaveChangesAsync();
+        TempData["GuardianNotice"] = await poems.MessageAsync(isNewRecord ? "library-added" : "library-edited", model.Name);
         return RedirectToAction(nameof(Index), new { type = model.Type });
     }
 
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateField(string type, int id, string field, string? value, string[]? values)
     {
+        if (type.Equals("hero-configuration", StringComparison.OrdinalIgnoreCase))
+        {
+            var configuration = await db.HeroConfigurations.FirstOrDefaultAsync(item => item.Id == id);
+            if (configuration is null) return NotFound();
+            var error = await heroConfigurations.UpdateAsync(configuration, field, value, values ?? []);
+            return error is null ? Json(new { success = true, message = await poems.MessageAsync("library-edited", configuration.CharacterName) }) : BadRequest(error);
+        }
         // Cada solicitud solo puede actualizar un campo incluido en esta lista explícita.
         var allowed = GetEditableFields(type);
         if (allowed is null || !allowed.TryGetValue(field, out var propertyName)) return BadRequest();
@@ -214,7 +253,17 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         if (property is null || !property.CanWrite) return BadRequest();
         if (propertyName == "Appears") property.SetValue(entity, TypeAppearsParser.Parse(string.Join(", ", values ?? [])));
         else if (field == "AbilityOptions") property.SetValue(entity, string.Join(", ", values ?? []));
-        else if (field == "MiscellaneaCategoryOptions" && entity is MiscellaneaItem miscellanea) miscellanea.Category = ParseMiscellaneaCategory(values ?? []);
+        else if (field is "WeaponOptions" or "ArmorOptions" or "ItemOptions")
+        {
+            if (entity is not Heroe heroEntity) return BadRequest();
+            var weapons = field == "WeaponOptions" ? values ?? [] : HeroConfigurationService.SplitNames(heroEntity.Weapon);
+            var armors = field == "ArmorOptions" ? values ?? [] : HeroConfigurationService.SplitNames(heroEntity.Armor);
+            var items = field == "ItemOptions" ? values ?? [] : HeroConfigurationService.SplitNames(heroEntity.Items);
+            var validation = await heroConfigurations.ValidateLoadoutAsync(heroEntity, weapons, armors, items);
+            if (validation is not null) return BadRequest(validation);
+            property.SetValue(entity, HeroConfigurationService.JoinNames(values ?? []));
+        }
+        else if (field == "MiscellaneaCategoryOptions" && entity is MiscellaneaItem miscellaneaCategoryItem) miscellaneaCategoryItem.Category = ParseMiscellaneaCategory(values ?? []);
         else if (property.PropertyType == typeof(int))
         {
             if (!int.TryParse(value, out var number) || number < 0) return BadRequest("El valor debe ser un número positivo.");
@@ -238,11 +287,19 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
             if (text.Length > 2000 || (field == "Name" && (text.Length == 0 || text.Length > 120))) return BadRequest();
             property.SetValue(entity, text);
             if (entity is Monster monster && field == "Name") monster.CharacterTypeClass = text;
+            if (entity is EquipmentsAndArtifacts equipment && field == "Description") EquipmentEffectParser.Apply(equipment);
+            if (entity is MiscellaneaItem miscellaneaItem && field == "Description") EquipmentEffectParser.Apply(miscellaneaItem);
         }
         else return BadRequest();
 
         await db.SaveChangesAsync();
-        return Json(new { success = true });
+        var recordName = entity switch
+        {
+            Heroe hero => hero.Name, Monster monster => monster.Name, EquipmentsAndArtifacts equipment => equipment.Name,
+            MiscellaneaItem item => item.Name, MonsterAbility ability => ability.Name, SpellOfTerror spell => spell.Name,
+            WorldPoem poem => poem.Title, _ => "la ficha"
+        };
+        return Json(new { success = true, message = await poems.MessageAsync("library-edited", recordName) });
     }
 
     [HttpPost, ValidateAntiForgeryToken]
@@ -298,7 +355,8 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
 
     private static Dictionary<string, string>? GetEditableFields(string type) => type.ToLowerInvariant() switch
     {
-            "heroes" => new() { ["Name"] = "Name", ["Description"] = "Description", ["CharacterTypeClass"] = "CharacterTypeClass", ["Hp"] = "Hp", ["DicesMind"] = "DicesMind", ["DicesAttack"] = "DicesAttack", ["DicesDefend"] = "DicesDefend", ["DicesRedMovement"] = "DicesRedMovement", ["Player"] = "Player", ["Weapon"] = "Weapon", ["Armor"] = "Armor", ["AbilityOptions"] = "Spells", ["Items"] = "Items", ["Gold"] = "Gold", ["QuestsCompleted"] = "QuestsCompleted", ["AppearsOptions"] = "Appears" },
+        "heroes" => new() { ["Name"] = "Name", ["Description"] = "Description", ["CharacterTypeClass"] = "CharacterTypeClass", ["Hp"] = "Hp", ["DicesMind"] = "DicesMind", ["DicesAttack"] = "DicesAttack", ["DicesDefend"] = "DicesDefend", ["DicesRedMovement"] = "DicesRedMovement", ["WeaponOptions"] = "Weapon", ["ArmorOptions"] = "Armor", ["AbilityOptions"] = "Spells", ["ItemOptions"] = "Items", ["Gold"] = "Gold", ["QuestsCompleted"] = "QuestsCompleted", ["AppearsOptions"] = "Appears" },
+        "hero-configuration" => new() { ["Name"] = "CharacterName", ["WeaponOptions"] = "Weapons", ["ArmorOptions"] = "Armors", ["ItemOptions"] = "Items", ["AbilityOptions"] = "Abilities", ["MovementDice"] = "MovementDice", ["Gold"] = "Gold", ["QuestsCompleted"] = "QuestsCompleted" },
         "monsters" => new() { ["Name"] = "Name", ["Description"] = "Description", ["Faction"] = "Faction", ["AbilityOptions"] = "Ability", ["Hp"] = "Hp", ["DicesMind"] = "DicesMind", ["DicesAttack"] = "DicesAttack", ["DicesDefend"] = "DicesDefend", ["MaxMovement"] = "MaxMovement", ["AppearsOptions"] = "Appears" },
         "equipment" => new() { ["Name"] = "Name", ["Description"] = "Description", ["Price"] = "Price", ["ItemType"] = "Type", ["Weight"] = "Weight", ["Category"] = "Category", ["AppearsOptions"] = "Appears" },
         "miscellanea" => new() { ["Name"] = "Name", ["Description"] = "Description", ["Price"] = "Price", ["AppearsOptions"] = "Appears", ["MiscellaneaCategoryOptions"] = "Category" },
@@ -356,6 +414,8 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
     public async Task<IActionResult> Archive(string type, int id, bool inArchive = false)
     {
         if (!Titles.ContainsKey(type)) return BadRequest();
+        var recordName = await GetCatalogNameAsync(type, id);
+        if (recordName is null) return NotFound();
         var archived = type.ToLowerInvariant() switch
         {
             "heroes" => await SetArchive(db.Heroes, id), "monsters" => await SetArchive(db.Monsters, id),
@@ -365,6 +425,7 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         };
         if (!archived) return NotFound();
         await db.SaveChangesAsync();
+        TempData["GuardianNotice"] = await poems.MessageAsync(inArchive ? "library-restored" : "library-archived", recordName);
         return RedirectToAction(nameof(Index), new { type, archived = !inArchive });
     }
 
@@ -372,6 +433,8 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
     public async Task<IActionResult> Delete(string type, int id, bool archived = false)
     {
         if (!Titles.ContainsKey(type)) return BadRequest();
+        var recordName = await GetCatalogNameAsync(type, id);
+        if (recordName is null) return NotFound();
         var deleted = type.ToLowerInvariant() switch
         {
             "heroes" => await Remove(db.Heroes, id), "monsters" => await Remove(db.Monsters, id),
@@ -381,8 +444,21 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         };
         if (!deleted) return NotFound();
         await db.SaveChangesAsync();
+        TempData["GuardianNotice"] = await poems.MessageAsync("library-destroyed", recordName);
         return RedirectToAction(nameof(Index), new { type, archived });
     }
+
+    private async Task<string?> GetCatalogNameAsync(string type, int id) => type.ToLowerInvariant() switch
+    {
+        "heroes" => await db.Heroes.Where(item => item.Id == id).Select(item => item.Name).FirstOrDefaultAsync(),
+        "monsters" => await db.Monsters.Where(item => item.Id == id).Select(item => item.Name).FirstOrDefaultAsync(),
+        "equipment" => await db.EquipmentsAndArtifacts.Where(item => item.Id == id).Select(item => item.Name).FirstOrDefaultAsync(),
+        "miscellanea" => await db.Miscellanea.Where(item => item.Id == id).Select(item => item.Name).FirstOrDefaultAsync(),
+        "abilities" => await db.MonsterAbilities.Where(item => item.Id == id).Select(item => item.Name).FirstOrDefaultAsync(),
+        "spells" => await db.SpellsOfTerror.Where(item => item.Id == id).Select(item => item.Name).FirstOrDefaultAsync(),
+        "poems" => await db.WorldPoems.Where(item => item.Id == id).Select(item => item.Title).FirstOrDefaultAsync(),
+        _ => null
+    };
 
     private async Task<int> NextCharacterId(bool isHero)
     {
@@ -441,6 +517,20 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         ViewBag.SpellTypeOptions = await db.SpellsOfTerror.AsNoTracking().Select(spell => spell.Type).Distinct().ToListAsync();
         ViewBag.SpellTypeOptions = ((IEnumerable<string>)ViewBag.SpellTypeOptions).Append(model.SpellType)
             .Where(value => !string.IsNullOrWhiteSpace(value)).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(value => value).ToArray();
+
+        if (model.Type == "heroes" && model.Id is int heroId && await db.Heroes.FindAsync(heroId) is { } hero)
+        {
+            ViewBag.WeaponOptions = (await heroConfigurations.GetWeaponOptionsAsync(hero)).Concat(model.WeaponOptions).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(value => value).ToArray();
+            ViewBag.ArmorOptions = (await heroConfigurations.GetArmorOptionsAsync(hero)).Concat(model.ArmorOptions).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(value => value).ToArray();
+            ViewBag.ItemOptions = (await heroConfigurations.GetItemOptionsAsync(hero)).Concat(model.ItemOptions).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(value => value).ToArray();
+        }
+        else if (model.Type == "heroes")
+        {
+            ViewBag.WeaponOptions = await db.EquipmentsAndArtifacts.AsNoTracking().Where(item => !item.IsArchived && item.Type == "Arma").Select(item => item.Name).Distinct().OrderBy(value => value).ToArrayAsync();
+            ViewBag.ArmorOptions = (await db.EquipmentsAndArtifacts.AsNoTracking().Where(item => !item.IsArchived && item.Type == "Armadura").Select(item => item.Name).ToListAsync())
+                .Concat(await db.Miscellanea.AsNoTracking().Where(item => !item.IsArchived && (item.EquipmentSlot == "Armadura" || item.EquipmentSlot == "Escudo" || item.EquipmentSlot == "Cabeza")).Select(item => item.Name).ToListAsync()).Distinct().OrderBy(value => value).ToArray();
+            ViewBag.ItemOptions = await db.Miscellanea.AsNoTracking().Where(item => !item.IsArchived).Select(item => item.Name).Distinct().OrderBy(value => value).ToArrayAsync();
+        }
     }
 
     private static string[] SplitOptions(string? values)
@@ -454,7 +544,7 @@ public class AdminController(ApplicationDbContext db, IWebHostEnvironment enviro
         var model = new CatalogEditViewModel { Type = type.ToLowerInvariant(), Id = id };
         switch (model.Type)
         {
-            case "heroes": if (await db.Heroes.FindAsync(id) is { } h) { model.Name=h.Name; model.SourceName=h.SourceName; model.CharacterTypeClass=h.CharacterTypeClass; model.Hp=h.Hp; model.DicesMind=h.DicesMind; model.DicesAttack=h.DicesAttack; model.DicesDefend=h.DicesDefend; model.DicesRedMovement=h.DicesRedMovement; model.Description=h.Description??""; model.AppearsOptions=SelectedAppearances(h.Appears); model.AbilityOptions=SplitOptions(h.Spells); model.Player=h.Player; model.Weapon=h.Weapon; model.Armor=h.Armor??""; model.Spells=h.Spells??""; model.Items=h.Items??""; model.Gold=h.Gold; model.QuestsCompleted=h.QuestsCompleted; model.IsArchived=h.IsArchived; } else return null; break;
+            case "heroes": if (await db.Heroes.FindAsync(id) is { } h) { model.Name=h.Name; model.SourceName=h.SourceName; model.CharacterTypeClass=h.CharacterTypeClass; model.Hp=h.Hp; model.DicesMind=h.DicesMind; model.DicesAttack=h.DicesAttack; model.DicesDefend=h.DicesDefend; model.DicesRedMovement=h.DicesRedMovement; model.Description=h.Description??""; model.AppearsOptions=SelectedAppearances(h.Appears); model.AbilityOptions=HeroConfigurationService.SplitNames(h.Spells); model.Weapon=h.Weapon; model.Armor=h.Armor??""; model.Items=h.Items??""; model.WeaponOptions=HeroConfigurationService.SplitNames(h.Weapon); model.ArmorOptions=HeroConfigurationService.SplitNames(h.Armor); model.ItemOptions=HeroConfigurationService.SplitNames(h.Items); model.Spells=h.Spells??""; model.Gold=h.Gold; model.QuestsCompleted=h.QuestsCompleted; model.IsArchived=h.IsArchived; model.DisplayHp=h.Hp; model.DisplayMind=h.DicesMind; model.DisplayAttack=h.DicesAttack; model.DisplayDefense=h.DicesDefend; } else return null; break;
             case "monsters": if (await db.Monsters.FindAsync(id) is { } m) { model.Name=m.Name; model.SourceName=m.SourceName; model.Hp=m.Hp; model.DicesMind=m.DicesMind; model.DicesAttack=m.DicesAttack; model.DicesDefend=m.DicesDefend; model.MaxMovement=m.MaxMovement; model.Faction=m.Faction; model.Ability=m.Ability; model.AbilityOptions=SplitOptions(m.Ability); model.Description=m.Description??""; model.AppearsOptions=SelectedAppearances(m.Appears); model.IsArchived=m.IsArchived; } else return null; break;
             case "equipment": if (await db.EquipmentsAndArtifacts.FindAsync(id) is { } e) { model.Name=e.Name; model.Description=e.Description; model.Price=e.Price; model.ItemType=e.Type; model.Weight=e.Weight; model.Category=e.Category; model.AppearsOptions=SelectedAppearances(e.Appears); model.IsArchived=e.IsArchived; } else return null; break;
             case "miscellanea": if (await db.Miscellanea.FindAsync(id) is { } i) { model.Name=i.Name; model.Description=i.Description; model.Price=i.Price; model.AppearsOptions=SelectedAppearances(i.Appears); model.MiscellaneaCategoryOptions=Enum.GetValues<MiscellaneaCategory>().Where(flag => flag != 0 && i.Category.HasFlag(flag)).Select(flag => flag.DisplayName()).ToArray(); model.IsArchived=i.IsArchived; } else return null; break;

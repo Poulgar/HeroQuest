@@ -1,0 +1,27 @@
+@model HeroQuest.Models.PlayerHeroListViewModel
+@{
+    ViewData["Title"] = "Mis héroes";
+}
+<section class="admin-page page-shell player-library-page">
+    <p class="eyebrow">TUS FICHAS DE CAMPAÑA</p>
+    <h1>Tu <em>Biblioteca</em></h1>
+    <p>Consulta y actualiza tus héroes. Sus atributos de clase y ficha original permanecen protegidos.</p>
+    @if (Model.Configurations.Count == 0)
+    {
+        <p>Aún no tienes una configuración activa. El Maestro de Juego puede asignarte un héroe.</p>
+    }
+    else
+    {
+        <div class="player-hero-cards">
+            @foreach (var configuration in Model.Configurations)
+            {
+                <article class="player-hero-card">
+                    <p class="eyebrow">@configuration.Hero.CharacterTypeClass</p>
+                    <h2>@configuration.CharacterName</h2>
+                    <p>@configuration.Hero.Hp HP · @configuration.Hero.DicesMind MND · @configuration.Hero.Appears.DisplayName()</p>
+                    <a class="fantasy-button fantasy-button-primary" asp-action="Edit" asp-route-id="@configuration.Id">Abrir mi ficha</a>
+                </article>
+            }
+        </div>
+    }
+</section>

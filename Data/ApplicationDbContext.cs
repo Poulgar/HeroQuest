@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<MonsterSpellOfTerror> MonsterSpellOfTerrors => Set<MonsterSpellOfTerror>(); // Relación de muchos a muchos monstruo-hechizo
     public DbSet<WorldPoem> WorldPoems => Set<WorldPoem>(); // Poemas breves que acompañan el acceso y los temas visuales.
     public DbSet<PlayerProfile> PlayerProfiles => Set<PlayerProfile>();
+    public DbSet<HeroConfiguration> HeroConfigurations => Set<HeroConfiguration>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : base(options) // Constructor que recibe opciones de configuración para la base de datos y las pasa a la clase base DbContext.
@@ -32,11 +33,19 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<SpellOfTerror>().ToTable("SpellsOfTerror");
         modelBuilder.Entity<WorldPoem>().HasIndex(poem => poem.Key).IsUnique();
-        modelBuilder.Entity<PlayerProfile>()
-            .HasOne(player => player.Hero)
-            .WithOne(hero => hero.PlayerProfile)
-            .HasForeignKey<PlayerProfile>(player => player.HeroId)
-            .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.Entity<PlayerProfile>().HasIndex(player => player.Username).IsUnique().HasFilter("\"Username\" <> ''");
+        modelBuilder.Entity<HeroConfiguration>()
+            .HasIndex(configuration => new { configuration.PlayerProfileId, configuration.HeroId }).IsUnique();
+        modelBuilder.Entity<HeroConfiguration>()
+            .HasOne(configuration => configuration.Hero)
+            .WithMany(hero => hero.Configurations)
+            .HasForeignKey(configuration => configuration.HeroId)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<HeroConfiguration>()
+            .HasOne(configuration => configuration.PlayerProfile)
+            .WithMany(player => player.HeroConfigurations)
+            .HasForeignKey(configuration => configuration.PlayerProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // La tabla puente representa las dos claves foráneas y evita duplicar hechizos por monstruo.
         modelBuilder.Entity<MonsterSpellOfTerror>(entity =>
